@@ -1,1 +1,29 @@
 /* CSS declarations go here */
+
+/* Home Template */
+
+#features-box-outer {
+    background: #2d3e50;
+    color: white;
+}
+
+#features-box-inner {
+    padding-top: 3px;
+}
+
+.features-text {
+    color: white;
+}
+
+#cal-box {
+    background: white;
+    color: #aaa;
+}
+
+/* Not Found Template */
+
+#panda-box {
+    padding-top: 15px;
+    max-width: 700px;
+    letter-spacing: 0.3em;
+}
