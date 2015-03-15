@@ -5,6 +5,19 @@
 
 /* Home Template */
 
+#login-wrapper {
+    visibility: hidden;
+    background: black;
+    opacity: 0.3;
+    height: 100%;
+    width: 100%;
+    z-index: 4;
+}
+
+#login-box {
+    background: white;
+}
+
 #features-box-outer {
     background: #2d3e50;
     color: white;
