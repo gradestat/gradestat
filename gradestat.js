@@ -1,3 +1,4 @@
 Router.map(function() {
-    this.route('home');
+    this.route('splash', {path: '/'});
+    this.route('about');
 });

@@ -11,4 +11,4 @@ accounts-ui
 accounts-password
 accounts-google
 accounts-meteor-developer
-iron-router
+iron:router
