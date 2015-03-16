@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/gradestat/gradestat/issues"
   },
-  "homepage": "https://github.com/gradestat/gradestat"
+  "homepage": "https://github.com/gradestat/gradestat",
+  "dependencies": {
+    "node-canvas-lms": "0.0.6"
+  }
 }
