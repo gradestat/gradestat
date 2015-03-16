@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
   <link rel="stylesheet" href="css/layouts/marketing.css">
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  <script src="jquery-1.11.2.min.js"></script>
 </head>
 
 <body>
@@ -16,20 +17,24 @@
       var haze = document.getElementById("login-wrapper");
       haze.style.visibility = "visible";
     }
+    $("#login-box").on("click", function(event){
+      event.stopPropagation();
+    });
+    $("#login-wrapper").on("click", function(event){
+      $("#login-wrapper").hide();
+    });
   </script>
 
-  <div id="login-wrapper" class="content-wrapper" onclick="document.getElementById('login-wrapper').style.visibility='hidden';">
+  <div id="login-wrapper" class="content-wrapper">
     <div id="login-box" class="content">
       <h2>Login</h2>
       <form class="pure-form pure-form-aligned" action="{{pathFor 'dashboard'}}">
 	<fieldset>
           <div class="pure-control-group">
-            <label for="email">Berkeley Email:</label>
-            <input name="email" id="email" type="text" placeholder="Email">
+            <input name="email" id="email" type="text" placeholder="Berkeley Email">
           </div>
 
           <div class="pure-control-group">
-            <label for="password">Password:</label>
             <input name="password" id="password" type="password" placeholder="Password">
           </div>
 
