@@ -32,6 +32,11 @@
     border-radius: 15px;
 }
 
+input {
+    width: 100%;
+    clear: both;
+}
+
 #features-box-outer {
     background: #2d3e50;
     color: white;
@@ -52,6 +57,12 @@
 #cal-box {
     background: white;
     color: #aaa;
+}
+
+/* Dashboard  Template */
+
+#menu {
+    top: 62px;
 }
 
 /* Not Found Template */
