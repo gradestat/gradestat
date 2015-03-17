@@ -32,11 +32,6 @@
     border-radius: 15px;
 }
 
-input {
-    width: 100%;
-    clear: both;
-}
-
 #features-box-outer {
     background: #2d3e50;
     color: white;
