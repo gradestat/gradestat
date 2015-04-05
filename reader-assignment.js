@@ -13,24 +13,24 @@ function normalizeHours(readers) {
 // This are supposed to grade.
 // Each reader is expected to have a `.workload` attribute which is their
 // percentage of the work
-// Validate determines the overlap in assignments to all readers. 
+// Validate determines the overlap in assignments to all readers.
 // If validate >0 and < 1, then it is a percentage of the total number of
 // assignments, otherwise, it is treated as an integer.
 function assignReaders(readers, assignments, validate) {
     var numAssignAll = calculateNumValidations(assignments.length, validate);
-    var readerTaks = readers.map(function(r) { 
+    var readerTaks = readers.map(function(r) {
         return { name: r.name, id: r.id, workload: r.workload, assigments: [] };
     });
     var assigments = clone(assigments); // Immutability.
     // TODO: Update once assignment object exists.
     // Respresents assignments that need to be divided up by reader
     var numToAssign = assignments.length - numAssignAll;
-    
+
     var assignIdx = 0;
     while (numAssignAll) {
         assignIdx = Math.floor(Math.random() * assignments.length);
         readerTaks.forEach(function(reader) {
-            reader.assignments.push(assignments[assignIdx];)
+            reader.assignments.push(assignments[assignIdx]);
         });
         assignments.splice(assignIdx, 1); // remove item.
         numAssignAll--;
@@ -39,7 +39,7 @@ function assignReaders(readers, assignments, validate) {
         var readerNum = Math.round(reader.workload * numToAssign);
         while (readerNum) {
             assignIdx = Math.floor(Math.random() * assignments.length);
-            reader.assignments.push(assignments[assignIdx];)
+            reader.assignments.push(assignments[assignIdx]);
             assignments.splice(assignIdx, 1); // remove item.
             readerNum--;
         }
@@ -52,7 +52,7 @@ function assignReaders(readers, assignments, validate) {
             return !assingmnets.length;
         });
     }
-    
+
     return readerTaks;
 }
 
