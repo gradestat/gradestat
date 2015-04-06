@@ -3,7 +3,15 @@ Router.configure({
 });
 
 Router.map(function() {
-    this.route('splash', { path: '/' });
     this.route('about');
     this.route('dashboard');
 });
+
+Router.route('/', function() {
+    if (Meteor.user()) {
+        this.render('dashboard');
+    } else {
+        this.render('splash');
+    }
+})
+
