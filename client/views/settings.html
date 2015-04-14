@@ -1,0 +1,49 @@
+<template name="settings">
+  <div class="header">
+    <h1>Settings</h1>
+  </div>
+  <div class="content">
+    <h2 class="content-subhead">Update bCourses Access Token</h2>
+    <form class="pure-form" action="/update_token">
+      <fieldset>
+	<input type="text" name="access_token" placeholder="{{canvasToken}}">
+	<input type="hidden" name="user_id" value="{{userId}}">
+	<button type="submit" class="pure-button pure-button-primary">Submit</button>
+      </fieldset>
+    </form>
+
+    <p>
+      About: The access token allows Gradestat to import data about your classes from bCourses to be integrated with the app's functionality. This data is never used by Gradestat for any purposes other than providing you with our service. This data is not viewed or shared by Gradestat.
+      <br>
+      Instructions: To obtain a new access token, go the "Settings" page in your bCourses account. Under "Approved Integrations", click "New Access Token". Copy and paste the token value from the box that appears in your window into this form and click "Submit". This will update your course info from bCourses.
+    </p>
+
+    <h2 class="content-subhead">My Courses</h2>
+    <ul id="courses">
+      {{#each courses}}
+      <li>{{this.name}}</li>
+      {{/each}}
+    </ul>
+
+    <div class="pure-g">
+      <div class="pure-u-1-4">
+        <img class="pure-img-responsive" src="http://farm3.staticflickr.com/2875/9069037713_1752f5daeb.jpg" alt="Peyto Lake">
+      </div>
+      <div class="pure-u-1-4">
+        <img class="pure-img-responsive" src="http://farm3.staticflickr.com/2813/9069585985_80da8db54f.jpg" alt="Train">
+      </div>
+      <div class="pure-u-1-4">
+        <img class="pure-img-responsive" src="http://farm6.staticflickr.com/5456/9121446012_c1640e42d0.jpg" alt="T-Shirt Store">
+      </div>
+      <div class="pure-u-1-4">
+        <img class="pure-img-responsive" src="http://farm8.staticflickr.com/7357/9086701425_fda3024927.jpg" alt="Mountain">
+      </div>
+    </div>
+
+    <h2 class="content-subhead">Try Resizing your Browser</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+  </div>
+
+</template>
