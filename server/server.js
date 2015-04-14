@@ -1,3 +1,9 @@
+Meteor.methods({
+    getCourses: function() {
+	return Meteor.http.get("https://canvas.instructure.com/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
+    }
+});
+
 // Serverside routes
 Router.map(function() {
     this.route(
