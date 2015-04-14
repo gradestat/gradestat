@@ -4,10 +4,8 @@ Tracker.autorun(function() {
 
 Template.dashboard.helpers({
     canvasToken: function() {
-//	return Meteor.userId();	
-	var user = Meteor.user();//.canvas_token;
+	var user = Meteor.user();
 	return user.canvasToken;
-//	return Meteor.users.find({"canvasToken": {$exists:true,$ne:null}});
     },
     userId: function() {
 	return Meteor.userId();
