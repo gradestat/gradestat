@@ -1,8 +1,7 @@
 Meteor.methods({
     getCourses: function() {
 	var result = Meteor.http.get("https://canvas.instructure.com/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
-	result = JSON.parse(result)
-	return result[0].name;
+	return result;
     }
 });
 

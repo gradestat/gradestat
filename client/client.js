@@ -11,7 +11,13 @@ Template.dashboard.helpers({
 	return Meteor.userId();
     },
     courses: function() {
-	return Template.instance().courseInfo.get();
+	var courses = JSON.parse(Template.instance().courseInfo.get());
+	var teaching = courses.filter(function(el) {
+	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
+		return el;
+	    }
+	});
+	return teaching;
 //	var token =  Meteor.user().canvasToken;
 //	Meteor.call('getCourses', token, function(error, response) {
 //	    this.find("#courses").innerHTML = response.content;
@@ -22,7 +28,7 @@ Template.dashboard.helpers({
 
 Template.dashboard.created = function() {
     var self = this;
-    self.courseInfo = new ReactiveVar("Loading...");
+    self.courseInfo = new ReactiveVar("[Loading...]");
     Meteor.call('getCourses', function(err, value) {
 	if (err) {
 	    console.log(err);
