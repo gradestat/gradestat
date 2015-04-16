@@ -1,4 +1,5 @@
-Session.setDefault("dashView", 'courses');
+Session.setDefault("dashView", 'mycourses');
+Session.setDefault("course", null);
 
 Template.dashboard.events({
     'click #home': function(e) {
@@ -8,10 +9,15 @@ Template.dashboard.events({
 	Session.set('dashView', 'settings');
     },
     'click #courses': function(e) {
-	Session.set('dashView', 'courses');
+	Session.set('dashView', 'mycourses');
     }
 });
 
+Template.mycourses.events({
+    'click .course-link': function(e) {
+	Session.set("course", this);
+    }
+});
 
 Tracker.autorun(function() {
     Meteor.subscribe("userData");
@@ -20,6 +26,9 @@ Tracker.autorun(function() {
 Template.mycourses.helpers({
     noToken: function() {
 	return Meteor.user().canvasToken == null || Meteor.user().canvasToken == "";
+    },
+    course: function() {
+	return Session.get("course");
     },
     courses: function() {
 	var courses = JSON.parse(Template.instance().courseInfo.get());
