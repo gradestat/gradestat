@@ -1,5 +1,12 @@
 Session.setDefault("dashView", 'mycourses');
 Session.setDefault("course", null);
+Session.setDefault("assignmentList", null);
+
+Tracker.autorun(function() {
+    Meteor.subscribe("userData");
+});
+
+// DASHBOARD TEMPLATE
 
 Template.dashboard.events({
     'click #home': function(e) {
@@ -13,14 +20,44 @@ Template.dashboard.events({
     }
 });
 
+Template.dashboard.helpers({
+    dashView: function() {
+	return Session.get("dashView");
+    },
+    canvasToken: function() {
+	var user = Meteor.user();
+	return user.canvasToken;
+    },
+    userId: function() {
+	return Meteor.userId();
+    },
+});
+
+// MYCOURSES TEMPLATE
+
+Template.mycourses.created = function() {
+    var self = this;
+    self.courseInfo = new ReactiveVar("[Loading...]");
+    Meteor.call('getCourses', function(err, value) {
+	if (err) {
+	    console.log(err);
+	} else {
+	    self.courseInfo.set(value);
+	}
+    });
+}
+
 Template.mycourses.events({
     'click .course-link': function(e) {
 	Session.set("course", this);
+	Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
+	    if (err) {
+		console.log(err);
+	    } else {
+		Session.set("assignmentList", JSON.parse(value));
+	    }
+	});	
     }
-});
-
-Tracker.autorun(function() {
-    Meteor.subscribe("userData");
 });
 
 Template.mycourses.helpers({
@@ -39,35 +76,8 @@ Template.mycourses.helpers({
 //	});
 //	return teaching;
 	return courses;
-//	var token =  Meteor.user().canvasToken;
-//	Meteor.call('getCourses', token, function(error, response) {
-//	    this.find("#courses").innerHTML = response.content;
-//	});
-//	return "Loading...";
+    },
+    assignments: function() {
+	return Session.get("assignmentList");
     }
 });
-
-Template.dashboard.helpers({
-    dashView: function() {
-	return Session.get("dashView");
-    },
-    canvasToken: function() {
-	var user = Meteor.user();
-	return user.canvasToken;
-    },
-    userId: function() {
-	return Meteor.userId();
-    },
-});
-
-Template.mycourses.created = function() {
-    var self = this;
-    self.courseInfo = new ReactiveVar("[Loading...]");
-    Meteor.call('getCourses', function(err, value) {
-	if (err) {
-	    console.log(err);
-	} else {
-	    self.courseInfo.set(value);
-	}
-    });
-}

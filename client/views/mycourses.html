@@ -22,11 +22,17 @@
     </div>
 
     {{#if course}}
-    <div id="course-title">
-      <h2 class="content-subhead">
-	{{course.name}}
-	</h2>
-    </div>
+    <h2 id="course-title">
+      {{course.name}}
+    </h2>
+    <h3 class="content-subhead">
+      Assignments
+    </h3>
+    {{#each assignments}}
+    <ul>
+      <li>{{this.name}}</li>
+    </ul>
+    {{/each}}
     {{/if}}
 
   </div>
