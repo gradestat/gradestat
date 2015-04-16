@@ -1,6 +1,6 @@
 Meteor.methods({
     getCourses: function() {
-	var result = Meteor.http.get("https://canvas.instructure.com/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
+	var result = Meteor.http.get("https://bcourses.berkeley.edu/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
 	return result;
     }
 });
