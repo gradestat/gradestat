@@ -1,12 +1,20 @@
 var canvasBaseURL = "https://canvas.instructure.com/api/v1";
 
+function accessTokenString() {
+    return "?access_token=" + Meteor.user().canvasToken;
+}
+
 Meteor.methods({
     getCourses: function() {
 	var result = Meteor.http.get("https://canvas.instructure.com/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
 	return result;
     },
     getAssignmentList: function(courseId) {
-	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments?access_token=" + Meteor.user().canvasToken).content;
+	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments" + accessTokenString()).content;
+	return result;
+    },
+    getAssignment: function(courseId, assignmentId) {
+	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId + accessTokenString()).content;
 	return result;
     }
 });

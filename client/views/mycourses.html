@@ -28,11 +28,12 @@
     <h3 class="content-subhead">
       Assignments
     </h3>
-    {{#each assignments}}
+    {{#each assignmentList}}
     <ul>
-      <li>{{this.name}}</li>
+      <li><a href="#" class="assignment-link">{{this.name}}</a></li>
     </ul>
     {{/each}}
+    {{assignment}}
     {{/if}}
 
   </div>

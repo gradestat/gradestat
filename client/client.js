@@ -1,6 +1,7 @@
 Session.setDefault("dashView", 'mycourses');
 Session.setDefault("course", null);
 Session.setDefault("assignmentList", null);
+Session.setDefault("assignment", null);
 
 Tracker.autorun(function() {
     Meteor.subscribe("userData");
@@ -57,6 +58,16 @@ Template.mycourses.events({
 		Session.set("assignmentList", JSON.parse(value));
 	    }
 	});	
+    },
+    'click .assignment-link': function(e) {
+	Session.set("assignment", this);
+	Meteor.call('getAssignment', Session.get("course").id, Session.get("assignment").id, function (err, value) {
+	    if (err) {
+		console.log(err);
+	    } else {
+		Session.set("assignment", JSON.parse(value));
+	    }
+	});
     }
 });
 
@@ -77,7 +88,10 @@ Template.mycourses.helpers({
 //	return teaching;
 	return courses;
     },
-    assignments: function() {
+    assignmentList: function() {
 	return Session.get("assignmentList");
+    },
+    assignment: function() {
+	return Session.get("assignment");
     }
 });
