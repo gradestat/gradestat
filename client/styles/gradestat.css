@@ -2,6 +2,23 @@
 
 /* Layout Template */
 
+.login-display-name {
+    color: white;
+}
+
+#login-buttons {
+    vertical-align: middle;
+    float: right;
+    margin-top: 6px;
+}
+
+.login-buttons {
+    vertical-align: middle;
+}
+
+.login-buttons-dropdown-align- {
+    vertical-align: middle;
+}
 
 /* Home Template */
 
