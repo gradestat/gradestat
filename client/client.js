@@ -1,4 +1,4 @@
-Session.setDefault("dashView", 'home');
+Session.setDefault("dashView", 'courses');
 
 Template.dashboard.events({
     'click #home': function(e) {
@@ -17,6 +17,27 @@ Tracker.autorun(function() {
     Meteor.subscribe("userData");
 });
 
+Template.mycourses.helpers({
+    noToken: function() {
+	return Meteor.user().canvasToken == null || Meteor.user().canvasToken == "";
+    },
+    courses: function() {
+	var courses = JSON.parse(Template.instance().courseInfo.get());
+//	var teaching = courses.filter(function(el) {
+//	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
+//		return el;
+//	    }
+//	});
+//	return teaching;
+	return courses;
+//	var token =  Meteor.user().canvasToken;
+//	Meteor.call('getCourses', token, function(error, response) {
+//	    this.find("#courses").innerHTML = response.content;
+//	});
+//	return "Loading...";
+    }
+});
+
 Template.dashboard.helpers({
     dashView: function() {
 	return Session.get("dashView");
@@ -28,23 +49,9 @@ Template.dashboard.helpers({
     userId: function() {
 	return Meteor.userId();
     },
-    courses: function() {
-	var courses = JSON.parse(Template.instance().courseInfo.get());
-	var teaching = courses.filter(function(el) {
-	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
-		return el;
-	    }
-	});
-	return teaching;
-//	var token =  Meteor.user().canvasToken;
-//	Meteor.call('getCourses', token, function(error, response) {
-//	    this.find("#courses").innerHTML = response.content;
-//	});
-//	return "Loading...";
-    }
 });
 
-Template.dashboard.created = function() {
+Template.mycourses.created = function() {
     var self = this;
     self.courseInfo = new ReactiveVar("[Loading...]");
     Meteor.call('getCourses', function(err, value) {

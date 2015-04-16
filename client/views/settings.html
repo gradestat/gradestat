@@ -3,20 +3,8 @@
     <h1>Settings</h1>
   </div>
   <div class="content">
-    <h2 class="content-subhead">Update bCourses Access Token</h2>
-    <form class="pure-form" action="/update_token">
-      <fieldset>
-	<input type="text" name="access_token" placeholder="{{canvasToken}}">
-	<input type="hidden" name="user_id" value="{{userId}}">
-	<button type="submit" class="pure-button pure-button-primary">Submit</button>
-      </fieldset>
-    </form>
 
-    <p>
-      About: The access token allows Gradestat to import data about your classes from bCourses to be integrated with the app's functionality. This data is never used by Gradestat for any purposes other than providing you with our service. This data is not viewed or shared by Gradestat.
-      <br>
-      Instructions: To obtain a new access token, go the "Settings" page in your bCourses account. Under "Approved Integrations", click "New Access Token". Copy and paste the token value from the box that appears in your window into this form and click "Submit". This will update your course info from bCourses.
-    </p>
+    {{> updateToken}}
 
     <h2 class="content-subhead">My Courses</h2>
     <ul id="courses">
