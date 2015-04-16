@@ -61,13 +61,6 @@ Template.mycourses.events({
     },
     'click .assignment-link': function(e) {
 	Session.set("assignment", this);
-	Meteor.call('getAssignment', Session.get("course").id, Session.get("assignment").id, function (err, value) {
-	    if (err) {
-		console.log(err);
-	    } else {
-		Session.set("assignment", JSON.parse(value));
-	    }
-	});
     }
 });
 
