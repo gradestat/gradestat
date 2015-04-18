@@ -24,7 +24,7 @@ function requestParams(query) {
         headers: {
             Authorization: 'Bearer ' + Meteor.user().canvasToken
         },
-        query: baseQuery,
+        params: baseQuery,
         npmRequestOptions: {
             json: true,
             useQueryString: true
