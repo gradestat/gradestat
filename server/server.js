@@ -6,10 +6,7 @@ function accessTokenString() {
 
 Meteor.methods({
     getCourses: function() {
-        console.log('Getting Courses....');
-        console.log('TOKEN:');
-        console.log(Meteor.user().canvasToken);
-        var result = Meteor.http.get("https://bcourses.berkeley.edu/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
+        var result = Meteor.http.get(canvasBaseURL + "/courses" + accessTokenString()).content;
         return result;
     },
     getAssignmentList: function(courseId) {
