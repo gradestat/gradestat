@@ -11,19 +11,19 @@ Tracker.autorun(function() {
 
 Template.dashboard.events({
     'click #home': function(e) {
-	Session.set('dashView', 'home');
+        Session.set('dashView', 'home');
     },
     'click #settings': function(e) {
-	Session.set('dashView', 'settings');
+        Session.set('dashView', 'settings');
     },
     'click #courses': function(e) {
-	Session.set('dashView', 'mycourses');
+        Session.set('dashView', 'mycourses');
     }
 });
 
 Template.dashboard.helpers({
     dashView: function() {
-	return Session.get("dashView");
+        return Session.get("dashView");
     },
     canvasToken: function() {
         var user = Meteor.user();
@@ -40,12 +40,11 @@ Template.mycourses.created = function() {
     var self = this;
     self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
-	if (err) {
-	    console.log(err);
-	} else {
-        console.log(value);
-	    self.courseInfo.set(value);
-	}
+        if (err) {
+            console.log(err);
+        } else {
+            self.courseInfo.set(value);
+        }
     });
 }
 
@@ -73,11 +72,10 @@ Template.mycourses.helpers({
         return Session.get("course");
     },
     courses: function() {
-        console.log('COURSES');
         var courses = Template.instance().courseInfo.get();
         var teaching = courses.filter(function(el) {
             if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
-            return el;
+                return el;
             }
         });
         return teaching;

@@ -17,10 +17,7 @@ function requestParams(query) {
             useQueryString: true
         }
     }
-    console.log(options);
     return options;
-
-    //return "?per_page=100&access_token=" + ;
 }
 
 Meteor.methods({
