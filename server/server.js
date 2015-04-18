@@ -48,6 +48,7 @@ function findObjectByField(arr, field, value) {
 Meteor.methods({
     getCourses: function() {
         var result = Meteor.http.get(coursePath(),
+                requestParams({'include[]':'term' })).content;
         var myCourses = Courses.find({user_id: Meteor.userId()});
         myCourses = myCourses.fetch();
         for (var i=0; i < myCourses.length; i += 1) {
