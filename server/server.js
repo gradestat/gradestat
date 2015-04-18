@@ -15,8 +15,8 @@ var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function requestParams(query) {
     var baseQuery =  { 'per_page': '100' };
-    // Stupidly simple $.extend()
-    for (prop in query) {
+
+    for (prop in query) { // Stupidly simple $.extend()
         if (query.hasOwnProperty(prop)) { baseQuery[prop] = query[prop]; }
     }
 
@@ -43,6 +43,10 @@ function findObjectByField(arr, field, value) {
     return -1;
 }
 
+function coursePath(id) {
+    return canvasBaseURL + "/courses"+ (id ? "/" + id : '');
+}
+
 Meteor.methods({
     getCourses: function() {
         console.log('Getting Courses....');
@@ -63,22 +67,23 @@ Meteor.methods({
 	console.log(myCourses.length);
 	return jsresult;
     },
-    getAssignmentList: function(courseId) {
-        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments", requestParams()).content;
+    getAssignmentList: function(cId) {
+        var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
         return result;
     },
-    getAssignment: function(courseId, assignmentId) {
-        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId, requestParams()).content;
-	return result;
+    getAssignment: function(cId, assignmentId) {
+        var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
+        return result;
+    },
+    getStaff: function(cId) {
+        var result = Meteor.http.get(coursePath(cId) + "/enrollments",
+            requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment']})).content;
+        return result;
     },
     addCourse: function(course) {
-	Courses.insert(course);
-	return course;
+        Courses.insert(course);
+        return course;
     }
-    // getStaff: function(courseId, assignmentId) {
-    //     var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId, requestParams()).content;
-    //     return result;
-    // }
 });
 
 // Serverside routes
