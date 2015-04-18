@@ -37,7 +37,7 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
         return result;
     },
-    getStaff: function(cId, assignmentId) {
+    getStaff: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/enrollments",
             requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment']})).content;
         return result;

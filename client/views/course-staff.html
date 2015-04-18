@@ -1,0 +1,16 @@
+<template name="course_staff">
+    <h3 class="content-subhead">Course Staff</h3>
+
+    <div class="pure-g">
+      {{#each staff}}
+        <div class="pure-u-1-4">
+          <div class="course-link-wrapper">
+            <a href="#" class="course-link">
+              {{this.name}}
+            </a>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+</template>
