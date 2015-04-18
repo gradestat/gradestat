@@ -1,3 +1,15 @@
+// DB Setup
+// Users "collection" is created for us
+
+// Courses
+Courses = new Mongo.Collection('courses');
+
+Assignments = new Mongo.Collection('assignments');
+
+// Course Configurations?
+// Autograders -- Later
+//
+
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function requestParams(query) {
@@ -24,9 +36,25 @@ function coursePath(id) {
     return canvasBaseURL + "/courses"+ (id ? "/" + id : '');
 }
 
+function findObjectByField(arr, field, value) {
+    for (var i = 0; i < arr.length; i += 1) {
+        if (arr[i][field] == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Meteor.methods({
     getCourses: function() {
-        var result = Meteor.http.get(coursePath(), requestParams()).content;
+        var result = Meteor.http.get(coursePath(),
+        var myCourses = Courses.find({user_id: Meteor.userId()});
+        myCourses = myCourses.fetch();
+        for (var i=0; i < myCourses.length; i += 1) {
+            if (findObjectByField(result, 'id', myCourses[i].id)) {
+                result.push(myCourses[i]);
+            }
+        }
         return result;
     },
     getAssignmentList: function(cId) {
@@ -41,6 +69,10 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/enrollments",
             requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment']})).content;
         return result;
+    },
+    addCourse: function(course) {
+        Courses.insert(course);
+        return course;
     }
 });
 
@@ -56,16 +88,3 @@ Router.map(function() {
         { where: 'server' }
     );
 });
-
-
-// DB Setup
-// Users "collection" is created for us
-
-// Courses
-Courses = new Mongo.Collection('courses');
-
-Assignments = new Mongo.Collection('assignments');
-
-// Course Configurations?
-// Autograders -- Later
-//

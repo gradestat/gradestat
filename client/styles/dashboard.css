@@ -29,6 +29,17 @@
 
 /* Courses Styles */
 
+.dashboard-table {
+    letter-spacing: 1px;
+    width: 100%;
+    text-align: left;
+}
+
+.table-header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
 .course-link-wrapper {
     margin: 8px;
     background: rgba(255,255,255,0.5);
@@ -43,10 +54,13 @@
     text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: center;
     height: 40px;
     width: 100%;
     line-height: 20px;
+}
+
+.course-link-inner {
+    vertical-align: middle;
 }
 
 #course-title {
