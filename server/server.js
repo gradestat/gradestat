@@ -52,7 +52,8 @@ Meteor.methods({
         console.log('Getting Courses....');
         console.log('TOKEN:');
         console.log(Meteor.user().canvasToken);
-	var result = Meteor.http.get("https://bcourses.berkeley.edu/api/v1/courses?access_token=" + Meteor.user().canvasToken + "&include[]=term").content;
+        var result = Meteor.http.get(coursePath(),
+                requestParams({'include[]':'term' })).content;
 	jsresult = JSON.parse(result);
 	myCourses = Courses.find({user_id: Meteor.userId()});
 	myCourses = myCourses.fetch();
