@@ -12,8 +12,24 @@ Assignments = new Mongo.Collection('assignments');
 
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
-function accessTokenString() {
-    return "?access_token=" + Meteor.user().canvasToken;
+function requestParams(query) {
+    var baseQuery =  { 'per_page': '100' };
+    // Stupidly simple $.extend()
+    for (prop in query) {
+        if (query.hasOwnProperty(prop)) { baseQuery[prop] = query[prop]; }
+    }
+
+    var options = {
+        headers: {
+            Authorization: 'Bearer ' + Meteor.user().canvasToken
+        },
+        query: baseQuery,
+        npmRequestOptions: {
+            json: true,
+            useQueryString: true
+        }
+    }
+    return options;
 }
 
 function findObjectByField(arr, field, value) {
@@ -44,29 +60,29 @@ Meteor.methods({
 	return jsresult;
     },
     getAssignmentList: function(courseId) {
-	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments" + accessTokenString()).content;
-	return result;
+        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments", requestParams()).content;
+        return result;
     },
     getAssignment: function(courseId, assignmentId) {
-	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId + accessTokenString()).content;
+        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId, requestParams()).content;
 	return result;
     },
     addCourse: function(course) {
 	Courses.insert(course);
 	return course;
     }
+    // getStaff: function(courseId, assignmentId) {
+    //     var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId, requestParams()).content;
+    //     return result;
+    // }
 });
 
 // Serverside routes
 Router.map(function() {
     this.route('update_token',
         function () {
-            console.log('SETTING USER TOKEN:\n');
-            console.log(this.request.query.access_token);
-            console.log('UID:\n', this.request.query);
             var user = Meteor.users.update({_id: this.request.query.user_id},
                     { $set: {"canvasToken": this.request.query.access_token} });
-            console.log(user);
             this.response.writeHead(200, {'Content-Type': 'text/html'});
             this.response.end("<h3>Loading...</h3><script>window.location.href='/dashboard'</script>");
         },

@@ -11,26 +11,26 @@ Tracker.autorun(function() {
 
 Template.dashboard.events({
     'click #home': function(e) {
-	Session.set('dashView', 'home');
+        Session.set('dashView', 'home');
     },
     'click #settings': function(e) {
-	Session.set('dashView', 'settings');
+        Session.set('dashView', 'settings');
     },
     'click #courses': function(e) {
-	Session.set('dashView', 'mycourses');
+        Session.set('dashView', 'mycourses');
     }
 });
 
 Template.dashboard.helpers({
     dashView: function() {
-	return Session.get("dashView");
+        return Session.get("dashView");
     },
     canvasToken: function() {
-	var user = Meteor.user();
-	return user.canvasToken;
+        var user = Meteor.user();
+        return user.canvasToken;
     },
     userId: function() {
-	return Meteor.userId();
+        return Meteor.userId();
     },
 });
 
@@ -38,7 +38,7 @@ Template.dashboard.helpers({
 
 Template.mycourses.created = function() {
     var self = this;
-    self.courseInfo = new ReactiveVar("[Loading...]");
+    self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
 	if (err) {
 	    console.log(err);
@@ -50,14 +50,14 @@ Template.mycourses.created = function() {
 
 Template.mycourses.events({
     'click .course-link': function(e) {
-	Session.set("course", this);
-	Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
-	    if (err) {
-		console.log(err);
-	    } else {
-		Session.set("assignmentList", JSON.parse(value));
-	    }
-	});	
+        Session.set("course", this);
+        Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
+            if (err) {
+                console.log(err);
+            } else {
+                Session.set("assignmentList", value);
+            }
+        });
     },
     'click .add-course': function(e) {
 	this.user_id = Meteor.userId();
@@ -70,16 +70,16 @@ Template.mycourses.events({
 	});
     },
     'click .assignment-link': function(e) {
-	Session.set("assignment", this);
+        Session.set("assignment", this);
     }
 });
 
 Template.mycourses.helpers({
     noToken: function() {
-	return Meteor.user().canvasToken == null || Meteor.user().canvasToken == "";
+        return !Meteor.user().canvasToken;
     },
     course: function() {
-	return Session.get("course");
+        return Session.get("course");
     },
     courses: function() {
 	var courses = JSON.parse(Template.instance().courseInfo.get());
@@ -93,9 +93,9 @@ Template.mycourses.helpers({
 	return courses;
     },
     assignmentList: function() {
-	return Session.get("assignmentList");
+        return Session.get("assignmentList");
     },
     assignment: function() {
-	return Session.get("assignment");
+        return Session.get("assignment");
     }
 });

@@ -48,18 +48,18 @@
     </div>
 
     {{#if course}}
-    <h2 id="course-title">
-      {{course.name}}
-    </h2>
-    <h3 class="content-subhead">
-      Assignments
-    </h3>
-    {{#each assignmentList}}
-    <ul>
-      <li><a href="#" class="assignment-link">{{this.name}}</a></li>
-    </ul>
-    {{/each}}
-    {{assignment}}
+      <h2 id="course-title">
+        {{course.name}}
+      </h2>
+      <h3 class="content-subhead">
+        Assignments
+      </h3>
+      {{#each assignmentList}}
+        <ul>
+          <li><a href="#" class="assignment-link">{{this.name}}</a></li>
+        </ul>
+      {{/each}}
+      {{assignment}}
     {{/if}}
 
   </div>
