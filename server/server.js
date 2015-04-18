@@ -10,6 +10,7 @@ Assignments = new Mongo.Collection('assignments');
 // Autograders -- Later
 //
 
+/* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function requestParams(query) {
@@ -32,13 +33,14 @@ function requestParams(query) {
     return options;
 }
 
+/* Check if an object in arr has value for field. */
 function findObjectByField(arr, field, value) {
     for (var i = 0; i < arr.length; i += 1) {
 	if (arr[i][field] == value) {
-	    return true;
+	    return i;
 	}
     }
-    return false;
+    return -1;
 }
 
 Meteor.methods({
@@ -51,8 +53,10 @@ Meteor.methods({
 	myCourses = Courses.find({user_id: Meteor.userId()});
 	myCourses = myCourses.fetch();
 	for (var i=0; i < myCourses.length; i += 1) {
-	    if (findObjectByField(jsresult, 'id', myCourses[i].id)) {
-	 	jsresult.push(myCourses[i]);
+	    var index = findObjectByField(jsresult, 'id', myCourses[i].id);
+	    if (index != -1) {
+		jsresult[index] = myCourses[i];
+	 	//jsresult.push(myCourses[i]);
 	    }
 	}
 	console.log(jsresult);
