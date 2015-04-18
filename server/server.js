@@ -1,4 +1,4 @@
-var canvasBaseURL = "https://canvas.instructure.com/api/v1";
+var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function accessTokenString() {
     return "?access_token=" + Meteor.user().canvasToken;
@@ -9,16 +9,16 @@ Meteor.methods({
         console.log('Getting Courses....');
         console.log('TOKEN:');
         console.log(Meteor.user().canvasToken);
-	var result = Meteor.http.get("https://bcourses.berkeley.edu/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
-	return result;
+        var result = Meteor.http.get("https://bcourses.berkeley.edu/api/v1/courses?access_token=" + Meteor.user().canvasToken).content;
+        return result;
     },
     getAssignmentList: function(courseId) {
-	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments" + accessTokenString()).content;
-	return result;
+        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments" + accessTokenString()).content;
+        return result;
     },
     getAssignment: function(courseId, assignmentId) {
-	var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId + accessTokenString()).content;
-	return result;
+        var result = Meteor.http.get(canvasBaseURL + "/courses/" + courseId + "/assignments/" + assignmentId + accessTokenString()).content;
+        return result;
     }
 });
 
