@@ -4,6 +4,8 @@ Template.staff_view.created = function() {
     var self = this;
     self.staffList = new ReactiveVar(['Loading...']);
     Meteor.call('getStaff', function(err, value) {
+        console.log('STAFF BE GET');
+        console.log(value);
         if (err) {
             console.log(err);
         } else {
