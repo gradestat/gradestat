@@ -30,7 +30,6 @@ function requestParams(query) {
             useQueryString: true
         }
     }
-    console.log(options.query);
     return options;
 }
 
@@ -50,8 +49,6 @@ function coursePath(id) {
 
 Meteor.methods({
     getCourses: function() {
-        console.log(Meteor.http.get(coursePath(),
-                requestParams({'include[]':['term'] })));
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':['term'] })).content;
         var myCourses = Courses.find({user_id: Meteor.userId()});
