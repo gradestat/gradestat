@@ -43,7 +43,7 @@ Template.mycourses.created = function() {
 	if (err) {
 	    console.log(err);
 	} else {
-	    self.courseInfo.set(value);
+	    self.courseInfo.set(JSON.stringify(value));
 	}
     });
 }
@@ -59,6 +59,16 @@ Template.mycourses.events({
 	    }
 	});	
     },
+    'click .add-course': function(e) {
+	this.user_id = Meteor.userId();
+	Meteor.call('addCourse', this, function(err,value) {
+	    if (err) {
+		console.log(err);
+	    } else {
+		console.log("SUCCESS: added course " + value.name);
+	    }
+	});
+    },
     'click .assignment-link': function(e) {
 	Session.set("assignment", this);
     }
@@ -73,6 +83,7 @@ Template.mycourses.helpers({
     },
     courses: function() {
 	var courses = JSON.parse(Template.instance().courseInfo.get());
+	console.log(courses);
 //	var teaching = courses.filter(function(el) {
 //	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
 //		return el;
