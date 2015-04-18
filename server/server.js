@@ -1,7 +1,7 @@
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function accessTokenString() {
-    return "?access_token=" + Meteor.user().canvasToken;
+    return "?per_page=100&access_token=" + Meteor.user().canvasToken;
 }
 
 Meteor.methods({
