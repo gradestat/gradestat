@@ -10,6 +10,7 @@ Assignments = new Mongo.Collection('assignments');
 // Autograders -- Later
 //
 
+/* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function requestParams(query) {
@@ -32,31 +33,40 @@ function requestParams(query) {
     return options;
 }
 
+/* Check if an object in arr has value for field. */
+function findObjectByField(arr, field, value) {
+    for (var i = 0; i < arr.length; i += 1) {
+	if (arr[i][field] == value) {
+	    return i;
+	}
+    }
+    return -1;
+}
+
 function coursePath(id) {
     return canvasBaseURL + "/courses"+ (id ? "/" + id : '');
 }
 
-function findObjectByField(arr, field, value) {
-    for (var i = 0; i < arr.length; i += 1) {
-        if (arr[i][field] == value) {
-            return true;
-        }
-    }
-    return false;
-}
-
 Meteor.methods({
     getCourses: function() {
+        console.log('Getting Courses....');
+        console.log('TOKEN:');
+        console.log(Meteor.user().canvasToken);
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':'term' })).content;
-        var myCourses = Courses.find({user_id: Meteor.userId()});
-        myCourses = myCourses.fetch();
-        for (var i=0; i < myCourses.length; i += 1) {
-            if (findObjectByField(result, 'id', myCourses[i].id)) {
-                result.push(myCourses[i]);
-            }
-        }
-        return result;
+	jsresult = JSON.parse(result);
+	myCourses = Courses.find({user_id: Meteor.userId()});
+	myCourses = myCourses.fetch();
+	for (var i=0; i < myCourses.length; i += 1) {
+	    var index = findObjectByField(jsresult, 'id', myCourses[i].id);
+	    if (index != -1) {
+		jsresult[index] = myCourses[i];
+	 	//jsresult.push(myCourses[i]);
+	    }
+	}
+	console.log(jsresult);
+	console.log(myCourses.length);
+	return jsresult;
     },
     getAssignmentList: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
