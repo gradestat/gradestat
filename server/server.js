@@ -52,9 +52,8 @@ Meteor.methods({
         console.log('Getting Courses....');
         console.log('TOKEN:');
         console.log(Meteor.user().canvasToken);
-        var result = Meteor.http.get(coursePath(),
-                requestParams({'include[]':'term' })).content;
-	jsresult = JSON.parse(result);
+        var result = Meteor.http.get(coursePath(), requestParams({'include[]':'term' })).content;
+	var jsresult = JSON.parse(result);
 	myCourses = Courses.find({user_id: Meteor.userId()});
 	myCourses = myCourses.fetch();
 	for (var i=0; i < myCourses.length; i += 1) {
