@@ -36,9 +36,9 @@ function requestParams(query) {
 /* Check if an object in arr has value for field. */
 function findObjectByField(arr, field, value) {
     for (var i = 0; i < arr.length; i += 1) {
-	if (arr[i][field] == value) {
-	    return i;
-	}
+        if (arr[i][field] == value) {
+            return i;
+        }
     }
     return -1;
 }
@@ -49,24 +49,17 @@ function coursePath(id) {
 
 Meteor.methods({
     getCourses: function() {
-        console.log('Getting Courses....');
-        console.log('TOKEN:');
-        console.log(Meteor.user().canvasToken);
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':'term' })).content;
-	jsresult = JSON.parse(result);
-	myCourses = Courses.find({user_id: Meteor.userId()});
-	myCourses = myCourses.fetch();
-	for (var i=0; i < myCourses.length; i += 1) {
-	    var index = findObjectByField(jsresult, 'id', myCourses[i].id);
-	    if (index != -1) {
-		jsresult[index] = myCourses[i];
-	 	//jsresult.push(myCourses[i]);
-	    }
-	}
-	console.log(jsresult);
-	console.log(myCourses.length);
-	return jsresult;
+        var myCourses = Courses.find({user_id: Meteor.userId()});
+        myCourses = myCourses.fetch();
+        for (var i=0; i < myCourses.length; i += 1) {
+            var index = findObjectByField(result, 'id', myCourses[i].id);
+            if (index != -1) {
+                result[index] = myCourses[i];
+            }
+        }
+        return result;
     },
     getAssignmentList: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
