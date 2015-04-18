@@ -26,11 +26,11 @@ Template.dashboard.helpers({
 	return Session.get("dashView");
     },
     canvasToken: function() {
-	var user = Meteor.user();
-	return user.canvasToken;
+        var user = Meteor.user();
+        return user.canvasToken;
     },
     userId: function() {
-	return Meteor.userId();
+        return Meteor.userId();
     },
 });
 
@@ -38,11 +38,12 @@ Template.dashboard.helpers({
 
 Template.mycourses.created = function() {
     var self = this;
-    self.courseInfo = new ReactiveVar("[Loading...]");
+    self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
 	if (err) {
 	    console.log(err);
 	} else {
+        console.log(value);
 	    self.courseInfo.set(value);
 	}
     });
@@ -50,41 +51,41 @@ Template.mycourses.created = function() {
 
 Template.mycourses.events({
     'click .course-link': function(e) {
-	Session.set("course", this);
-	Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
-	    if (err) {
-		console.log(err);
-	    } else {
-		Session.set("assignmentList", JSON.parse(value));
-	    }
-	});	
+        Session.set("course", this);
+        Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
+            if (err) {
+                console.log(err);
+            } else {
+                Session.set("assignmentList", value);
+            }
+        });
     },
     'click .assignment-link': function(e) {
-	Session.set("assignment", this);
+        Session.set("assignment", this);
     }
 });
 
 Template.mycourses.helpers({
     noToken: function() {
-	return Meteor.user().canvasToken == null || Meteor.user().canvasToken == "";
+        return !Meteor.user().canvasToken;
     },
     course: function() {
-	return Session.get("course");
+        return Session.get("course");
     },
     courses: function() {
-	var courses = JSON.parse(Template.instance().courseInfo.get());
-//	var teaching = courses.filter(function(el) {
-//	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
-//		return el;
-//	    }
-//	});
-//	return teaching;
-	return courses;
+        console.log('COURSES');
+        var courses = Template.instance().courseInfo.get();
+        var teaching = courses.filter(function(el) {
+            if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
+            return el;
+            }
+        });
+        return teaching;
     },
     assignmentList: function() {
-	return Session.get("assignmentList");
+        return Session.get("assignmentList");
     },
     assignment: function() {
-	return Session.get("assignment");
+        return Session.get("assignment");
     }
 });

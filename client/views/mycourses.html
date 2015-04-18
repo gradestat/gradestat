@@ -11,29 +11,29 @@
 
     <div class="pure-g">
       {{#each courses}}
-      <div class="pure-u-1-4">
-	<div class="course-link-wrapper">
-	  <a href="#" class="course-link">
-	    {{this.name}}
-	  </a>
-	</div>
-      </div>
+        <div class="pure-u-1-4">
+          <div class="course-link-wrapper">
+            <a href="#" class="course-link">
+              {{this.name}}
+            </a>
+          </div>
+        </div>
       {{/each}}
     </div>
 
     {{#if course}}
-    <h2 id="course-title">
-      {{course.name}}
-    </h2>
-    <h3 class="content-subhead">
-      Assignments
-    </h3>
-    {{#each assignmentList}}
-    <ul>
-      <li><a href="#" class="assignment-link">{{this.name}}</a></li>
-    </ul>
-    {{/each}}
-    {{assignment}}
+      <h2 id="course-title">
+        {{course.name}}
+      </h2>
+      <h3 class="content-subhead">
+        Assignments
+      </h3>
+      {{#each assignmentList}}
+        <ul>
+          <li><a href="#" class="assignment-link">{{this.name}}</a></li>
+        </ul>
+      {{/each}}
+      {{assignment}}
     {{/if}}
 
   </div>
