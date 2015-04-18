@@ -24,12 +24,13 @@ function requestParams(query) {
         headers: {
             Authorization: 'Bearer ' + Meteor.user().canvasToken
         },
-        query: baseQuery,
+        params: baseQuery,
         npmRequestOptions: {
             json: true,
             useQueryString: true
         }
     }
+    console.log(options.query);
     return options;
 }
 
@@ -49,8 +50,10 @@ function coursePath(id) {
 
 Meteor.methods({
     getCourses: function() {
+        console.log(Meteor.http.get(coursePath(),
+                requestParams({'include[]':['term'] })));
         var result = Meteor.http.get(coursePath(),
-                requestParams({'include[]':'term' })).content;
+                requestParams({'include[]':['term'] })).content;
         var myCourses = Courses.find({user_id: Meteor.userId()});
         myCourses = myCourses.fetch();
         for (var i=0; i < myCourses.length; i += 1) {
