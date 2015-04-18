@@ -1,4 +1,4 @@
-var canvasBaseURL = "https://canvas.instructure.com/api/v1";
+var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
 function accessTokenString() {
     return "?access_token=" + Meteor.user().canvasToken;
