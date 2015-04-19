@@ -8,6 +8,7 @@ Template.course_staff.created = function() {
         if (err) {
             console.log(err);
         } else {
+	    console.log(value);
             self.staffList.set(value);
         }
     });

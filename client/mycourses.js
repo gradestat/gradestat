@@ -1,39 +1,3 @@
-Session.setDefault("dashView", 'mycourses');
-Session.setDefault("course", null);
-Session.setDefault("assignmentList", null);
-Session.setDefault("assignment", null);
-
-Tracker.autorun(function() {
-    Meteor.subscribe("userData");
-});
-
-// DASHBOARD TEMPLATE
-
-Template.dashboard.events({
-    'click #home': function(e) {
-        Session.set('dashView', 'home');
-    },
-    'click #settings': function(e) {
-        Session.set('dashView', 'settings');
-    },
-    'click #courses': function(e) {
-        Session.set('dashView', 'mycourses');
-    }
-});
-
-Template.dashboard.helpers({
-    dashView: function() {
-        return Session.get("dashView");
-    },
-    canvasToken: function() {
-        var user = Meteor.user();
-        return user.canvasToken;
-    },
-    userId: function() {
-        return Meteor.userId();
-    },
-});
-
 // MYCOURSES TEMPLATE
 
 Template.mycourses.created = function() {
@@ -51,6 +15,7 @@ Template.mycourses.created = function() {
 Template.mycourses.events({
     'click .course-link': function(e) {
         Session.set("course", this);
+	Session.set("dashView", "course");
         Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
             if (err) {
                 console.log(err);
@@ -68,9 +33,6 @@ Template.mycourses.events({
             console.log("SUCCESS: added course " + value.name);
         }
     });
-    },
-    'click .assignment-link': function(e) {
-        Session.set("assignment", this);
     }
 });
 
@@ -90,9 +52,6 @@ Template.mycourses.helpers({
 //	});
 //	return teaching;
     return courses;
-    },
-    assignmentList: function() {
-        return Session.get("assignmentList");
     },
     assignment: function() {
         return Session.get("assignment");

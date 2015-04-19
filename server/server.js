@@ -2,9 +2,9 @@
 // Users "collection" is created for us
 
 // Courses
-var Courses = new Mongo.Collection('courses');
+Courses = new Mongo.Collection('courses');
 
-var Assignments = new Mongo.Collection('assignments');
+Assignments = new Mongo.Collection('assignments');
 
 // Course Configurations?
 // Autograders -- Later
@@ -52,7 +52,7 @@ Meteor.methods({
         if (myCourseIds) {
             var myCourses = Courses.find({'id' : { $in : myCourseIds}});
             myCourses = myCourses.fetch();
-            for (var i=0; i < myCourses.length; i += 1) {
+            for (var i = 0; i < myCourses.length; i += 1) {
                 var index = findObjectByField(result, 'id', myCourses[i].id);
                 if (index != -1) {
                     result[index] = myCourses[i];
@@ -96,7 +96,6 @@ Meteor.methods({
         return course;
     }
 });
-
 
 
 // Serverside routes
