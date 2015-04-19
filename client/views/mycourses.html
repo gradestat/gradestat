@@ -10,39 +10,37 @@
 
     <div class="pure-g">
       <table class="dashboard-table" id="course-table">
-	<tr class="table-header">
-	  <td>
-	    Course
-	  </td>
-	  <td>
-	    Term
-	  </td>
-	  <td>
-	    Manage
-	  </td>
-	</tr>
-	<br>
-	{{#each courses}}
-	<tr>
-	  <td>
-	    <a href="#" class="course-link">
-	      <p class="course-link-inner">
-	      {{this.name}}
-	      </p>
-	    </a>
-	  </td>
-	  <td>
-	    {{this.term.name}}
-	  </td>
-	  <td>
-	    {{#if this.user_id}}
-	    <a href="#" class="remove-course pure-button">Remove</a>	    
-	    {{else}}
-	    <a href="#" class="add-course pure-button">Add</a>
-	    {{/if}}
-	  </td>
-	</tr>
-	{{/each}}
+        <thead>
+          <tr class="table-header">
+            <td>Course</td>
+            <td>Term</td>
+            <td>Manage</td>
+          </tr>
+        </thead>
+        <br>
+        <tbody>
+          {{#each courses}}
+          <tr>
+            <td>
+              <a href="#" class="course-link">
+                <p class="course-link-inner">
+                {{this.name}}
+                </p>
+              </a>
+            </td>
+            <td>
+              {{this.term.name}}
+            </td>
+            <td>
+              {{#if this.user_id}}
+              <a href="#" class="remove-course pure-button">Remove</a>
+              {{else}}
+              <a href="#" class="add-course pure-button">Add</a>
+              {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+      </tbody>
       </table>
     </div>
     {{/if}}

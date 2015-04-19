@@ -76,9 +76,11 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-        var result = Meteor.http.get(coursePath(cId) + "/enrollments",
-            requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment']})).content;
-        return result;
+        console.log('STAFF SERVER CALLED');
+        console.log(cId);
+        var params = requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment'] });
+        var call = Meteor.http.get(coursePath(cId) + "/enrollments", params);
+        return call.contents || [];
     },
     addCourse: function(course) {
 	var courseDB = Courses.find({'id': course.id});

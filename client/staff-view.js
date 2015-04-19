@@ -1,11 +1,11 @@
 // The Staff View Grabs All the Staff and lets you assign hours to them.
 
-Template.staff_view.created = function() {
+Template.course_staff.created = function() {
     var self = this;
     self.staffList = new ReactiveVar(['Loading...']);
-    Meteor.call('getStaff', function(err, value) {
+    Meteor.call('getStaff', Session.get("course").id, function (err, value) {
         console.log('STAFF BE GET');
-        console.log(value);
+        // console.log(value);
         if (err) {
             console.log(err);
         } else {
@@ -14,6 +14,10 @@ Template.staff_view.created = function() {
     });
 }
 
-Template.staff_view.helpers({
-
+Template.course_staff.helpers({
+    staffList: function() {
+        console.log('STAFF CALLED');
+        var data = Template.instance().staffList.get();
+        return data;
+    }
 });
