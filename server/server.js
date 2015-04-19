@@ -2,9 +2,9 @@
 // Users "collection" is created for us
 
 // Courses
-Courses = new Mongo.Collection('courses');
+var Courses = new Mongo.Collection('courses');
 
-Assignments = new Mongo.Collection('assignments');
+var Assignments = new Mongo.Collection('assignments');
 
 // Course Configurations?
 // Autograders -- Later
@@ -96,6 +96,8 @@ Meteor.methods({
         return course;
     }
 });
+
+
 
 // Serverside routes
 Router.map(function() {
