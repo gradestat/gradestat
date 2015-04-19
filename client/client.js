@@ -32,6 +32,9 @@ Template.dashboard.helpers({
     userId: function() {
         return Meteor.userId();
     },
+    course: function() {
+	return Session.get("course");
+    }
 });
 
 // MYCOURSES TEMPLATE
@@ -51,6 +54,7 @@ Template.mycourses.created = function() {
 Template.mycourses.events({
     'click .course-link': function(e) {
         Session.set("course", this);
+	Session.set("dashView", "course");
         Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
             if (err) {
                 console.log(err);
@@ -74,6 +78,15 @@ Template.mycourses.events({
     }
 });
 
+Template.course.helpers({
+    assignmentList: function() {
+        return Session.get("assignmentList");
+    },
+    course: function() {
+	return Session.get("course");
+    }
+});
+
 Template.mycourses.helpers({
     noToken: function() {
         return !Meteor.user().canvasToken;
@@ -90,9 +103,6 @@ Template.mycourses.helpers({
 //	});
 //	return teaching;
     return courses;
-    },
-    assignmentList: function() {
-        return Session.get("assignmentList");
     },
     assignment: function() {
         return Session.get("assignment");

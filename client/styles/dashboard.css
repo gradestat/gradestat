@@ -48,7 +48,8 @@
     padding-left: 8px;
     padding-right: 8px;
 }
-.course-link {
+
+.course-link, .assignment-link {
     color: #34495e;
     display: block;
     text-decoration: none;
@@ -66,4 +67,16 @@
 #course-title {
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
+}
+
+/* Course template */
+
+.course-content {
+    max-width: none;
+}
+
+#assignment-table {
+    overflow: auto;
+    max-height: 400px;
+    margin-right: 50px;
 }

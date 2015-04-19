@@ -5,10 +5,10 @@ Template.course_staff.created = function() {
     self.staffList = new ReactiveVar(['Loading...']);
     Meteor.call('getStaff', Session.get("course").id, function (err, value) {
         console.log('STAFF BE GET');
-        // console.log(value);
         if (err) {
             console.log(err);
         } else {
+	    console.log(value);
             self.staffList.set(value);
         }
     });

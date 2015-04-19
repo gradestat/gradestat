@@ -80,7 +80,7 @@ Meteor.methods({
         console.log(cId);
         var params = requestParams({'type[]': ['TaEnrollment', 'TeacherEnrollment'] });
         var call = Meteor.http.get(coursePath(cId) + "/enrollments", params);
-        return call.contents || [];
+        return call.content || [];
     },
     addCourse: function(course) {
 	var courseDB = Courses.find({'id': course.id});

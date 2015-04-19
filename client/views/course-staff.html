@@ -2,15 +2,15 @@
     <h3 class="content-subhead">Course Staff</h3>
 
     <div class="pure-g">
-      {{#each staffList}}
-        <div class="pure-u-1-4">
-          <div class="course-link-wrapper">
-            <a href="#" class="course-link">
-              {{this.name}}
-            </a>
-          </div>
-        </div>
-      {{/each}}
+      <table class="dashboard-table">
+	<tr class="table-header">
+	  Name
+	</tr>
+	{{#each staffList}}
+	<tr>
+	  {{this.name}}
+	</tr>
+	{{/each}}
+      </table>
     </div>
-
 </template>
