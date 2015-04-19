@@ -4,8 +4,7 @@ Template.course_staff.created = function() {
     var self = this;
     self.staffList = new ReactiveVar(['Loading...']);
     Meteor.call('getStaff', Session.get("course").id, function (err, value) {
-        console.log('STAFF BE GET');
-        // console.log(value);
+        console.log(value);
         if (err) {
             console.log(err);
         } else {
@@ -18,6 +17,7 @@ Template.course_staff.helpers({
     staffList: function() {
         console.log('STAFF CALLED');
         var data = Template.instance().staffList.get();
+        console.log(data);
         return data;
     }
 });
