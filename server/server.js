@@ -38,7 +38,7 @@ Meteor.methods({
         //var myCourses = Courses.find({user_id: Meteor.userId()});
         var myCourseIds = Meteor.user().courses;
         if (myCourseIds) {
-            var myCourses = Courses.find({'id' : { $in : myCourseIds}});
+            var myCourses = Courses.find({'id' : { $in : myCourseIds }});
             myCourses = myCourses.fetch();
             for (var i = 0; i < myCourses.length; i += 1) {
                 var index = findObjectByField(result, 'id', myCourses[i].id);

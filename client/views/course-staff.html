@@ -3,14 +3,18 @@
 
     <div class="pure-g">
       <table class="dashboard-table">
-	<tr class="table-header">
-	  Name
-	</tr>
-	{{#each staffList}}
-	<tr>
-	  {{this.name}}
-	</tr>
-	{{/each}}
-      </table>
+        <tr class="table-header">
+          <td></td>
+          <td>Name</td>
+          <td>Hours</td>
+        </tr>
+        {{#each staffList}}
+          <tr>
+            <td><img src="{{ this.avatar_url }}"/></td>
+            <td>{{this.name}}</td>
+            <td>0</td>
+          </tr>
+        {{/each}}
+        </table>
     </div>
 </template>
