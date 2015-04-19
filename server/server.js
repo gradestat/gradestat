@@ -35,9 +35,9 @@ Meteor.methods({
     getCourses: function() {
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':'term'})).content;
-        //var myCourses = Courses.find({user_id: Meteor.userId()});
         var myCourseIds = Meteor.user().courses;
         if (myCourseIds) {
+	    console.log(typeof myCourseIds);
             var myCourses = Courses.find({'id' : { $in : myCourseIds}});
             myCourses = myCourses.fetch();
             for (var i = 0; i < myCourses.length; i += 1) {
@@ -80,7 +80,7 @@ Meteor.methods({
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
-        Meteor.users.update({'_id':Meteor.userId()}, {$addToSet: {'courses':course.id}});
+        Meteor.users.update({'_id':Meteor.userId()}, {$addToSet: {'courses': course.id}});
         return course;
     }
 });
