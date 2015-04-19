@@ -51,14 +51,20 @@ Meteor.methods({
     getCourses: function() {
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':'term'})).content;
-        var myCourses = Courses.find({user_id: Meteor.userId()});
-        myCourses = myCourses.fetch();
-        for (var i=0; i < myCourses.length; i += 1) {
-            var index = findObjectByField(result, 'id', myCourses[i].id);
-            if (index != -1) {
-                result[index] = myCourses[i];
+        //var myCourses = Courses.find({user_id: Meteor.userId()});
+	var myCourseIds = Meteor.user().courses;
+	console.log(myCourseIds);
+	console.log(typeof( myCourseIds));
+	if (myCourseIds != undefined && myCourseIds.length > 0) {
+	    var myCourses = Courses.find({'id' : { $in : myCourseIds}});
+            myCourses = myCourses.fetch();
+            for (var i=0; i < myCourses.length; i += 1) {
+		var index = findObjectByField(result, 'id', myCourses[i].id);
+		if (index != -1) {
+                    result[index] = myCourses[i];
+		}
             }
-        }
+	}
         return result;
     },
     getAssignmentList: function(cId) {
@@ -75,7 +81,11 @@ Meteor.methods({
         return result;
     },
     addCourse: function(course) {
-        Courses.insert(course);
+	var courseDB = Courses.find({'id': course.id});
+	if (courseDB.fetch().length == 0) {
+            Courses.insert(course);
+	}
+	Meteor.users.update({'_id':Meteor.userId()}, {'courses': Meteor.user().courses ? Meteor.user().courses.push(course.id) : [course.id]});
         return course;
     }
 });

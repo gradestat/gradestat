@@ -5,8 +5,7 @@
   <div class="content">
     {{#if noToken}}
     {{> updateToken}}
-    {{/if}}
-
+    {{else}}
     <h2 class="content-subhead">My Courses</h2>
 
     <div class="pure-g">
@@ -46,6 +45,7 @@
 	{{/each}}
       </table>
     </div>
+    {{/if}}
 
     {{#if course}}
       <h2 id="course-title">
