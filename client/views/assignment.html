@@ -1,27 +1,23 @@
-<template name="course">
+<template name="assignment">
   <div class="header">
     <h1>
-      {{course.name}}
+      {{assignment.name}}
     </h1>
+    <a href="#" class="course-link">
+      Back to {{course.name}}
+    </a>
   </div>
   <div class="content dash-content">
     <div class="pure-g">
       <div class="pure-u-1-2">
 	<h3 class="content-subhead">
-	  Assignments
+	  Assignment Data
 	</h3>
-	<div id="assignment-table">
-	  <table>
-	    {{#each assignmentList}}
-	    <tr>
-	      <a href="#" class="assignment-link">{{this.name}}</a>
-	    </tr>
-	    {{/each}}
-	  </table>
-	</div>
       </div>
       <div class="pure-u-1-2">
-	{{> course_staff}}
+	<h3 class="content-subhead">
+	  Assign Graders
+	</h3>
       </div>
     </div>
   </div>
