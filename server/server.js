@@ -71,13 +71,21 @@ Meteor.methods({
     },
     getStaff: function(cId) {
         console.log('STAFF SERVER CALLED');
-        var tas = requestParams({enrollment_type:'ta',
+        var taParam = requestParams({enrollment_type:'ta',
                 'include[]': ['email', 'avatar_url'] });
-        var instructors = requestParams({enrollment_type:'teacher',
+        var instParam = requestParams({enrollment_type:'teacher',
                 'include[]': ['email', 'avatar_url'] });
-        var call = Meteor.http.get(coursePath(cId) + "/users", tas);
-        console.log(call.content.length);
-        return call.content;
+        var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
+        var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
+        var all = [].concat(tas.content, inst.content)
+        var sorted = all.sort(function(a, b) {
+            a = a.sortable_name.toLowerCase();
+            b = b.sortable_name.toLowerCase();
+            if (a > b) { return 1; }
+            if (a < b) { return -1; }
+            return 0;
+        });
+        return sorted;
     },
     addCourse: function(course) {
         var courseDB = Courses.find({'id': course.id});
