@@ -72,7 +72,7 @@ Meteor.methods({
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
-        Meteor.users.update({'_id':Meteor.userId()}, {$set: {'courses': Meteor.user().courses ? Meteor.user().courses.push(course.id) : [course.id]}});
+        Meteor.users.update({'_id':Meteor.userId()}, {$addToSet: {'courses':course.id}});
         return course;
     }
 });
