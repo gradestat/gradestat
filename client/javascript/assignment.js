@@ -26,6 +26,29 @@ Template.assignment.helpers({
 	console.log(data);
 	console.log(typeof data);
 	return data;
+    },
+    graderStats: function() {
+	var data = Template.instance().submissionList.get();
+	var stats = {};
+	var gId = 0;
+	for (var i=0; i < data.length; i += 1) {
+	    gId = data[i].grader_id;
+	    if (stats[gId]) {
+		stats[gId].count += 1;
+		stats[gId].total += data[i].score;
+		stats[gId].scores.push(data[i].score);
+	    } else {
+		stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score]};
+	    }
+	}
+	var ret = [];
+	for (grader in stats) {
+	    stats[grader].mean = stats[grader].total/stats[grader].count;
+	    stats[grader].grader_id = grader;
+	    ret.push(stats[grader]);
+	}
+	Session.set("ret", ret);
+	return ret;
     }
 });
 

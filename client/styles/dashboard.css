@@ -107,3 +107,7 @@ td {
     min-width: 400px;
     min-height: 400px;
 }
+
+p, .content-subhead {
+    letter-spacing: 1px;
+}

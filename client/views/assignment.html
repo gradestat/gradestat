@@ -16,7 +16,7 @@
 	<tr>
 	  <td>
 	    <p class="course-page-title" style="height:20px;">
-	      Due Date:
+	      Due:
 	    </p>
 	  </td>
 	  <td>
@@ -41,7 +41,7 @@
     </div>
     <div class="pure-g">
       <div id="submission-table" style="width:100%">
-	<h3 class="content-subhead" style="letter-spacing:1px;">
+	<h3 class="content-subhead">
 	  Assignments
 	</h3>
 	<table class="dashboard-table" id="course-table">
@@ -89,6 +89,14 @@
 	  </tbody>
 	</table>
       </div>
+    </div>
+    <div class="pure-g">
+      <h3 class="content-subhead">
+	Grader Analytics
+      </h3>
+      {{#each graderStats}}
+      <p>Grader {{this.grader_id}} gave an average score of {{this.mean}}</p>
+      {{/each}}
     </div>
   </div>
 </template>
