@@ -16,12 +16,36 @@
 	<tr>
 	  <td>
 	    <p class="course-page-title" style="height:20px;">
+	      Created:
+	    </p>
+	  </td>
+	  <td>
+	    <p>
+	      {{assignment.created_at}}
+	    </p>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <p class="course-page-title" style="height:20px;">
 	      Due:
 	    </p>
 	  </td>
 	  <td>
 	    <p>
 	      {{assignment.due_at}}
+	    </p>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <p class="course-page-title" style="height:20px;">
+	      Points Possible:
+	    </p>
+	  </td>
+	  <td>
+	    <p>
+	      {{assignment.points_possible}}
 	    </p>
 	  </td>
 	</tr>
@@ -94,9 +118,43 @@
       <h3 class="content-subhead">
 	Grader Analytics
       </h3>
-      {{#each graderStats}}
-      <p>Grader {{this.grader_id}} gave an average score of {{this.mean}}</p>
-      {{/each}}
+      <table class="dashboard-table" id="stat-table">
+        <thead>
+          <tr class="table-header">
+            <td>Grader</td>
+            <td>Average Score</td>
+          </tr>
+        </thead>
+        <br>
+        <tbody>
+          <tr>
+            <td>
+	      <a href="#" class="course-link">
+                <p class="course-link-inner">
+		  All
+                </p>
+	      </a>
+            </td>
+            <td>
+	      {{classMean}}
+            </td>
+          </tr>
+          {{#each graderStats}}
+          <tr>
+            <td>
+	      <a href="#" class="course-link">
+                <p class="course-link-inner">
+                  {{this.grader_id}}
+                </p>
+	      </a>
+            </td>
+            <td>
+	      {{this.mean}}
+            </td>
+          </tr>
+          {{/each}}
+	</tbody>
+      </table>
     </div>
   </div>
 </template>

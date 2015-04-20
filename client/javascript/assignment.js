@@ -29,10 +29,14 @@ Template.assignment.helpers({
     },
     graderStats: function() {
 	var data = Template.instance().submissionList.get();
+	var total = 0;
+	var count = 0;
 	var stats = {};
 	var gId = 0;
 	for (var i=0; i < data.length; i += 1) {
 	    gId = data[i].grader_id;
+	    total += data[i].score;
+	    count += 1;
 	    if (stats[gId]) {
 		stats[gId].count += 1;
 		stats[gId].total += data[i].score;
@@ -47,8 +51,12 @@ Template.assignment.helpers({
 	    stats[grader].grader_id = grader;
 	    ret.push(stats[grader]);
 	}
+	Session.set("classMean", total/count);
 	Session.set("ret", ret);
 	return ret;
+    },
+    classMean: function() {
+	return Session.get("classMean");
     }
 });
 
