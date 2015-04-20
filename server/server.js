@@ -83,6 +83,10 @@ Meteor.methods({
         });
         return sorted;
     },
+    getSubmissions: function(cId, aId) {
+	var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
+	return result.content;
+    },
     addCourse: function(course) {
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {

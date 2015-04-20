@@ -76,7 +76,7 @@
     border-bottom: 1px solid #eee;
 }
 
-/* Course template */
+/* Course Template */
 
 .dash-content {
     max-width: none;
@@ -86,4 +86,15 @@
     overflow: auto;
     max-height: 400px;
     margin-right: 50px;
+}
+
+/* Assignment Template */
+
+#submission-table {
+    overflow: auto;
+    max-height: 800px;
+}
+
+td {
+    margin-right: 10px;
 }
