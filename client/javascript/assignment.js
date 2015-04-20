@@ -21,17 +21,11 @@ Template.assignment.helpers({
     course: function() {
 	return Session.get("course");
     },
-    previewDisplay: function() {
-	return Session.get("submissionURL") ? "block" : "none";
-    },
     submissions: function() {
 	var data = Template.instance().submissionList.get();
 	console.log(data);
 	console.log(typeof data);
 	return data;
-    },
-    submissionURL: function() {
-	return Session.get("submissionURL");
     }
 });
 
@@ -45,8 +39,6 @@ Template.assignment.events({
 	} else {
 	    Session.set("submissionURL", this.html_url);
 	}	
-    },
-    'click .close-preview': function(e) {
-	Session.set("submissionURL", null);
+	window.open(Session.get("submissionURL"), "_blank").focus();
     }
 });
