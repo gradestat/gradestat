@@ -6,12 +6,18 @@
         <tr class="table-header">
           <td></td>
           <td>Name</td>
+          <td>Rode</td>
           <td>Hours</td>
         </tr>
         {{#each staffList}}
           <tr>
             <td><img src="{{ this.avatar_url }}"/></td>
-            <td>{{this.name}}</td>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                {{this.name}}
+              </p>
+            </td>
+            <td><p>{{this.enrollment_type}}4</p></td>
             <td>0</td>
           </tr>
         {{/each}}

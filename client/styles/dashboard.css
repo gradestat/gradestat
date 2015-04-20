@@ -1,3 +1,5 @@
+/* Header Styles */
+
 .help-text {
     display: none;
 }
@@ -29,6 +31,11 @@
 
 /* Courses Styles */
 
+#course-info {
+    max-width: 300px;
+    letter-spacing: 1px;
+}
+
 .dashboard-table {
     letter-spacing: 1px;
     width: 100%;
@@ -49,7 +56,7 @@
     padding-right: 8px;
 }
 
-.course-link, .assignment-link {
+.course-link, .assignment-link, .course-page-title {
     color: #34495e;
     display: block;
     text-decoration: none;
@@ -69,7 +76,7 @@
     border-bottom: 1px solid #eee;
 }
 
-/* Course template */
+/* Course Template */
 
 .dash-content {
     max-width: none;
@@ -79,4 +86,15 @@
     overflow: auto;
     max-height: 400px;
     margin-right: 50px;
+}
+
+/* Assignment Template */
+
+#submission-table {
+    overflow: auto;
+    max-height: 800px;
+}
+
+td {
+    margin-right: 10px;
 }

@@ -7,17 +7,54 @@
       Back to {{course.name}}
     </a>
   </div>
+  <br><br>
   <div class="content dash-content">
     <div class="pure-g">
-      <div class="pure-u-1-2">
-	<h3 class="content-subhead">
-	  Assignment Data
-	</h3>
-      </div>
-      <div class="pure-u-1-2">
-	<h3 class="content-subhead">
-	  Assign Graders
-	</h3>
+      <div id="submission-table" style="width:100%">
+	<table class="dashboard-table" id="course-table">
+          <thead>
+            <tr class="table-header">
+              <td>Student</td>
+              <td>Submitted</td>
+              <td>Grader</td>
+	      <td>Graded?</td>
+            </tr>
+          </thead>
+          <br>
+          <tbody>
+            {{#each submissions}}
+            <tr>
+              <td>
+		<a href="#" class="course-link">
+                  <p class="course-link-inner">
+                    {{this.user.name}}
+                  </p>
+		</a>
+              </td>
+              <td>
+		{{#if this.submitted_at}}
+		{{this.submitted_at}}
+		{{else}}
+		No Submission Time
+		{{/if}}
+              </td>
+	      <td>
+		{{#if this.grader_id}}
+		{{this.grader_id}}
+		{{else}}
+		Not Yet Graded
+		{{/if}}
+	      </td>
+              <td>
+		{{#if this.graded_at}}
+		<i class="fa fa-check-square-o"></i>
+		{{/if}}
+		<a href="#" class="pure-button">Add</a>
+              </td>
+            </tr>
+            {{/each}}
+	  </tbody>
+	</table>
       </div>
     </div>
   </div>
