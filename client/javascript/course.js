@@ -13,5 +13,10 @@ Template.course.helpers({
     },
     course: function() {
 	return Session.get("course");
+    },
+    myRole: function() {
+	var role = Session.get("course");
+	role = role.enrollments[0].type;
+	return role == "teacher" ? "Instructor" : "TA";
     }
 });

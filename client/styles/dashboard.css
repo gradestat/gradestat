@@ -1,3 +1,5 @@
+/* Header Styles */
+
 .help-text {
     display: none;
 }
@@ -29,6 +31,11 @@
 
 /* Courses Styles */
 
+#course-info {
+    max-width: 300px;
+    letter-spacing: 1px;
+}
+
 .dashboard-table {
     letter-spacing: 1px;
     width: 100%;
@@ -49,7 +56,7 @@
     padding-right: 8px;
 }
 
-.course-link, .assignment-link {
+.course-link, .assignment-link, .course-page-title {
     color: #34495e;
     display: block;
     text-decoration: none;

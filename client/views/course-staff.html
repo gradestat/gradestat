@@ -4,11 +4,25 @@
     <div class="pure-g">
       <table class="dashboard-table">
 	<tr class="table-header">
-	  Name
+	  <td>
+	    Name
+	  </td>
+	  <td>
+	    Role
+	  </td>
 	</tr>
 	{{#each staffList}}
 	<tr>
-	  {{this.name}}
+	  <td>
+	    <p class="course-page-title" style="height:20px;">
+	      {{this.name}}
+	    </p>
+	  </td>
+	  <td>
+	    <p>
+	      {{this.enrollment_type}}
+	    </p>
+	  </td>
 	</tr>
 	{{/each}}
       </table>

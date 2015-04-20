@@ -1,9 +1,9 @@
 /* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
-function requestParams(params) {
+function requestParams(p) {
     var baseQuery =  { 'per_page': '100' };
-    var qs = _.extend({}, baseQuery, params);
+    var qs = _.extend({}, baseQuery, p);
     var options = {
         headers: {
             Authorization: 'Bearer ' + Meteor.user().canvasToken
@@ -60,12 +60,20 @@ Meteor.methods({
     getStaff: function(cId) {
         console.log('STAFF SERVER CALLED');
         var taParam = requestParams({enrollment_type:'ta',
-                'include[]': ['email', 'avatar_url'] });
+				     'include[]': ['email', 'avatar_url'] });
         var instParam = requestParams({enrollment_type:'teacher',
-                'include[]': ['email', 'avatar_url'] });
+				       'include[]': ['email', 'avatar_url'] });
         var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
+	tas = tas.content;
+	for (var i=0; i < tas.length; i += 1) {
+	    tas[i].enrollment_type = "TA";
+	}
         var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
-        var all = [].concat(tas.content, inst.content)
+	inst = inst.content;
+	for (var i=0; i < inst.length; i += 1) {
+	    inst[i].enrollment_type = "Instructor";
+	}
+        var all = [].concat(tas, inst)
         var sorted = all.sort(function(a, b) {
             a = a.sortable_name.toLowerCase();
             b = b.sortable_name.toLowerCase();
