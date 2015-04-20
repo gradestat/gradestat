@@ -1,4 +1,9 @@
 <template name="assignment">
+  <div id="submission-preview" style="display:{{previewDisplay}}">
+    <a href="#" class="close-preview">x</a>
+    <iframe src="{{submissionURL}}">
+    </iframe>
+  </div>
   <div class="header">
     <h1>
       {{assignment.name}}
@@ -7,10 +12,43 @@
       Back to {{course.name}}
     </a>
   </div>
-  <br><br>
   <div class="content dash-content">
+    <div class="pure-g" id="course-info">
+      <h3 class="content-subhead">
+	Assignment Info
+      </h3>
+      <table class="dashboard-table">
+	<tr>
+	  <td>
+	    <p class="course-page-title" style="height:20px;">
+	      Due Date:
+	    </p>
+	  </td>
+	  <td>
+	    <p>
+	      {{assignment.due_at}}
+	    </p>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <p class="course-page-title" style="height:20px;">
+	      Ungraded:
+	    </p>
+	  </td>
+	  <td>
+	    <p>
+	      {{assignment.needs_grading_count}}
+	    </p>
+	  </td>
+	</tr>
+      </table>
+    </div>
     <div class="pure-g">
       <div id="submission-table" style="width:100%">
+	<h3 class="content-subhead" style="letter-spacing:1px;">
+	  Assignments
+	</h3>
 	<table class="dashboard-table" id="course-table">
           <thead>
             <tr class="table-header">
@@ -49,7 +87,7 @@
 		{{#if this.graded_at}}
 		<i class="fa fa-check-square-o"></i>
 		{{/if}}
-		<a href="#" class="pure-button">Add</a>
+		<a href="#" class="grade-submission pure-button">Grade</a>
               </td>
             </tr>
             {{/each}}
