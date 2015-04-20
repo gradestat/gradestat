@@ -92,9 +92,22 @@
 
 #submission-table {
     overflow: auto;
-    max-height: 800px;
+    max-height: 600px;
 }
 
 td {
     margin-right: 10px;
+}
+
+#submission-preview {
+    z-index: 1000;
+    display: none;
+    position: fixed;
+    margin: auto;
+    min-width: 400px;
+    min-height: 400px;
+}
+
+p, .content-subhead {
+    letter-spacing: 1px;
 }
