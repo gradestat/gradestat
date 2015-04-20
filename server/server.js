@@ -31,6 +31,32 @@ function coursePath(id) {
     return canvasBaseURL + "/courses"+ (id ? "/" + id : '');
 }
 
+function canvasStaff(cId) {
+    var taParam = requestParams({enrollment_type:'ta',
+                    'include[]': ['email', 'avatar_url'] });
+    var instParam = requestParams({enrollment_type:'teacher',
+                    'include[]': ['email', 'avatar_url'] });
+    var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
+    tas = tas.content;
+    for (var i=0; i < tas.length; i += 1) {
+        tas[i].enrollment_type = "TA";
+    }
+    var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
+    inst = inst.content;
+    for (var i=0; i < inst.length; i += 1) {
+        inst[i].enrollment_type = "Instructor";
+    }
+    var all = [].concat(tas, inst)
+    var sorted = all.sort(function(a, b) {
+        a = a.sortable_name.toLowerCase();
+        b = b.sortable_name.toLowerCase();
+        if (a > b) { return 1; }
+        if (a < b) { return -1; }
+        return 0;
+    });
+    return sorted;
+}
+
 Meteor.methods({
     getCourses: function() {
         var result = Meteor.http.get(coursePath(),
@@ -56,42 +82,26 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
         return result;
     },
-    getStaff: function(cId) {
-        console.log('STAFF SERVER CALLED');
-        var taParam = requestParams({enrollment_type:'ta',
-				     'include[]': ['email', 'avatar_url'] });
-        var instParam = requestParams({enrollment_type:'teacher',
-				       'include[]': ['email', 'avatar_url'] });
-        var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
-	tas = tas.content;
-	for (var i=0; i < tas.length; i += 1) {
-	    tas[i].enrollment_type = "TA";
-	}
-        var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
-	inst = inst.content;
-	for (var i=0; i < inst.length; i += 1) {
-	    inst[i].enrollment_type = "Instructor";
-	}
-        var all = [].concat(tas, inst)
-        var sorted = all.sort(function(a, b) {
-            a = a.sortable_name.toLowerCase();
-            b = b.sortable_name.toLowerCase();
-            if (a > b) { return 1; }
-            if (a < b) { return -1; }
-            return 0;
-        });
-        return sorted;
-    },
+    getStaff: canvasStaff,
     getSubmissions: function(cId, aId) {
-	var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
-	return result.content;
+        var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
+        return result.content;
     },
     addCourse: function(course) {
+        console.log('ADDING COURSE');
+        console.log(course);
+        
+        var course = {
+            id: course.id,
+            bcourses: course,
+            staff: []
+        };
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
-        Meteor.users.update({'_id':Meteor.userId()}, {$addToSet: {'courses': course.id}});
+        Meteor.users.update({ '_id':Meteor.userId() },
+                            { $addToSet: { 'courses': course.id } });
         return course;
     }
 });
