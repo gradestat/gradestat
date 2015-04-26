@@ -3,28 +3,24 @@
 
     <div class="pure-g">
       <table class="dashboard-table">
-	<tr class="table-header">
-	  <td>
-	    Name
-	  </td>
-	  <td>
-	    Role
-	  </td>
-	</tr>
-	{{#each staffList}}
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      {{this.name}}
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{this.enrollment_type}}
-	    </p>
-	  </td>
-	</tr>
-	{{/each}}
-      </table>
+        <tr class="table-header">
+          <td></td>
+          <td>Name</td>
+          <td>Rode</td>
+          <td>Hours</td>
+        </tr>
+        {{#each staffList}}
+          <tr>
+            <td><img src="{{ this.avatar_url }}"/></td>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                {{this.name}}
+              </p>
+            </td>
+            <td><p>{{this.enrollment_type}}</p></td>
+            <td>0</td>
+          </tr>
+        {{/each}}
+        </table>
     </div>
 </template>
