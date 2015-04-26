@@ -46,12 +46,12 @@ Template.assignment.helpers({
 	    }
 	}
 	var ret = [];
+	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;})});
 	for (grader in stats) {
 	    stats[grader].mean = stats[grader].total/stats[grader].count;
 	    stats[grader].grader_id = grader;
 	    ret.push(stats[grader]);
 	}
-	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;})});
 	Session.set("classMean", total/count);
 	Session.set("ret", ret);
 	return ret;
