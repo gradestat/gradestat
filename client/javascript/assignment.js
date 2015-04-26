@@ -51,6 +51,7 @@ Template.assignment.helpers({
 	    stats[grader].grader_id = grader;
 	    ret.push(stats[grader]);
 	}
+	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;})});
 	Session.set("classMean", total/count);
 	Session.set("ret", ret);
 	return ret;
@@ -60,43 +61,56 @@ Template.assignment.helpers({
     },
     boxChart: function() {
 	return {
-            chart: {
-		plotBackgroundColor: null,
-		plotBorderWidth: null,
-		plotShadow: false
-            },
-            title: {
-		text: "Reader Grade Distributions"
-            },
-            tooltip: {
-		pointFormat: '<b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-		pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-			enabled: true,
-			format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-			style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-			},
-			connectorColor: 'silver'
-                    }
+	    chart: {
+		type: 'boxplot',
+		backgroundColor: "#BBBBBB"
+	    },
+	    title: {
+		text: 'Reader Grade Distributions'
+	    },
+	    legend: {
+		enabled: false
+	    },
+	    xAxis: {
+		categories: Session.get("ret").map(function(x) {return x.grader_id;}),
+		title: {
+		    text: 'Grader'
 		}
-            },
-            series: [{
-		type: 'pie',
-		name: 'genre',
-		data: [
-                    ['Adventure',   45.0],
-                    ['Action',       26.8],
-                    ['Ecchi',   12.8],
-                    ['Comedy',    8.5],
-                    ['Yuri',     6.2]
-		]
-            }]
+	    },
+	    yAxis: {
+		title: {
+		    text: 'Points Awarded'
+		},
+		plotLines: [{
+		    value: Session.get("classMean"),
+		    color: 'red',
+		    width: 1,
+		    label: {
+			text: 'Assignment Mean: ' + Session.get("classMean"),
+			align: 'center',
+			style: {
+			    color: 'gray'
+			}
+		    }
+		}]
+	    },
+	    series: [{
+		name: 'Submissions',
+		data: Session.get("ret").map(function(x) {return x.scores;}),
+		// [
+		//     [760, 801, 848, 895, 965],
+		//     [733, 853, 939, 980, 1080],
+		//     [714, 762, 817, 870, 918],
+		//     [724, 802, 806, 871, 950],
+		//     [834, 836, 864, 882, 910]
+		// ],
+		tooltip: {
+		    headerFormat: '<em>Submission {point.key}</em><br/>'
+		}
+	    }]
+
 	};
+
     }
 });
 

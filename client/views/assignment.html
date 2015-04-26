@@ -127,18 +127,6 @@
         </thead>
         <br>
         <tbody>
-          <tr>
-            <td>
-	      <a href="#" class="course-link">
-                <p class="course-link-inner">
-		  All
-                </p>
-	      </a>
-            </td>
-            <td>
-	      {{classMean}}
-            </td>
-          </tr>
           {{#each graderStats}}
           <tr>
             <td>
@@ -156,8 +144,8 @@
 	</tbody>
       </table>
     </div>
-    <div class="pure-g">
-      {{> highchartsHelper chartId="readerAverages" chartWidth="400px" chartHeight="400px" chartObject=boxChart}}
+    <div class="pure-g" style="letter-spacing:1px;">
+      {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
     </div>
   </div>
 </template>
