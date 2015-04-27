@@ -1,6 +1,6 @@
 // Assignment Template
 
-function medianX(medianArr) {
+medianX = function(medianArr) {
     count = medianArr.length;
     median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
     return median;
@@ -21,6 +21,65 @@ computeStats = function(values) {
     ret[0] = values[0];
     ret[4] = values[values.length-1];
     return ret;
+}
+
+setBoxData = function(ret) {
+    Session.set("boxData", {
+	chart: {
+	    type: 'boxplot',
+	    backgroundColor: "#BBBBBB"
+	},
+	title: {
+	    text: 'Reader Grade Distributions'
+	},
+	legend: {
+	    enabled: false
+	},
+	xAxis: {
+	    categories: ret.map(function(x) {return x.grader_id;}),
+	    title: {
+		text: 'Grader'
+	    }
+	},
+	yAxis: {
+	    title: {
+		text: 'Points Awarded'
+	    },
+	    plotLines: [{
+		value: Session.get("classMean"),
+		color: 'red',
+		width: 1,
+		label: {
+		    text: 'Assignment Mean: ' + Session.get("classMean"),
+		    align: 'center',
+		    style: {
+			color: 'gray'
+		    }
+		}
+	    }]
+	},
+	series: [{
+	    name: 'Grade Distribution',
+	    data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
+	    tooltip: {
+		headerFormat: '<b>{point.key} Grades</b><br/>'
+	    }
+	}, {
+	    name: 'Mean',
+            color: Highcharts.getOptions().colors[0],
+            type: 'scatter',
+            data: ret.map(function(x) {return [ret.indexOf(x),x.scores.reduce(function(a,b){return a+b}, 0)/x.scores.length]}),
+            marker: {
+                fillColor: '#254A6E',
+                lineWidth: 1,
+                lineColor: Highcharts.getOptions().colors[0]
+            },
+            tooltip: {
+                pointFormat: 'Value: {point.y}'
+            }
+	}]
+    });
+    $('#readerAverages').highcharts(Session.get("boxData"));
 }
 
 Template.assignment.created = function() {
@@ -78,50 +137,7 @@ Template.assignment.helpers({
 	}
 	Session.set("classMean", total/count);
 	Session.set("ret", ret);
-	Session.set("boxData", {
-	    chart: {
-		type: 'boxplot',
-		backgroundColor: "#BBBBBB"
-	    },
-	    title: {
-		text: 'Reader Grade Distributions'
-	    },
-	    legend: {
-		enabled: false
-	    },
-	    xAxis: {
-		categories: ret.map(function(x) {return x.grader_id;}),
-		title: {
-		    text: 'Grader'
-		}
-	    },
-	    yAxis: {
-		title: {
-		    text: 'Points Awarded'
-		},
-		plotLines: [{
-		    value: Session.get("classMean"),
-		    color: 'red',
-		    width: 1,
-		    label: {
-			text: 'Assignment Mean: ' + Session.get("classMean"),
-			align: 'center',
-			style: {
-			    color: 'gray'
-			}
-		    }
-		}]
-	    },
-	    series: [{
-		name: 'Grades',
-		data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
-		tooltip: {
-		    headerFormat: '<b>{point.key} Grades</b><br/>'
-		}
-	    }]
-
-	});
-	$('#readerAverages').highcharts(Session.get("boxData"));
+	setBoxData(ret);
 	return ret;
     },
     classMean: function() {
@@ -129,6 +145,9 @@ Template.assignment.helpers({
     },
     boxChart: function() {
 	return Session.get("boxData");
+    },
+    histoChart: function() {
+	return Session.get("histoData");
     }
 });
 
