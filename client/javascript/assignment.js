@@ -1,5 +1,28 @@
 // Assignment Template
 
+function medianX(medianArr) {
+    count = medianArr.length;
+    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
+    return median;
+}
+
+computeStats = function(values) {
+    var ret = [0,0,0,0,0];
+    values.sort(function(a,b) {return a-b;});
+    q1Arr = (values.length % 2 == 0) ? values.slice(0, (values.length / 2) + 1) : values.slice(0, Math.floor(values.length / 2) + 1);
+    q2Arr =  values;
+    q3Arr = (values.length % 2 == 0) ? values.slice( (values.length/2) - 1, values.length) : values.slice(Math.ceil(values.length / 2) - 1, values.length);
+    medianX(q1Arr);
+    ret[1]=median;
+    medianX(q2Arr);
+    ret[2]=median;
+    medianX(q3Arr);
+    ret[3]=median;
+    ret[0] = values[0];
+    ret[4] = values[values.length-1];
+    return ret;
+}
+
 Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
@@ -91,17 +114,10 @@ Template.assignment.helpers({
 		}]
 	    },
 	    series: [{
-		name: 'Submissions',
-		data: [[1,2,3,4,5],[5,6,7,8,9]],//Session.get("ret").map(function(x) {return x.scores;}),
-		// [
-		//     [760, 801, 848, 895, 965],
-		//     [733, 853, 939, 980, 1080],
-		//     [714, 762, 817, 870, 918],
-		//     [724, 802, 806, 871, 950],
-		//     [834, 836, 864, 882, 910]
-		// ],
+		name: 'Grades',
+		data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
 		tooltip: {
-		    headerFormat: '<em>Submission {point.key}</em><br/>'
+		    headerFormat: '<b>{point.key} Grades</b><br/>'
 		}
 	    }]
 
