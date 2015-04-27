@@ -92,7 +92,7 @@
 
 #submission-table {
     overflow: auto;
-    max-height: 600px;
+    max-height: 200px;
 }
 
 td {

@@ -64,54 +64,56 @@
       </table>
     </div>
     <div class="pure-g">
-      <div id="submission-table" style="width:100%">
+      <div style="width:100%">
 	<h3 class="content-subhead">
 	  Assignments
 	</h3>
-	<table class="dashboard-table" id="course-table">
-          <thead>
-            <tr class="table-header">
-              <td>Student</td>
-              <td>Submitted</td>
-              <td>Grader</td>
-	      <td>Graded?</td>
-            </tr>
-          </thead>
-          <br>
-          <tbody>
-            {{#each submissions}}
-            <tr>
-              <td>
-		<a href="#" class="course-link">
-                  <p class="course-link-inner">
-                    {{this.user.name}}
-                  </p>
-		</a>
-              </td>
-              <td>
-		{{#if this.submitted_at}}
-		{{this.submitted_at}}
-		{{else}}
-		No Submission Time
-		{{/if}}
-              </td>
-	      <td>
-		{{#if this.grader_id}}
-		{{this.grader_id}}
-		{{else}}
-		Not Yet Graded
-		{{/if}}
-	      </td>
-              <td>
-		{{#if this.graded_at}}
-		<i class="fa fa-check-square-o"></i>
-		{{/if}}
-		<a href="#" class="grade-submission pure-button">Grade</a>
-              </td>
-            </tr>
-            {{/each}}
-	  </tbody>
-	</table>
+	<div id="submission-table">
+	  <table class="dashboard-table">
+            <thead>
+              <tr class="table-header">
+		<td>Student</td>
+		<td>Submitted</td>
+		<td>Grader</td>
+		<td>Graded?</td>
+              </tr>
+            </thead>
+            <br>
+            <tbody>
+              {{#each submissions}}
+              <tr>
+		<td>
+		  <a href="#" class="course-link">
+                    <p class="course-link-inner">
+                      {{this.user.name}}
+                    </p>
+		  </a>
+		</td>
+		<td>
+		  {{#if this.submitted_at}}
+		  {{this.submitted_at}}
+		  {{else}}
+		  No Submission Time
+		  {{/if}}
+		</td>
+		<td>
+		  {{#if this.grader_id}}
+		  {{this.grader_id}}
+		  {{else}}
+		  Not Yet Graded
+		  {{/if}}
+		</td>
+		<td>
+		  {{#if this.graded_at}}
+		  <i class="fa fa-check-square-o"></i>
+		  {{/if}}
+		  <a href="#" class="grade-submission pure-button">Grade</a>
+		</td>
+              </tr>
+              {{/each}}
+	    </tbody>
+	  </table>
+	</div>
       </div>
     </div>
     <div class="pure-g">
