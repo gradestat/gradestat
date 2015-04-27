@@ -1,8 +1,6 @@
 // Assignment Template
 
 toggleBands = function(chart) {
-    console.log('index');
-
     var i = chart.xAxis[0].plotLinesAndBands.length;
     if (i > 0) {
         while (i--) {
@@ -14,14 +12,12 @@ toggleBands = function(chart) {
             plotBands: plotBands
         });
     }
-
 }
 
 average = function(data){
   var sum = data.reduce(function(sum, value){
     return sum + value;
   }, 0);
- 
   var avg = sum / data.length;
   return avg;
 }
@@ -134,8 +130,10 @@ setHistoData = function(ret) {
 	},
 	tooltip: {
             borderWidth: 1,
-            formatter: function () {
-		return '<b>Range:</b><br/> ' + this.x + '<br/>' +
+            pointFormatter: function () {
+		lower = this.x - bucketMargin;
+		upper = this.x + bucketMargin;
+		return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
                     '<b>Count:</b> ' + this.y;
             }
 	},
@@ -158,6 +156,9 @@ setHistoData = function(ret) {
             }
 	},
 	xAxis: {
+            title: {
+		text: 'Point Buckets'
+            },
             lineColor: '#999',
             tickColor: '#ccc',
             plotLines: plotLines,
@@ -165,7 +166,7 @@ setHistoData = function(ret) {
 	},
 	yAxis: {
             title: {
-		text: ''
+		text: 'Count'
             },
             gridLineColor: '#e9e9e9',
             tickWidth: 1,
@@ -182,7 +183,14 @@ setHistoData = function(ret) {
             borderColor: '#666',
             pointPadding: 0,
             groupPadding: 0,
-            color: '#e3e3e3'
+            color: '#e3e3e3',
+	    tooltip: {
+		pointFormatter: function () {
+		    lower = this.x - bucketMargin;
+		    upper = this.x + bucketMargin;
+		    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
+		}
+	    }
 	}, {
             type: 'area',
             name: 'Sigma Bands',
@@ -218,7 +226,7 @@ setBoxData = function(ret) {
     Session.set("boxData", {
 	chart: {
 	    type: 'boxplot',
-	    backgroundColor: "#BBBBBB"
+	    backgroundColor: 'white'//"#BBBBBB"
 	},
 	title: {
 	    text: 'Reader Grade Distributions'
