@@ -26,7 +26,6 @@ computeStats = function(values) {
 Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
-    self.boxData = new ReactiveVar();
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
 	console.log(value);
 	if (err) {

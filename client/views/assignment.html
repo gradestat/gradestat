@@ -123,6 +123,7 @@
           <tr class="table-header">
             <td>Grader</td>
             <td>Average Score</td>
+	    <td>Number Graded</td>
           </tr>
         </thead>
         <br>
@@ -139,11 +140,15 @@
             <td>
 	      {{this.mean}}
             </td>
+	    <td>
+	      {{this.scores.length}}
+	    </td>
           </tr>
           {{/each}}
 	</tbody>
       </table>
     </div>
+    <br>
     <div class="pure-g" style="letter-spacing:1px;">
       {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
     </div>
