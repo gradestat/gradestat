@@ -1,8 +1,9 @@
-// Assignments Template
+// Assignment Template
 
 Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
+    self.boxData = new ReactiveVar();
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
 	console.log(value);
 	if (err) {
@@ -29,6 +30,7 @@ Template.assignment.helpers({
     },
     graderStats: function() {
 	var data = Template.instance().submissionList.get();
+	console.log("DATA: " + data);
 	var total = 0;
 	var count = 0;
 	var stats = {};
@@ -54,13 +56,7 @@ Template.assignment.helpers({
 	}
 	Session.set("classMean", total/count);
 	Session.set("ret", ret);
-	return ret;
-    },
-    classMean: function() {
-	return Session.get("classMean");
-    },
-    boxChart: function() {
-	return {
+	Session.set("boxData", {
 	    chart: {
 		type: 'boxplot',
 		backgroundColor: "#BBBBBB"
@@ -72,7 +68,7 @@ Template.assignment.helpers({
 		enabled: false
 	    },
 	    xAxis: {
-		categories: Session.get("ret").map(function(x) {return x.grader_id;}),
+		categories: ret.map(function(x) {return x.grader_id;}),
 		title: {
 		    text: 'Grader'
 		}
@@ -96,7 +92,7 @@ Template.assignment.helpers({
 	    },
 	    series: [{
 		name: 'Submissions',
-		data: Session.get("ret").map(function(x) {return x.scores;}),
+		data: [[1,2,3,4,5],[5,6,7,8,9]],//Session.get("ret").map(function(x) {return x.scores;}),
 		// [
 		//     [760, 801, 848, 895, 965],
 		//     [733, 853, 939, 980, 1080],
@@ -109,8 +105,15 @@ Template.assignment.helpers({
 		}
 	    }]
 
-	};
-
+	});
+	$('#readerAverages').highcharts(Session.get("boxData"));
+	return ret;
+    },
+    classMean: function() {
+	return Session.get("classMean");
+    },
+    boxChart: function() {
+	return Session.get("boxData");
     }
 });
 
