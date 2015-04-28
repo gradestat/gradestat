@@ -161,14 +161,54 @@
       {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
     </div>
     <br>
+    <h3 class="content-subhead">
+      Grade Statistics
+    </h3>
     <div class="pure-g" style="letter-spacing:1px;">
-      <h3 class="content-subhead">
-	Grade Statistics
-      </h3>
-      <br>
-      <h4>Median: </h4><p>{{median}}</p><br>
-      <h4>Mean: {{mean}}</h4><br>
-      <h4>Standard Deviation: {{standardDeviation}}</h4>
+      <div class="pure-u-1-2">
+	<table class="dashboard-table">
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Median:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{median}}
+	      </p>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Mean:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{mean}}
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+      <div class="pure-u-1-2">
+	<table class="dashboard-table">
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Standard Deviation:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{standardDeviation}}
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+      </div>
     </div>
     <div class="pure-g" style="letter-spacing:1px;">
       {{> highchartsHelper chartId="gradeHistogram" chartWidth="100%" chartHeight="100%" chartObject=histoChart}}

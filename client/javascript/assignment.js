@@ -182,7 +182,7 @@ setHistoData = function(ret) {
             endOnTick: false,
 	},
 	series: [{
-            name: 'Sample Distribution',
+            name: 'Submission Samples',
             data: buckets,
             pointRange: bucketSize,
             borderWidth: .5,
