@@ -5,6 +5,7 @@ Template.mycourses.created = function() {
     self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
         if (err) {
+	    console.log("AHA");
             console.log(err);
         } else {
             self.courseInfo.set(value);
