@@ -59,7 +59,6 @@ function canvasStaff(cId) {
 
 Meteor.methods({
     getCourses: function() {
-	console.log("AHAHAHAH");
 	if (Meteor.user().canvasToken) {
             var result = Meteor.http.get(coursePath(),
 					 requestParams({'include[]':'term'})).content;

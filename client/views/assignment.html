@@ -8,60 +8,66 @@
     </a>
   </div>
   <div class="content dash-content">
+    <h3 class="content-subhead">
+      Assignment Info
+    </h3>
     <div class="pure-g" id="course-info">
-      <h3 class="content-subhead">
-	Assignment Info
-      </h3>
-      <table class="dashboard-table">
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      Created:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{assignment.created_at}}
-	    </p>
-	  </td>
-	</tr>
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      Due:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{assignment.due_at}}
-	    </p>
-	  </td>
-	</tr>
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      Points Possible:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{assignment.points_possible}}
-	    </p>
-	  </td>
-	</tr>
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      Ungraded:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{assignment.needs_grading_count}}
-	    </p>
-	  </td>
-	</tr>
-      </table>
+      <div class="pure-u-1-2">
+	<table class="dashboard-table">
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Created:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{assignment.created_at}}
+	      </p>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Due:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{assignment.due_at}}
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+      <div class="pure-u-1-2">
+	<table class="dashboard-table">
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Points Possible:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{assignment.points_possible}}
+	      </p>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Ungraded:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{assignment.needs_grading_count}}
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+      </div>
     </div>
     <div class="pure-g">
       <div style="width:100%">
@@ -155,6 +161,15 @@
       {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
     </div>
     <br>
+    <div class="pure-g" style="letter-spacing:1px;">
+      <h3 class="content-subhead">
+	Grade Statistics
+      </h3>
+      <br>
+      <h4>Median: </h4><p>{{median}}</p><br>
+      <h4>Mean: {{mean}}</h4><br>
+      <h4>Standard Deviation: {{standardDeviation}}</h4>
+    </div>
     <div class="pure-g" style="letter-spacing:1px;">
       {{> highchartsHelper chartId="gradeHistogram" chartWidth="100%" chartHeight="100%" chartObject=histoChart}}
     </div>

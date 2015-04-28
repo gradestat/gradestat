@@ -1,5 +1,11 @@
 // Assignment Template
 
+medianX = function(medianArr) {
+    count = medianArr.length;
+    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
+    return median;
+}
+
 toggleBands = function(chart) {
     var i = chart.xAxis[0].plotLinesAndBands.length;
     if (i > 0) {
@@ -34,6 +40,9 @@ setHistoData = function(ret) {
 	return sqr;
     });
     var sd = Math.sqrt(average(squareDiffs));
+    Session.set("standardDeviation", sd);
+    Session.set("mean", mean);
+    Session.set("median", medianX(scores));
     var plotLines = [{
 	"value": mean,
         "width": 2,
@@ -72,8 +81,6 @@ setHistoData = function(ret) {
 	    }
 	});
     }
-    console.log(mean);
-    console.log(plotLines);
     var plotBands = [{
 	"from": -1*sd + mean,
         "to": 1*sd + mean,
@@ -96,7 +103,6 @@ setHistoData = function(ret) {
     var curBucket = bucketMargin;
     var buckets = [];
     var count = 0;
-    console.log("SD: " + sd);
     while (curBucket < maxPoints) {
 	count = 0;
 	for (var i = 0; i < scores.length; i += 1) {
@@ -197,12 +203,6 @@ setHistoData = function(ret) {
 	}]
     });
     $('#gradeHistogram').highcharts(Session.get("histoData"));
-}
-
-medianX = function(medianArr) {
-    count = medianArr.length;
-    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
-    return median;
 }
 
 computeStats = function(values) {
@@ -336,6 +336,15 @@ Template.assignment.helpers({
     },
     histoChart: function() {
 	return Session.get("histoData");
+    },
+    mean: function() {
+	return Session.get("mean");
+    },
+    standardDeviation: function() {
+	return Session.get("standardDeviation");
+    },
+    median: function() {
+	return Session.get("standardDeviation");
     }
 });
 
