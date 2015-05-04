@@ -93,17 +93,13 @@ Meteor.methods({
     addCourse: function(course) {
         console.log('ADDING COURSE');
         console.log(course);
-        
-        var course = {
-            id: course.id,
-            bcourses: course,
-            staff: []
-        };
+
+        course.staff = [];
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
-        Meteor.users.update({ '_id':Meteor.userId() },
+        Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
         return course;
     }

@@ -357,7 +357,7 @@ Template.assignment.events({
 	    Session.set("submissionURL", this.preview_url);
 	} else {
 	    Session.set("submissionURL", this.html_url);
-	}	
+	}
 	window.open(Session.get("submissionURL"), "_blank").focus();
     }
 });
