@@ -38,12 +38,12 @@ function canvasStaff(cId) {
                     'include[]': ['email', 'avatar_url'] });
     var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
     tas = tas.content;
-    for (var i=0; i < tas.length; i += 1) {
+    for (var i = 0; i < tas.length; i += 1) {
         tas[i].enrollment_type = "TA";
     }
     var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
     inst = inst.content;
-    for (var i=0; i < inst.length; i += 1) {
+    for (var i = 0; i < inst.length; i += 1) {
         inst[i].enrollment_type = "Instructor";
     }
     var all = [].concat(tas, inst)
@@ -96,14 +96,34 @@ Meteor.methods({
         }
         return result;
     },
+    setCanvasId: function(userId, token) {
+        var canvasUser = Meteor.http.get(canvasBaseURL + "/users/self?access_token=" + token);
+        canvasUser = JSON.parse(canvasUser.content);
+        Meteor.users.update({_id: userId},
+            { $set: {"canvasId": canvasUser["id"]} });
+
+        return Meteor.users.find({_id: userId}).canvasId;
+    },
     addCourse: function(course) {
-        course.staff = [];
+        console.log('ADDING COURSE');
+        console.log(course);
+
+        course.staff = canvasStaff(course.id);
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
+        var course_staff = Courses.find({"id":course.id});
+        course_staff = course_staff.fetch().staff;
+        var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
+
+        my_info.user_id = Meteor.userId();
+        var other_info = course_staff.filter(function(o) {return o.id != Meteor.user().canvasId;});
+        other_info.push(my_info);
+        Courses.update({ 'id': course.id },
+            { $set: { 'staff': other_info } });
         return course;
     }
 });
