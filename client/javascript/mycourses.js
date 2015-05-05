@@ -5,7 +5,6 @@ Template.mycourses.created = function() {
     self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
         if (err) {
-	    console.log("AHA");
             console.log(err);
         } else {
             self.courseInfo.set(value);
@@ -52,7 +51,12 @@ Template.mycourses.helpers({
 //	    }
 //	});
 //	return teaching;
-    return courses;
+	for (var i=0; i < courses.length; i += 1) {
+	    if (courses[i].bcourses) {
+		courses[i] = courses[i].bcourses;
+	    }
+	}
+	return courses;
     },
     assignment: function() {
         return Session.get("assignment");

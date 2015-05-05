@@ -59,23 +59,23 @@ function canvasStaff(cId) {
 
 Meteor.methods({
     getCourses: function() {
-        if (Meteor.user().canvasToken) {
+	if (Meteor.user().canvasToken) {
             var result = Meteor.http.get(coursePath(),
-            requestParams({'include[]':'term'})).content;
+					 requestParams({'include[]':'term'})).content;
             var myCourseIds = Meteor.user().courses;
             if (myCourseIds) {
-                var myCourses = Courses.find({'id' : { $in : myCourseIds }});
-                myCourses = myCourses.fetch();
-                for (var i = 0; i < myCourses.length; i += 1) {
+		var myCourses = Courses.find({'id' : { $in : myCourseIds }});
+		myCourses = myCourses.fetch();
+		for (var i = 0; i < myCourses.length; i += 1) {
                     var index = findObjectByField(result, 'id', myCourses[i].id);
                     if (index != -1) {
-                        result[index] = myCourses[i];
+			result[index] = myCourses[i];
                     }
-                }
+		}
             }
             return result;
-	}
-	return null;
+        }
+        return null;
     },
     getAssignmentList: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
@@ -88,22 +88,25 @@ Meteor.methods({
     getStaff: canvasStaff,
     getSubmissions: function(cId, aId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
-        return result.content;
+        result = result.content;
+        var staff = canvasStaff(cId);
+        for (var i=0; i < result.length; i += 1) {
+            console.log(result[i].grader_id);
+            grader = staff.filter(function(e) {return e.id == result[i].grader_id;})[0];
+            console.log(grader);
+            result[i].grader_name = grader.name;
+        }
+        return result;
     },
     addCourse: function(course) {
         console.log('ADDING COURSE');
         console.log(course);
-
-        var course = {
-            id: course.id,
-            bcourses: course,
-            staff: []
-        };
+        course.staff = [];
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
-        Meteor.users.update({ '_id':Meteor.userId() },
+        Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
         return course;
     }
