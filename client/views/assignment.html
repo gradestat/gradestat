@@ -9,7 +9,7 @@
   </div>
   <div class="content dash-content">
     <h3 class="content-subhead">
-      Assignment Info
+      <a href="#" class="toggle-link" id="info-toggle" onclick="$('#course-info').toggle();">+</a> Assignment Info
     </h3>
     <div class="pure-g" id="course-info">
       <div class="pure-u-1-2">
@@ -72,7 +72,7 @@
     <div class="pure-g">
       <div style="width:100%">
 	<h3 class="content-subhead">
-	  Assignments
+	  <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
 	</h3>
 	<div id="submission-table">
 	  <table class="dashboard-table">
@@ -104,7 +104,7 @@
 		</td>
 		<td>
 		  {{#if this.grader_id}}
-		  {{this.grader_id}}
+		  {{this.grader_name}}
 		  {{else}}
 		  Not Yet Graded
 		  {{/if}}
@@ -124,7 +124,7 @@
     </div>
     <div class="pure-g">
       <h3 class="content-subhead">
-	Grader Analytics
+	<a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#stat-table').toggle();$('#readerAverages').toggle();">+</a> Grader Analytics
       </h3>
       <table class="dashboard-table" id="stat-table">
         <thead>
@@ -141,7 +141,7 @@
             <td>
 	      <a href="#" class="course-link">
                 <p class="course-link-inner">
-                  {{this.grader_id}}
+                  {{this.grader_name}}
                 </p>
 	      </a>
             </td>
@@ -156,15 +156,15 @@
 	</tbody>
       </table>
     </div>
-    <br>
     <div class="pure-g" style="letter-spacing:1px;">
+      <br>
       {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
+      <br>
     </div>
-    <br>
     <h3 class="content-subhead">
-      Grade Statistics
+      <a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#grade-stats').toggle();$('#gradeHistogram').toggle();">+</a> Grade Statistics
     </h3>
-    <div class="pure-g" style="letter-spacing:1px;">
+    <div class="pure-g" style="letter-spacing:1px;" id="grade-stats">
       <div class="pure-u-1-2">
 	<table class="dashboard-table">
 	  <tr>

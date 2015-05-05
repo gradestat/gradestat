@@ -88,7 +88,15 @@ Meteor.methods({
     getStaff: canvasStaff,
     getSubmissions: function(cId, aId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
-        return result.content;
+	result = result.content;
+	var staff = canvasStaff(cId);
+	for (var i=0; i < result.length; i += 1) {
+	    console.log(result[i].grader_id);
+	    grader = staff.filter(function(e) {return e.id == result[i].grader_id;})[0];
+	    console.log(grader);
+	    result[i].grader_name = grader.name;
+	}
+        return result;
     },
     addCourse: function(course) {
         console.log('ADDING COURSE');

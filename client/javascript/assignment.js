@@ -292,13 +292,10 @@ Template.assignment.helpers({
     },
     submissions: function() {
 	var data = Template.instance().submissionList.get();
-	console.log(data);
-	console.log(typeof data);
 	return data;
     },
     graderStats: function() {
 	var data = Template.instance().submissionList.get();
-	console.log("DATA: " + data);
 	var total = 0;
 	var count = 0;
 	var stats = {};
@@ -312,11 +309,11 @@ Template.assignment.helpers({
 		stats[gId].total += data[i].score;
 		stats[gId].scores.push(data[i].score);
 	    } else {
-		stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score]};
+		stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
 	    }
 	}
 	var ret = [];
-	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;})});
+	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
 	for (grader in stats) {
 	    stats[grader].mean = stats[grader].total/stats[grader].count;
 	    stats[grader].grader_id = grader;

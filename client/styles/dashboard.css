@@ -110,3 +110,7 @@ td {
 p, .content-subhead {
     letter-spacing: 1px;
 }
+
+.toggle-link {
+    text-decoration: none;
+}
