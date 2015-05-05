@@ -62,6 +62,7 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(),
                 requestParams({'include[]':'term'})).content;
         var myCourseIds = Meteor.user().courses;
+        console.log(myCourseIds);
         if (myCourseIds) {
             var myCourses = Courses.find({'id' : { $in : myCourseIds }});
             myCourses = myCourses.fetch();
@@ -90,7 +91,7 @@ Meteor.methods({
     addCourse: function(course) {
         console.log('ADDING COURSE');
         console.log(course);
-        
+
         var course = {
             id: course.id,
             bcourses: course,
