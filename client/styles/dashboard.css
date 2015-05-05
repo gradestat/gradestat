@@ -114,3 +114,7 @@ p, .content-subhead {
 .toggle-link {
     text-decoration: none;
 }
+
+.assignment-title {
+    margin-top: 20px;
+}

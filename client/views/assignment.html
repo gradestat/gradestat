@@ -8,7 +8,7 @@
     </a>
   </div>
   <div class="content dash-content">
-    <h3 class="content-subhead">
+    <h3 class="assignment-title content-subhead">
       <a href="#" class="toggle-link" id="info-toggle" onclick="$('#course-info').toggle();">+</a> Assignment Info
     </h3>
     <div class="pure-g" id="course-info">
@@ -71,7 +71,7 @@
     </div>
     <div class="pure-g">
       <div style="width:100%">
-	<h3 class="content-subhead">
+	<h3 class="assignment-title content-subhead">
 	  <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
 	</h3>
 	<div id="submission-table">
@@ -123,7 +123,7 @@
       </div>
     </div>
     <div class="pure-g">
-      <h3 class="content-subhead">
+      <h3 class="assignment-title content-subhead">
 	<a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#stat-table').toggle();$('#readerAverages').toggle();">+</a> Grader Analytics
       </h3>
       <table class="dashboard-table" id="stat-table">
@@ -157,11 +157,9 @@
       </table>
     </div>
     <div class="pure-g" style="letter-spacing:1px;">
-      <br>
       {{> highchartsHelper chartId="readerAverages" chartWidth="100%" chartHeight="100%" chartObject=boxChart}}
-      <br>
     </div>
-    <h3 class="content-subhead">
+    <h3 class="assignment-title content-subhead">
       <a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#grade-stats').toggle();$('#gradeHistogram').toggle();">+</a> Grade Statistics
     </h3>
     <div class="pure-g" style="letter-spacing:1px;" id="grade-stats">
