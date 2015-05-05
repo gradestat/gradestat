@@ -71,8 +71,9 @@ Meteor.methods({
                     if (index != -1) {
                         result[index] = myCourses[i];
                     }
+                }
+                return result;
             }
-            return result;
         }
         return null;
     },
