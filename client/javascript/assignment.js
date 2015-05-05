@@ -1,8 +1,12 @@
 // Assignment Template
 
-toggleBands = function(chart) {
-    console.log('index');
+medianX = function(medianArr) {
+    count = medianArr.length;
+    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
+    return median;
+}
 
+toggleBands = function(chart) {
     var i = chart.xAxis[0].plotLinesAndBands.length;
     if (i > 0) {
         while (i--) {
@@ -14,14 +18,12 @@ toggleBands = function(chart) {
             plotBands: plotBands
         });
     }
-
 }
 
 average = function(data){
   var sum = data.reduce(function(sum, value){
     return sum + value;
   }, 0);
- 
   var avg = sum / data.length;
   return avg;
 }
@@ -38,6 +40,9 @@ setHistoData = function(ret) {
 	return sqr;
     });
     var sd = Math.sqrt(average(squareDiffs));
+    Session.set("standardDeviation", sd);
+    Session.set("mean", mean);
+    Session.set("median", medianX(scores));
     var plotLines = [{
 	"value": mean,
         "width": 2,
@@ -76,8 +81,6 @@ setHistoData = function(ret) {
 	    }
 	});
     }
-    console.log(mean);
-    console.log(plotLines);
     var plotBands = [{
 	"from": -1*sd + mean,
         "to": 1*sd + mean,
@@ -100,7 +103,6 @@ setHistoData = function(ret) {
     var curBucket = bucketMargin;
     var buckets = [];
     var count = 0;
-    console.log("SD: " + sd);
     while (curBucket < maxPoints) {
 	count = 0;
 	for (var i = 0; i < scores.length; i += 1) {
@@ -134,8 +136,10 @@ setHistoData = function(ret) {
 	},
 	tooltip: {
             borderWidth: 1,
-            formatter: function () {
-		return '<b>Range:</b><br/> ' + this.x + '<br/>' +
+            pointFormatter: function () {
+		lower = this.x - bucketMargin;
+		upper = this.x + bucketMargin;
+		return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
                     '<b>Count:</b> ' + this.y;
             }
 	},
@@ -158,6 +162,9 @@ setHistoData = function(ret) {
             }
 	},
 	xAxis: {
+            title: {
+		text: 'Point Buckets'
+            },
             lineColor: '#999',
             tickColor: '#ccc',
             plotLines: plotLines,
@@ -165,7 +172,7 @@ setHistoData = function(ret) {
 	},
 	yAxis: {
             title: {
-		text: ''
+		text: 'Count'
             },
             gridLineColor: '#e9e9e9',
             tickWidth: 1,
@@ -175,26 +182,27 @@ setHistoData = function(ret) {
             endOnTick: false,
 	},
 	series: [{
-            name: 'Sample Distribution',
+            name: 'Submission Samples',
             data: buckets,
             pointRange: bucketSize,
             borderWidth: .5,
             borderColor: '#666',
             pointPadding: 0,
             groupPadding: 0,
-            color: '#e3e3e3'
+            color: '#e3e3e3',
+	    tooltip: {
+		pointFormatter: function () {
+		    lower = this.x - bucketMargin;
+		    upper = this.x + bucketMargin;
+		    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
+		}
+	    }
 	}, {
             type: 'area',
             name: 'Sigma Bands',
 	}]
     });
     $('#gradeHistogram').highcharts(Session.get("histoData"));
-}
-
-medianX = function(medianArr) {
-    count = medianArr.length;
-    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
-    return median;
 }
 
 computeStats = function(values) {
@@ -218,7 +226,7 @@ setBoxData = function(ret) {
     Session.set("boxData", {
 	chart: {
 	    type: 'boxplot',
-	    backgroundColor: "#BBBBBB"
+	    backgroundColor: 'white'//"#BBBBBB"
 	},
 	title: {
 	    text: 'Reader Grade Distributions'
@@ -328,6 +336,15 @@ Template.assignment.helpers({
     },
     histoChart: function() {
 	return Session.get("histoData");
+    },
+    mean: function() {
+	return Session.get("mean");
+    },
+    standardDeviation: function() {
+	return Session.get("standardDeviation");
+    },
+    median: function() {
+	return Session.get("standardDeviation");
     }
 });
 

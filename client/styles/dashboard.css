@@ -32,7 +32,6 @@
 /* Courses Styles */
 
 #course-info {
-    max-width: 300px;
     letter-spacing: 1px;
 }
 
@@ -92,7 +91,7 @@
 
 #submission-table {
     overflow: auto;
-    max-height: 600px;
+    max-height: 400px;
 }
 
 td {

@@ -59,21 +59,23 @@ function canvasStaff(cId) {
 
 Meteor.methods({
     getCourses: function() {
-        var result = Meteor.http.get(coursePath(),
-                requestParams({'include[]':'term'})).content;
-        var myCourseIds = Meteor.user().courses;
-        console.log(myCourseIds);
-        if (myCourseIds) {
-            var myCourses = Courses.find({'id' : { $in : myCourseIds }});
-            myCourses = myCourses.fetch();
-            for (var i = 0; i < myCourses.length; i += 1) {
-                var index = findObjectByField(result, 'id', myCourses[i].id);
-                if (index != -1) {
-                    result[index] = myCourses[i];
+        if (Meteor.user().canvasToken) {
+            var result = Meteor.http.get(coursePath(),
+            requestParams({'include[]':'term'})).content;
+            var myCourseIds = Meteor.user().courses;
+            if (myCourseIds) {
+                var myCourses = Courses.find({'id' : { $in : myCourseIds }});
+                myCourses = myCourses.fetch();
+                for (var i = 0; i < myCourses.length; i += 1) {
+                    var index = findObjectByField(result, 'id', myCourses[i].id);
+                    if (index != -1) {
+                        result[index] = myCourses[i];
+                    }
                 }
             }
-        }
-        return result;
+            return result;
+	}
+	return null;
     },
     getAssignmentList: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
