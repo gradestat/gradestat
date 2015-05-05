@@ -85,7 +85,16 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
         return result;
     },
-    getStaff: canvasStaff,
+    getStaff: function(cId) {
+	console.log("IN GET STAFF");
+	var course = Courses.find({"id": cId}).fetch();
+	console.log("FROM DB: " + course);
+	if (course.length == 0) {
+	    console.log("CANVAS STAFF CALL");
+	    return canvasStaff(cId);
+	}
+	return course[0].staff;
+    },
     getSubmissions: function(cId, aId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
 	result = result.content;
@@ -107,9 +116,6 @@ Meteor.methods({
 	return Meteor.users.find({_id: userId}).canvasId;
     },
     addCourse: function(course) {
-        console.log('ADDING COURSE');
-        console.log(course);
-
         course.staff = canvasStaff(course.id);
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
@@ -118,11 +124,8 @@ Meteor.methods({
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
 	var course_staff = Courses.find({"id":course.id});
-	course_staff = course_staff.fetch().staff;
+	course_staff = course_staff.fetch()[0].staff;
 	var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
-
-	console.log(my_info);
-	console.log(Meteor.userId());
 
 	my_info.user_id = Meteor.userId();
 	var other_info = course_staff.filter(function(o) {return o.id != Meteor.user().canvasId;});
