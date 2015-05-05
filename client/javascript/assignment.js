@@ -235,7 +235,7 @@ setBoxData = function(ret) {
 	    enabled: false
 	},
 	xAxis: {
-	    categories: ret.map(function(x) {return x.grader_id;}),
+	    categories: ret.map(function(x) {return x.grader_name;}),
 	    title: {
 		text: 'Grader'
 	    }
