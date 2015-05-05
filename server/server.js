@@ -59,19 +59,18 @@ function canvasStaff(cId) {
 
 Meteor.methods({
     getCourses: function() {
-	if (Meteor.user().canvasToken) {
+        if (Meteor.user().canvasToken) {
             var result = Meteor.http.get(coursePath(),
-					 requestParams({'include[]':'term'})).content;
+            requestParams({'include[]':'term'})).content;
             var myCourseIds = Meteor.user().courses;
             if (myCourseIds) {
-		var myCourses = Courses.find({'id' : { $in : myCourseIds }});
-		myCourses = myCourses.fetch();
-		for (var i = 0; i < myCourses.length; i += 1) {
+                var myCourses = Courses.find({'id' : { $in : myCourseIds }});
+                myCourses = myCourses.fetch();
+                for (var i = 0; i < myCourses.length; i += 1) {
                     var index = findObjectByField(result, 'id', myCourses[i].id);
                     if (index != -1) {
-			result[index] = myCourses[i];
+                        result[index] = myCourses[i];
                     }
-		}
             }
             return result;
         }
@@ -90,17 +89,13 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
         result = result.content;
         var staff = canvasStaff(cId);
-        for (var i=0; i < result.length; i += 1) {
-            console.log(result[i].grader_id);
+        for (var i = 0; i < result.length; i += 1) {
             grader = staff.filter(function(e) {return e.id == result[i].grader_id;})[0];
-            console.log(grader);
             result[i].grader_name = grader.name;
         }
         return result;
     },
     addCourse: function(course) {
-        console.log('ADDING COURSE');
-        console.log(course);
         course.staff = [];
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
