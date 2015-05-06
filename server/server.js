@@ -181,6 +181,7 @@ Meteor.methods({
         var assignment = Meteor.http.get(coursePath(cId) + "/assignments/" + aId, requestParams()).content;
         var submissions = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
         submissions = submissions.content;
+        staff = normalizeHours(staff); // Turn Hours to %
         var readerTasks = assignReaders(staff, submissions, params.pct, params.num);
         console.log(readerTasks);
         assignment.cached_submissions = submissions;
@@ -188,7 +189,7 @@ Meteor.methods({
         var existingAssignment = Assignments.findOne({'id': aId});
         if (existingAssignment) {
             Assignments.update({'id' : aId},
-                            {$set: assignment });
+                                {$set: assignment });
         } else {
             Assignments.insert(assignment)
         }
@@ -219,9 +220,10 @@ function isNotCurrentCanvasUser(user) { return !isCurrentCanvasUser; }
 // This is a helpful function to convert from a reader's hours to the percentage
 // of work they need to do.
 function normalizeHours(readers) {
-    var totalHours = 0;
-    readers.forEach(function(r) { totaHours += r.hours });
-    return readers.map(function(r) { return r.workload = (r.hours / totalHours) });
+    var total = 0;
+    readers.forEach(function(r) { total += parseInt(r.hours) });
+    readers.forEach(function(r) { r.percent = (r.hours / total) });
+    return readers;
 }
 
 // Return a new array of readers where each reader has a list of assignments
@@ -232,8 +234,10 @@ function normalizeHours(readers) {
 // maxValidate limits the percentage to a set value
 function assignReaders(readers, assignments, validate, maxValidate) {
     var numAssignAll = calculateNumValidations(assignments.length, validate, maxValidate);
+    console.log('TO ASSIGN ALL: ', numAssignAll);
+    // Make a copy of the readers adding an assignments array.
     var readerTaks = readers.map(function(r) {
-        return { name: r.name, id: r.id, workload: r.workload, assignments: [] };
+        return _.extend({}, r, {assignments: [] });
     });
     var assigments = clone(assigments); // Immutability.
     // TODO: Update once assignment object exists.
@@ -242,21 +246,29 @@ function assignReaders(readers, assignments, validate, maxValidate) {
 
     var assignIdx = 0;
     while (numAssignAll) {
+        console.log('NUM ASSIGNMENTS:  ', assignments.length);
+        console.log('TO ASSIGN: ', numAssignAll);
         assignIdx = Math.floor(Math.random() * assignments.length);
+        console.log('ASSIGNMENT IDX: ', assignIdx);
         readerTaks.forEach(function(reader) {
-            reader.assignments.push(assignments[assignIdx]);
+            if (reader.hours && reader.percent) {
+                reader.assignments.push(assignments[assignIdx]);
+            }
         });
         assignments.splice(assignIdx, 1); // remove item.
         numAssignAll--;
     }
+    console.log('Assignment....');
     readerTaks.forEach(function(reader) {
-        var readerNum = Math.round(reader.workload * numToAssign);
+        var readerNum = Math.round(reader.percent * numToAssign);
+        console.log('Assigning ', readerNum, ' assignments to ', reader.name);
         while (readerNum) {
             assignIdx = Math.floor(Math.random() * assignments.length);
             reader.assignments.push(assignments[assignIdx]);
             assignments.splice(assignIdx, 1); // remove item.
             readerNum--;
         }
+        console.log('Num Assignments Left:  ', assigments);
     });
     // Cleanup remaining leftover assigments (rounding) if any.
     while (assignments.length) {
@@ -272,14 +284,13 @@ function assignReaders(readers, assignments, validate, maxValidate) {
 
 
 function calculateNumValidations(numAsssignments, validPct, maxValid) {
+    validPct = parseFloat(validPct);
+    maxValid = parseInt(maxValid);
     var numAssignAll = 0;
-    if (validPct > 1) {
-        validPct /= 100;
-    }
+    if (validPct > 1) { validPct /= 100; }
 
     numAssignAll = numAsssignments * validPct;
-
-    numAssignAll = Math.max(validPct, maxValid, numAsssignments);
+    numAssignAll = Math.min(numAssignAll, maxValid, numAsssignments);
 
     return Math.round(numAssignAll);
 }
