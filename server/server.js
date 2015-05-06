@@ -102,7 +102,9 @@ Meteor.methods({
         // Check if the assignment has readers assigned:
         var assignment = Assignments.findOne({id: parseInt(aId) });
         if (assignment) {
+            console.log('FOUND IN DB');
             data = assignment.cached_submissions;
+            console.log(data);
         } else {
             var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
             data = result.content;
@@ -110,10 +112,12 @@ Meteor.methods({
         
         var staff = canvasStaff(cId);
         for (var i = 0; i < data.length; i += 1) {
-            grader = staff.filter(function(e) {return e.id == data[i].grader_id; })[0];
-            data[i].grader_name = grader.name;
+            grader = staff.filter(function(e) {return e.id == data[i].grader_id; });
+            if (grader && grader[0] && grader[0].name) {
+                data[i].grader_name = grader[0].name;
+            }
         }
-        return result;
+        return data;
     },
     setCanvasId: function(userId, token) {
         // FIXME -- url

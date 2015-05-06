@@ -268,6 +268,7 @@ Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
+        console.log('GET SUBMISSIONS');
         console.log(value);
         if (err) {
             console.log(err);
@@ -308,6 +309,8 @@ Template.assignment.helpers({
     },
     graderStats: function() {
         var data = Template.instance().submissionList.get();
+        console.log('STATS');
+        console.log(data);
         var total = 0;
         var count = 0;
         var stats = {};
@@ -321,7 +324,10 @@ Template.assignment.helpers({
                 stats[gId].total += data[i].score;
                 stats[gId].scores.push(data[i].score);
             } else {
-                stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
+                stats[gId] = { count: 1,
+                        total: data[i].score,
+                        scores: [data[i].score],
+                        grader_name: data[i].grader_name };
             }
         }
         var ret = [];
