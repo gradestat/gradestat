@@ -2,7 +2,7 @@
 
 medianX = function(medianArr) {
     count = medianArr.length;
-    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2:medianArr[Math.floor(medianArr.length / 2)];
+    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2 : medianArr[Math.floor(medianArr.length / 2)];
     return median;
 }
 
@@ -20,31 +20,30 @@ toggleBands = function(chart) {
     }
 }
 
-average = function(data){
-  var sum = data.reduce(function(sum, value){
-    return sum + value;
-  }, 0);
-  var avg = sum / data.length;
-  return avg;
+average = function(data) {
+    var sum = data.reduce(function(sum, value){
+        return sum + value;
+    }, 0);
+    var avg = sum / data.length;
+    return avg;
 }
 
 setHistoData = function(ret) {
-    console.log("HISTODATA");
     var all = $.grep(ret, function(o) {return o.grader_id == "All";});
     all = all[0];
     var mean = all.mean;
     var scores = all.scores;
-    var squareDiffs = scores.map(function(value){
-  var diff = value - mean;
-  var sqr = diff * diff;
-  return sqr;
+    var squareDiffs = scores.map(function(value) {
+        var diff = value - mean;
+        var sqr = diff * diff;
+        return sqr;
     });
     var sd = Math.sqrt(average(squareDiffs));
     Session.set("standardDeviation", sd);
     Session.set("mean", mean);
     Session.set("median", medianX(scores));
     var plotLines = [{
-  "value": mean,
+        "value": mean,
         "width": 2,
         "color": "#666",
         "zIndex": 10,
@@ -56,15 +55,15 @@ setHistoData = function(ret) {
             "x": 0,
             "y": -5,
             "style": {
-    "fontSize": "10px"
+                "fontSize": "10px"
             }
-  }
+        }
     }];
     var sigmas = [-3,-2,-1,1,2,3];
     for (s in sigmas) {
-  console.log(s);
-  plotLines.push({
-      "value": mean + sd*sigmas[s],
+        console.log(s);
+        plotLines.push({
+            "value": mean + sd*sigmas[s],
             "width": 1,
             "color": "#999",
             "dashStyle": "Dash",
@@ -376,12 +375,12 @@ Template.assignment.events({
             pct: pctConstraint,
             num: numConstraint
         }
-        $('.assignconf').html('<img src="/client/loading_spinner.gif" />');
+        $('.assignconf').html('<img src="/client/views/loading_spinner.gif" />');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
 
             } else {
-                $('.assignconf').html('<h5>Success!</h5>');
+                $('.assignconf').html('<h4>Success!</h4>');
             }
         })
     }

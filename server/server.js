@@ -186,6 +186,8 @@ Meteor.methods({
         // Returns an object with TASKS, VALIDATIONS and SUBMISSIONMAP
         var tasks = assignReaders(staff, submissions, params.pct, params.num);
 
+        // Store this in the DB since it's easy.
+        assignment.submissions_map = tasks.submissionMap;
         assignment.cached_submissions = submissions;
         // Map Each Submission to the person it is assigned to:
         assignment.cached_submissions.forEach(function(subm) {
@@ -269,7 +271,10 @@ function assignReaders(readers, submissions, validate, maxValidate) {
             }
         });
         validations.push(subm);
-        submissionIDMap[subm.id] = 'Everyone';
+        submissionIDMap[subm.id] = {
+            id: 0,
+            name: 'Everyone'
+        };
         submissions.splice(submIdx, 1); // remove item.
         numAssignAll--;
     }
@@ -282,7 +287,8 @@ function assignReaders(readers, submissions, validate, maxValidate) {
             if (!subm) { break; }
             
             reader.assignments.push(subm);
-            submissionIDMap[subm.id] = reader.id;
+            submissionIDMap[subm.id] = {
+                id: reader.id, name: reader.name };
             submissions.splice(submIdx, 1); // remove item.
             readerNum--;
         }
