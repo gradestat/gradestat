@@ -18,9 +18,18 @@
               </p>
             </td>
             <td><p>{{this.enrollment_type}}</p></td>
-            <td>0</td>
+            <td>
+              {{#if isInDB}}
+                Woot.
+              {{else}}
+                0
+              {{/if}}
+            </td>
           </tr>
         {{/each}}
         </table>
     </div>
+    {{#if  isInDB}}
+      Form Submit Here.
+    {{/if}}
 </template>

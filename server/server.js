@@ -58,6 +58,11 @@ function canvasStaff(cId) {
 }
 
 Meteor.methods({
+    courseInDB: function(cId) {
+        cId = parseInt(cId);
+        var data = Courses.find({ 'id' : cId }).fetch()
+        return data !== [];
+    },
     getCourses: function() {
         if (Meteor.user().canvasToken) {
             var result = Meteor.http.get(coursePath(),
@@ -105,9 +110,6 @@ Meteor.methods({
         return Meteor.users.find({_id: userId}).canvasId;
     },
     addCourse: function(course) {
-        console.log('ADDING COURSE');
-        console.log(course);
-
         course.staff = canvasStaff(course.id);
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {

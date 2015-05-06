@@ -15,7 +15,7 @@ Template.mycourses.created = function() {
 Template.mycourses.events({
     'click .course-link': function(e) {
         Session.set("course", this);
-	Session.set("dashView", "course");
+        Session.set("dashView", "course");
         Meteor.call('getAssignmentList', Session.get("course").id, function (err, value) {
             if (err) {
                 console.log(err);
@@ -45,18 +45,12 @@ Template.mycourses.helpers({
     },
     courses: function() {
         var courses = Template.instance().courseInfo.get();
-//	var teaching = courses.filter(function(el) {
-//	    if (el.enrollments[0].type == "teacher" || el.enrollments[0].type == "ta") {
-//		return el;
-//	    }
-//	});
-//	return teaching;
-	for (var i=0; i < courses.length; i += 1) {
-	    if (courses[i].bcourses) {
-		courses[i] = courses[i].bcourses;
-	    }
-	}
-	return courses;
+        for (var i = 0; i < courses.length; i += 1) {
+            if (courses[i].bcourses) {
+                courses[i] = courses[i].bcourses;
+            }
+        }
+        return courses;
     },
     assignment: function() {
         return Session.get("assignment");

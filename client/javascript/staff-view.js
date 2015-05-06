@@ -8,17 +8,28 @@ Template.course_staff.created = function() {
         if (err) {
             console.log(err);
         } else {
-	    console.log(value);
             self.staffList.set(value);
+        }
+    });
+    
+    self.isInDB = new ReactiveVar(['Loading...']);
+    Meteor.call('courseInDB', Session.get("course").id, function (err, value) {
+        console.log(value);
+        if (err) {
+            console.log(err);
+        } else {
+            self.isInDB.set(value);
         }
     });
 }
 
 Template.course_staff.helpers({
+    isInDB: function() {
+        var data = Template.instance().isInDB.get();
+        return data;
+    },
     staffList: function() {
-        console.log('STAFF CALLED');
         var data = Template.instance().staffList.get();
-        console.log(data);
         return data;
     }
 });
