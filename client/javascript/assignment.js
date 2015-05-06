@@ -61,7 +61,6 @@ setHistoData = function(ret) {
     }];
     var sigmas = [-3,-2,-1,1,2,3];
     for (s in sigmas) {
-        console.log(s);
         plotLines.push({
             "value": mean + sd*sigmas[s],
             "width": 1,
@@ -375,7 +374,7 @@ Template.assignment.events({
             pct: pctConstraint,
             num: numConstraint
         }
-        $('.assignconf').html('<img src="/client/views/loading_spinner.gif" />');
+        $('.assignconf').html('<img src="/loading_spinner.gif" />');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
 

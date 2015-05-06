@@ -98,16 +98,25 @@ Meteor.methods({
         return course[0].staff;
     },
     getSubmissions: function(cId, aId) {
-        var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
-        result = result.content;
+        var data;
+        // Check if the assignment has readers assigned:
+        var assignment = Assignments.findOne({id: parseInt(aId) });
+        if (assignment) {
+            data = assignment.cached_submissions;
+        } else {
+            var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
+            data = result.content;
+        }
+        
         var staff = canvasStaff(cId);
-        for (var i = 0; i < result.length; i += 1) {
-            grader = staff.filter(function(e) {return e.id == result[i].grader_id;})[0];
-            result[i].grader_name = grader.name;
+        for (var i = 0; i < data.length; i += 1) {
+            grader = staff.filter(function(e) {return e.id == data[i].grader_id; })[0];
+            data[i].grader_name = grader.name;
         }
         return result;
     },
     setCanvasId: function(userId, token) {
+        // FIXME -- url
         var canvasUser = Meteor.http.get(canvasBaseURL + "/users/self?access_token=" + token);
         canvasUser = JSON.parse(canvasUser.content);
         Meteor.users.update({_id: userId},
@@ -193,7 +202,8 @@ Meteor.methods({
         assignment.cached_submissions.forEach(function(subm) {
             var id = subm.id;
             if (tasks.submissionMap[id]) {
-                subm.assigned_to_grade = tasks.submissionMap[id];
+                subm.assigned_to_grade_id = tasks.submissionMap[id].id;
+                subm.assigned_to_grade_name = tasks.submissionMap[id].name;
             } else {
                 console.log('Uh oh! Assignment not found!!');
                 console.log(subm);
@@ -272,7 +282,7 @@ function assignReaders(readers, submissions, validate, maxValidate) {
         });
         validations.push(subm);
         submissionIDMap[subm.id] = {
-            id: 0,
+            id: '1', // We need something that is truthy but not a valid id.
             name: 'Everyone'
         };
         submissions.splice(submIdx, 1); // remove item.
