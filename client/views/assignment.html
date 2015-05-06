@@ -1,8 +1,6 @@
 <template name="assignment">
   <div class="header">
-    <h1>
-      {{assignment.name}}
-    </h1>
+    <h1>{{assignment.name}}</h1>
     <a href="#" class="course-link">
       Back to {{course.name}}
     </a>
@@ -43,45 +41,89 @@
       <div class="pure-u-1-2">
         <table class="dashboard-table">
           <tr>
-      <td>
-        <p class="course-page-title" style="height:20px;">
-    Points Possible:
-        </p>
-      </td>
-      <td>
-        <p>
-    {{assignment.points_possible}}
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p class="course-page-title" style="height:20px;">
-    Ungraded:
-        </p>
-      </td>
-      <td>
-        <p>
-    {{assignment.needs_grading_count}}
-        </p>
-      </td>
-    </tr>
-  </table>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Points Possible:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.points_possible}}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Ungraded:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.needs_grading_count}}
+              </p>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
+
+    <!-- ASSIGN READERS TAKS -->
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <h3 class="assignment-title content-subhead">
+          <a href="#" class="toggle-link" id="info-toggle" onclick="$('#reader-assignments').toggle();">+</a> Assign Readers
+        </h3>
+        <div class="pure-g" id="reader-assignments" style="display:none;">
+          <div class="pure-u-1-1">
+            <table class="dashboard-table">
+              <tr>
+                <td>
+                  <p class="course-page-title" style="height:20px;">
+                    Precent Assignments to Validate
+                  </p>
+                </td>
+                <td>
+                  <input type="number" class="pct-validate" value="3">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="course-page-title" style="height:20px;">
+                    Max Assignments to overlap
+                  </p>
+                </td>
+                <td>
+                  <input type="number" class="pct-validate" value="3">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button class="pure-button pure-button-primary" id="doAssignment">
+                    Assign Readers
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="pure-g">
       <div style="width:100%">
-  <h3 class="assignment-title content-subhead">
-    <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
-  </h3>
-  <div id="submission-table" style="display:none;">
-    <table class="dashboard-table">
+        <h3 class="assignment-title content-subhead">
+          <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
+        </h3>
+        <div id="submission-table" style="display:none;">
+          <table class="dashboard-table">
             <thead>
               <tr class="table-header">
-    <td>Student</td>
-    <td>Submitted</td>
-    <td>Grader</td>
-    <td>Graded?</td>
+                <td>Student</td>
+                <td>Submitted</td>
+                <td>Grader</td>
+                <td>Graded?</td>
               </tr>
             </thead>
             <br>
