@@ -182,16 +182,28 @@ Meteor.methods({
         var submissions = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
         submissions = submissions.content;
         staff = normalizeHours(staff); // Turn Hours to %
-        var readerTasks = assignReaders(staff, submissions, params.pct, params.num);
+        // Assign to readers and return the validations assignments
+        // Returns an object with TASKS, VALIDATIONS and SUBMISSIONMAP
+        var tasks = assignReaders(staff, submissions, params.pct, params.num);
 
         assignment.cached_submissions = submissions;
-        assignment.reader_taks = readerTasks;
+        // Map Each Submission to the person it is assigned to:
+        assignment.cached_submissions.forEach(function(subm) {
+            var id = subm.id;
+            if (tasks.submissionMap[id]) {
+                subm.assigned_to_grade = tasks.submissionMap[id];
+            } else {
+                console.log('Uh oh! Assignment not found!!');
+                console.log(subm);
+            }
+        })
+        assignment.reader_taks = tasks.tasks;
+        assignment.validations = tasks.validations;
         var existingAssignment = Assignments.findOne({'id': aId});
         if (existingAssignment) {
-            Assignments.update({'id' : aId},
-                                {$set: assignment });
+            Assignments.update({ 'id' : aId }, { $set: assignment });
         } else {
-            Assignments.insert(assignment)
+            Assignments.insert(assignment);
         }
 
         return true;
@@ -232,50 +244,61 @@ function normalizeHours(readers) {
 // percentage of the work
 // Validate determines the overlap in assignments to all readers, as a %
 // maxValidate limits the percentage to a set value
-function assignReaders(readers, assignments, validate, maxValidate) {
-    var numAssignAll = calculateNumValidations(assignments.length, validate, maxValidate);
+function assignReaders(readers, submissions, validate, maxValidate) {
+    var numAssignAll = calculateNumValidations(submissions.length, validate, maxValidate);
     // Make a copy of the readers adding an assignments array.
     var readerTaks = readers.map(function(r) {
         return _.extend({}, r, {assignments: [] });
     });
-    var assigments = clone(assigments); // Immutability.
+    var submissions = clone(submissions); // Immutability.
     // TODO: Update once assignment object exists.
     // Respresents assignments that need to be divided up by reader
-    var numToAssign = assignments.length - numAssignAll;
+    var numToAssign = submissions.length - numAssignAll;
 
+    // Map Submission.id to reader.id for easy retrevial later.
+    var submissionIDMap = {};
     // These assignments get assigned to every reader and stored separately.
     var validations = []
     var assignIdx = 0;
     while (numAssignAll) {
-        assignIdx = Math.floor(Math.random() * assignments.length);
+        submIdx = Math.floor(Math.random() * submissions.length);
+        var subm = submissions[submIdx];submissions[submIdx];
         readerTaks.forEach(function(reader) {
             if (reader.hours && reader.percent) {
-                reader.assignments.push(assignments[assignIdx]);
+                reader.assignments.push(subm);
             }
         });
-        validations.push(assignments[assignIdx])
-        assignments.splice(assignIdx, 1); // remove item.
+        validations.push(subm);
+        submissionIDMap[subm.id] = 'Everyone';
+        submissions.splice(submIdx, 1); // remove item.
         numAssignAll--;
     }
     readerTaks.forEach(function(reader) {
         var readerNum = Math.round(reader.percent * numToAssign);
         while (readerNum) {
-            assignIdx = Math.floor(Math.random() * assignments.length);
-            reader.assignments.push(assignments[assignIdx]);
-            assignments.splice(assignIdx, 1); // remove item.
+            submIdx = Math.floor(Math.random() * submissions.length);
+            var subm = submissions[submIdx];
+            // sometimes undefined is added to a reader array
+            if (!subm) { break; }
+            
+            reader.assignments.push(subm);
+            submissionIDMap[subm.id] = reader.id;
+            submissions.splice(submIdx, 1); // remove item.
             readerNum--;
         }
     });
     // Cleanup remaining leftover assigments (rounding) if any.
-    while (assignments.length) {
+    while (submissions.length) {
         readerTaks.some(function(reader) {
-            reader.assingmnets.push(assingmnets.pop());
+            reader.assingmnets.push(submissions.pop());
             // .some stops on true values, but we should stop only at 0.
-            return !assingmnets.length;
+            return !submissions.length;
         });
     }
 
-    return {tasks: readerTaks, validations: validations};
+    return { tasks: readerTaks,
+             validations: validations,
+             submissionMap: submissionIDMap };
 }
 
 

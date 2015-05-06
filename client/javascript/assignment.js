@@ -70,29 +70,29 @@ setHistoData = function(ret) {
             "dashStyle": "Dash",
             "zIndex": 10,
             "label": {
-    "text": sigmas[s].toString() + "s",
-    "rotation": 0,
-    "align": "center",
-    "x": 0,
-    "y": -5,
-    "style": {
-        "fontSize": "10px"
-    }
-      }
-  });
+                "text": sigmas[s].toString() + "s",
+                "rotation": 0,
+                "align": "center",
+                "x": 0,
+                "y": -5,
+                "style": {
+                    "fontSize": "10px"
+                }
+            }
+        });
     }
     var plotBands = [{
-  "from": -1*sd + mean,
+        "from": -1*sd + mean,
         "to": 1*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-  "from": -2*sd + mean,
+        "from": -2*sd + mean,
         "to": 2*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-  "from": -3*sd + mean,
+        "from": -3*sd + mean,
         "to": 3*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
@@ -104,104 +104,104 @@ setHistoData = function(ret) {
     var buckets = [];
     var count = 0;
     while (curBucket < maxPoints) {
-  count = 0;
-  for (var i = 0; i < scores.length; i += 1) {
-      if (scores[i] >= curBucket - bucketMargin && scores[i] < curBucket + bucketMargin) {
-    count += 1;
-      }
-  }
-  buckets.push([curBucket, count]);
-  curBucket += bucketSize;
+        count = 0;
+        for (var i = 0; i < scores.length; i += 1) {
+            if (scores[i] >= curBucket - bucketMargin && scores[i] < curBucket + bucketMargin) {
+                count += 1;
+            }
+        }
+        buckets.push([curBucket, count]);
+        curBucket += bucketSize;
     }
     count = 0;
     for (var j = 0; j < scores.length; j += 1) {
-  if (scores[j] == maxPoints) {
-      count += 1;
-  }
+        if (scores[j] == maxPoints) {
+            count += 1;
+        }
     }
     buckets[buckets.length-1][1] += count;
-    console.log(buckets);
     Session.set("histoData", {
-  chart: {
+        chart: {
             type: 'column',
             alignTicks: false,
             marginTop: 25,
             showAxes: true
-  },
-  exporting: {
+        },
+        exporting: {
             enabled: false
-  },
-  title: {
+        },
+        title: {
             text: 'Grade Histogram'
-  },
-  tooltip: {
+        },
+        tooltip: {
             borderWidth: 1,
             pointFormatter: function () {
-    lower = this.x - bucketMargin;
-    upper = this.x + bucketMargin;
-    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
+                lower = this.x - bucketMargin;
+                upper = this.x + bucketMargin;
+                return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
                     '<b>Count:</b> ' + this.y;
-            }
-  },
-  plotOptions: {
-            series: {
-    minPointLength: 1,
-    shadow: false,
-    marker: {
-                    enabled: false
-    }
+                }
             },
-            area: {
-    events: {
-                    legendItemClick: function (e) {
-      if (this.name == 'Sigma Bands') {
-                            toggleBands(this.chart);
-      }
+            plotOptions: {
+                series: {
+                    minPointLength: 1,
+                    shadow: false,
+                    marker: {
+                        enabled: false
                     }
-    }
-            }
-  },
-  xAxis: {
-            title: {
-    text: 'Point Buckets'
+                },
+                area: {
+                    events: {
+                        legendItemClick: function (e) {
+                            if (this.name == 'Sigma Bands') {
+                                toggleBands(this.chart);
+                            }
+                        }
+                    }
+                }
             },
-            lineColor: '#999',
-            tickColor: '#ccc',
-            plotLines: plotLines,
-            plotBands: plotBands
-  },
-  yAxis: {
-            title: {
-    text: 'Count'
+            xAxis: {
+                title: {
+                    text: 'Point Buckets'
+                },
+                lineColor: '#999',
+                tickColor: '#ccc',
+                plotLines: plotLines,
+                plotBands: plotBands
             },
-            gridLineColor: '#e9e9e9',
-            tickWidth: 1,
-            tickLength: 3,
-            tickColor: '#ccc',
-            lineColor: '#ccc',
-            endOnTick: false,
-  },
-  series: [{
-            name: 'Submission Samples',
-            data: buckets,
-            pointRange: bucketSize,
-            borderWidth: .5,
-            borderColor: '#666',
-            pointPadding: 0,
-            groupPadding: 0,
-            color: '#e3e3e3',
-      tooltip: {
-    pointFormatter: function () {
-        lower = this.x - bucketMargin;
-        upper = this.x + bucketMargin;
-        return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
-    }
-      }
-  }, {
-            type: 'area',
-            name: 'Sigma Bands',
-  }]
-    });
+            yAxis: {
+                title: {
+                    text: 'Count'
+                },
+                gridLineColor: '#e9e9e9',
+                tickWidth: 1,
+                tickLength: 3,
+                tickColor: '#ccc',
+                lineColor: '#ccc',
+                endOnTick: false,
+            },
+            series: [{
+                name: 'Submission Samples',
+                data: buckets,
+                pointRange: bucketSize,
+                borderWidth: .5,
+                borderColor: '#666',
+                pointPadding: 0,
+                groupPadding: 0,
+                color: '#e3e3e3',
+                tooltip: {
+                    pointFormatter: function () {
+                        lower = this.x - bucketMargin;
+                        upper = this.x + bucketMargin;
+                        return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
+                    }
+                }
+            }, {
+                type: 'area',
+                name: 'Sigma Bands',
+            }]
+        }
+    );
 }
 
 computeStats = function(values) {
