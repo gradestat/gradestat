@@ -86,11 +86,8 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-	console.log("IN GET STAFF");
 	var course = Courses.find({"id": cId}).fetch();
-	console.log("FROM DB: " + course);
 	if (course.length == 0) {
-	    console.log("CANVAS STAFF CALL");
 	    return canvasStaff(cId);
 	}
 	return course[0].staff;
