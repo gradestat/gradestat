@@ -268,7 +268,7 @@ Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
-        console.log('GET SUBMISSIONS');
+        console.log('GET SUBMISSIONS ');
         console.log(value);
         if (err) {
             console.log(err);
@@ -380,7 +380,7 @@ Template.assignment.events({
             pct: pctConstraint,
             num: numConstraint
         }
-        $('.assignconf').html('<img src="/loading_spinner.gif" />');
+        $('.assignconf').html('<img src="/loading_spinner.gif" width="30px" height="30px"/>');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
 
