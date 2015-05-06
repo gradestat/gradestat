@@ -6,7 +6,7 @@ function requestParams(p) {
     var qs = _.extend({}, baseQuery, p);
     var options = {
         headers: {
-            Authorization: 'Bearer ' + Meteor.user().canvasToken
+            Authorization: 'Bearer ' + '19~ud3PyBoCaBRHVUCsvhPJEt285u8H2bX5Lw0gGnLU4zbKvOjgAxe2Qofjb9VDvCBy'
         },
         params: qs,
         npmRequestOptions: {
@@ -64,10 +64,15 @@ Meteor.methods({
         return data !== [];
     },
     getCourses: function() {
+        console.log("courses");
+        console.log(Meteor.user().canvasToken);
         if (Meteor.user().canvasToken) {
+            console.log("inside");
             var result = Meteor.http.get(coursePath(),
             requestParams({'include[]':'term'})).content;
             var myCourseIds = Meteor.user().courses;
+            console.log('COURSE IDs', myCourseIds);
+            console.log("courseIDs: " + result);
             if (myCourseIds) {
                 var myCourses = Courses.find({'id' : { $in : myCourseIds }});
                 myCourses = myCourses.fetch();
@@ -79,6 +84,7 @@ Meteor.methods({
                 }
                 return result;
             }
+            return result;
         }
         return null;
     },
@@ -109,7 +115,7 @@ Meteor.methods({
             var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
             data = result.content;
         }
-        
+
         var staff = canvasStaff(cId);
         for (var i = 0; i < data.length; i += 1) {
             grader = staff.filter(function(e) {return e.id == data[i].grader_id; });
@@ -125,7 +131,7 @@ Meteor.methods({
         canvasUser = JSON.parse(canvasUser.content);
         Meteor.users.update({_id: userId},
             { $set: {"canvasId": canvasUser["id"]} });
-
+            console.log("Canvas id: " + canvasUser["id"])
         return Meteor.users.find({_id: userId}).canvasId;
     },
     removeCourse: function(course) {
@@ -299,7 +305,7 @@ function assignReaders(readers, submissions, validate, maxValidate) {
             var subm = submissions[submIdx];
             // sometimes undefined is added to a reader array
             if (!subm) { break; }
-            
+
             reader.assignments.push(subm);
             submissionIDMap[subm.id] = {
                 id: reader.id, name: reader.name };
