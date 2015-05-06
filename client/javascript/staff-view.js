@@ -33,3 +33,31 @@ Template.course_staff.helpers({
         return data;
     }
 });
+
+
+// Handle Form Submission
+Template.course_staff.events({
+    'click .submit-button': function(e) {
+        console.log('SUBMIT...');
+        console.log(this);
+        var hoursData = {};
+        $('.hours-data').each(function(item) {
+            item = $(item);
+            var id = item.attr('for')
+            hoursData[id] = $(item).val();
+        });
+
+        Meteor.call('updateStaffHours', Session.get("course").id, hoursData, function(err, value) {
+            console.log('response!');
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(value);
+            }
+        });
+        // Don't refresh the page.
+        return false;
+    }
+
+
+})

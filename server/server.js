@@ -138,9 +138,11 @@ Meteor.methods({
         course_staff = course_staff.staff;
         var my_info = course_staff.filter(isCurrentCanvasUser);
         var other_info = course_staff.filter(isNotCurrentCanvasUser);
-
-        if (my_info) {
+        console.log('MY INFO');
+        console.log(my_info);
+        if (my_info.length > 0) {
             my_info = my_info[0];
+
             my_info.user_id = Meteor.userId();
             other_info.push(my_info);
         }
@@ -148,6 +150,25 @@ Meteor.methods({
         Courses.update({ 'id': course.id },
                        { $set: { 'staff': other_info } });
         return course;
+    },
+    updateStaffHours: function(cId, hours) {
+        console.log('UPDATE');
+        console.log(course);
+        console.log(hours);
+        var course = Coursess.findOne({'id': parseInt(cId )});
+        var staff = course.staff
+        staff.forEach(function(s) {
+            if (s.hours != hours[s.id]) {
+                console.log('Updating hours!');
+                console.log(s.name);
+                console.log(hours[s.id]);
+            }
+            s.hours =  hours[s.id];
+        });
+        // UpdateDB
+        Courses.update({ 'id': course.id },
+               { $set: { 'staff': staff } });
+       return true;
     }
 });
 

@@ -20,7 +20,7 @@
             <td><p>{{this.enrollment_type}}</p></td>
             <td>
               {{#if isInDB}}
-                <input type="number" for="xx" value="{{this.hours}}">
+                <input type="number" class="hours-data" for="{{id}}" value="{{hours}}">
               {{else}}
                 0
               {{/if}}
@@ -29,7 +29,8 @@
         {{/each}}
         </table>
     </div>
-    {{#if  isInDB}}
-      Form Submit Here.
+    {{#if isInDB}}
+        <button type="submit" id="submit-button" class="pure-button pure-button-primary">
+          Update Staff Hours</button>
     {{/if}}
 </template>
