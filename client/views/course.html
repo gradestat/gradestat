@@ -6,35 +6,39 @@
   </div>
   <div class="content dash-content">
     <div class="pure-g" id="course-info">
-      <h3 class="content-subhead">
-	Course Info
-      </h3>
-      <table class="dashboard-table">
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      My Role:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{myRole}}
-	    </p>
-	  </td>
-	</tr>
-	<tr>
-	  <td>
-	    <p class="course-page-title" style="height:20px;">
-	      Term:
-	    </p>
-	  </td>
-	  <td>
-	    <p>
-	      {{course.term.name}}
-	    </p>
-	  </td>
-	</tr>
-      </table>
+      <div class="pure-u-1-2">
+	<h3 class="content-subhead">
+	  Course Info
+	</h3>
+	<table class="dashboard-table">
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		My Role:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{myRole}}
+	      </p>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <p class="course-page-title" style="height:20px;">
+		Term:
+	      </p>
+	    </td>
+	    <td>
+	      <p>
+		{{course.term.name}}
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+      <div class="pure-u-1-2">
+      </div>
     </div>
     <div class="pure-g">
       <div class="pure-u-1-2">

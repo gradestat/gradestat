@@ -90,7 +90,13 @@ Meteor.methods({
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
         return result;
     },
-    getStaff: canvasStaff,
+    getStaff: function(cId) {
+	var course = Courses.find({"id": cId}).fetch();
+	if (course.length == 0) {
+	    return canvasStaff(cId);
+	}
+	return course[0].staff;
+    },
     getSubmissions: function(cId, aId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
         result = result.content;
@@ -128,16 +134,25 @@ Meteor.methods({
         }
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
-        var course_db = Courses.findOne({"id" : course.id});
-        course_staff = course_db.staff;
-        var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
-        console.log('MY INFO');
-        console.log(my_info);
-        my_info.user_id = Meteor.userId();
-        var other_info = course_staff.filter(function(o) {return o.id != Meteor.user().canvasId;});
-        other_info.push(my_info);
+        var course_staff = Courses.findOne({"id" : course.id});
+        course_staff = course_staff.staff;
+        var my_info = course_staff.filter(isCurrentCanvasUser);
+        var other_info = course_staff.filter(isNotCurrentCanvasUser);
+
+        if (my_info) {
+            my_info = my_info[0];
+            my_info.user_id = Meteor.userId();
+            other_info.push(my_info);
+        }
+
         Courses.update({ 'id': course.id },
-            { $set: { 'staff': other_info } });
+                       { $set: { 'staff': other_info } });
         return course;
     }
 });
+
+function isCurrentCanvasUser(user) {
+    return user.id == Meteor.user().canvasId;
+}
+
+function isNotCurrentCanvasUser(user) { return !isCurrentCanvasUser; }
