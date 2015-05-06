@@ -61,9 +61,9 @@ function calculateNumValidations(numAsssignments, validPct, maxValid) {
     if (validPct > 1) {
         validPct /= 100;
     }
-    
+
     numAssignAll = numAsssignments * validPct;
-    
+
     numAssignAll = Math.max(validPct, maxValid, numAsssignments);
 
     return Math.round(numAssignAll);

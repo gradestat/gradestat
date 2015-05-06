@@ -171,13 +171,27 @@ Meteor.methods({
             pct: pctConstraint,
             num: numConstraint
         } */
-        console.log(params);
-        var staff = Courses.findOne({ 'id' : parseInt(params.course) });
+        var aId = params.assign;
+        var cId = params.course
+        var staff = Courses.findOne({ 'id' : parseInt(cId) });
         staff = staff.staff;
         if (!staff) {
             throw new Error('Course Staff Must be saved in GradeSate');
         }
-        console.log(staff);
+        var assignment = Meteor.http.get(coursePath(cId) + "/assignments/" + aId, requestParams()).content;
+        var submissions = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
+        submissions = submissions.content;
+        var readerTasks = assignReaders(staff, submissions, params.pct, params.num);
+        console.log(readerTasks);
+        assignment.cached_submissions = submissions;
+        assignment.reader_taks = readerTasks;
+        var existingAssignment = Assignments.findOne({'id': aId});
+        if (existingAssignment) {
+            Assignments.update({'id' : aId},
+                            {$set: assignment });
+        } else {
+            Assignments.insert(assignment)
+        }
 
         return true;
     }
@@ -190,3 +204,117 @@ function isCurrentCanvasUser(user) {
 }
 
 function isNotCurrentCanvasUser(user) { return !isCurrentCanvasUser; }
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+// This handles a very simple algorithm for reader assignment.
+// Takes in Readers and a list of assignments.
+
+// This is a helpful function to convert from a reader's hours to the percentage
+// of work they need to do.
+function normalizeHours(readers) {
+    var totalHours = 0;
+    readers.forEach(function(r) { totaHours += r.hours });
+    return readers.map(function(r) { return r.workload = (r.hours / totalHours) });
+}
+
+// Return a new array of readers where each reader has a list of assignments
+// This are supposed to grade.
+// Each reader is expected to have a `.workload` attribute which is their
+// percentage of the work
+// Validate determines the overlap in assignments to all readers, as a %
+// maxValidate limits the percentage to a set value
+function assignReaders(readers, assignments, validate, maxValidate) {
+    var numAssignAll = calculateNumValidations(assignments.length, validate, maxValidate);
+    var readerTaks = readers.map(function(r) {
+        return { name: r.name, id: r.id, workload: r.workload, assignments: [] };
+    });
+    var assigments = clone(assigments); // Immutability.
+    // TODO: Update once assignment object exists.
+    // Respresents assignments that need to be divided up by reader
+    var numToAssign = assignments.length - numAssignAll;
+
+    var assignIdx = 0;
+    while (numAssignAll) {
+        assignIdx = Math.floor(Math.random() * assignments.length);
+        readerTaks.forEach(function(reader) {
+            reader.assignments.push(assignments[assignIdx]);
+        });
+        assignments.splice(assignIdx, 1); // remove item.
+        numAssignAll--;
+    }
+    readerTaks.forEach(function(reader) {
+        var readerNum = Math.round(reader.workload * numToAssign);
+        while (readerNum) {
+            assignIdx = Math.floor(Math.random() * assignments.length);
+            reader.assignments.push(assignments[assignIdx]);
+            assignments.splice(assignIdx, 1); // remove item.
+            readerNum--;
+        }
+    });
+    // Cleanup remaining leftover assigments (rounding) if any.
+    while (assignments.length) {
+        readerTaks.some(function(reader) {
+            reader.assingmnets.push(assingmnets.pop());
+            // .some stops on true values, but we should stop only at 0.
+            return !assingmnets.length;
+        });
+    }
+
+    return readerTaks;
+}
+
+
+function calculateNumValidations(numAsssignments, validPct, maxValid) {
+    var numAssignAll = 0;
+    if (validPct > 1) {
+        validPct /= 100;
+    }
+
+    numAssignAll = numAsssignments * validPct;
+
+    numAssignAll = Math.max(validPct, maxValid, numAsssignments);
+
+    return Math.round(numAssignAll);
+}
+
+
+function clone(obj) {
+    var copy;
+
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+        copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+}
