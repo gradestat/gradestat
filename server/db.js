@@ -10,8 +10,9 @@ Assignment Schema:
  {
     id: 'bcourses-id',
     // bcourses stuff
-    readers_assignment: { }
+    readers_assignment: [ reader: { assignments: [] } ]
     cached_submissions: [ ]
+    validatios: [ assignments]
  }
 ****/
 

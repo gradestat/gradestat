@@ -183,7 +183,7 @@ Meteor.methods({
         submissions = submissions.content;
         staff = normalizeHours(staff); // Turn Hours to %
         var readerTasks = assignReaders(staff, submissions, params.pct, params.num);
-        console.log(readerTasks);
+
         assignment.cached_submissions = submissions;
         assignment.reader_taks = readerTasks;
         var existingAssignment = Assignments.findOne({'id': aId});
@@ -234,7 +234,6 @@ function normalizeHours(readers) {
 // maxValidate limits the percentage to a set value
 function assignReaders(readers, assignments, validate, maxValidate) {
     var numAssignAll = calculateNumValidations(assignments.length, validate, maxValidate);
-    console.log('TO ASSIGN ALL: ', numAssignAll);
     // Make a copy of the readers adding an assignments array.
     var readerTaks = readers.map(function(r) {
         return _.extend({}, r, {assignments: [] });
@@ -244,31 +243,28 @@ function assignReaders(readers, assignments, validate, maxValidate) {
     // Respresents assignments that need to be divided up by reader
     var numToAssign = assignments.length - numAssignAll;
 
+    // These assignments get assigned to every reader and stored separately.
+    var validations = []
     var assignIdx = 0;
     while (numAssignAll) {
-        console.log('NUM ASSIGNMENTS:  ', assignments.length);
-        console.log('TO ASSIGN: ', numAssignAll);
         assignIdx = Math.floor(Math.random() * assignments.length);
-        console.log('ASSIGNMENT IDX: ', assignIdx);
         readerTaks.forEach(function(reader) {
             if (reader.hours && reader.percent) {
                 reader.assignments.push(assignments[assignIdx]);
             }
         });
+        validations.push(assignments[assignIdx])
         assignments.splice(assignIdx, 1); // remove item.
         numAssignAll--;
     }
-    console.log('Assignment....');
     readerTaks.forEach(function(reader) {
         var readerNum = Math.round(reader.percent * numToAssign);
-        console.log('Assigning ', readerNum, ' assignments to ', reader.name);
         while (readerNum) {
             assignIdx = Math.floor(Math.random() * assignments.length);
             reader.assignments.push(assignments[assignIdx]);
             assignments.splice(assignIdx, 1); // remove item.
             readerNum--;
         }
-        console.log('Num Assignments Left:  ', assigments);
     });
     // Cleanup remaining leftover assigments (rounding) if any.
     while (assignments.length) {
@@ -279,7 +275,7 @@ function assignReaders(readers, assignments, validate, maxValidate) {
         });
     }
 
-    return readerTaks;
+    return {tasks: readerTaks, validations: validations};
 }
 
 
