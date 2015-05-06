@@ -202,7 +202,6 @@ setHistoData = function(ret) {
             name: 'Sigma Bands',
 	}]
     });
-    $('#gradeHistogram').highcharts(Session.get("histoData"));
 }
 
 computeStats = function(values) {
@@ -266,7 +265,6 @@ setBoxData = function(ret) {
             }
 	}]
     });
-    $('#readerAverages').highcharts(Session.get("boxData"));
 }
 
 Template.assignment.created = function() {
@@ -279,6 +277,23 @@ Template.assignment.created = function() {
 	} else {
 	    console.log(value);
 	    self.submissionList.set(value);
+	}
+    });
+}
+
+Template.assignment.rendered = function() {
+    $("#gradedata-toggle").click(function() {
+	if ($("#gradeHistogram").contents().length != 0) {
+	    $("#gradeHistogram").html("");
+	} else {
+	    $("#gradeHistogram").highcharts(Session.get("histoData"));
+	}
+    });
+    $("#analytics-toggle").click(function() {
+	if ($("#readerAverages").contents().length != 0) {
+	    $("#readerAverages").html("");
+	} else {
+	    $("#readerAverages").highcharts(Session.get("boxData"));
 	}
     });
 }
@@ -327,12 +342,6 @@ Template.assignment.helpers({
     },
     classMean: function() {
 	return Session.get("classMean");
-    },
-    boxChart: function() {
-	return Session.get("boxData");
-    },
-    histoChart: function() {
-	return Session.get("histoData");
     },
     mean: function() {
 	return Session.get("mean");
