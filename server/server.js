@@ -117,7 +117,6 @@ Meteor.methods({
         return remove;
     },
     addCourse: function(course) {
-        console.log(course);
         course.staff = canvasStaff(course.id);
         course.staff.forEach(function(s) {
             s.hours = 0;
@@ -129,12 +128,11 @@ Meteor.methods({
         }
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
-        var course_db = Courses.find({"id" : course.id}).fetch();
-        console.log('COURSE STAFF');
-        console.log(course_db);
+        var course_db = Courses.findOne({"id" : course.id});
         course_staff = course_db.staff;
         var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
-
+        console.log('MY INFO');
+        console.log(my_info);
         my_info.user_id = Meteor.userId();
         var other_info = course_staff.filter(function(o) {return o.id != Meteor.user().canvasId;});
         other_info.push(my_info);
