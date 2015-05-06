@@ -35,16 +35,16 @@ setHistoData = function(ret) {
     var mean = all.mean;
     var scores = all.scores;
     var squareDiffs = scores.map(function(value){
-	var diff = value - mean;
-	var sqr = diff * diff;
-	return sqr;
+  var diff = value - mean;
+  var sqr = diff * diff;
+  return sqr;
     });
     var sd = Math.sqrt(average(squareDiffs));
     Session.set("standardDeviation", sd);
     Session.set("mean", mean);
     Session.set("median", medianX(scores));
     var plotLines = [{
-	"value": mean,
+  "value": mean,
         "width": 2,
         "color": "#666",
         "zIndex": 10,
@@ -56,43 +56,43 @@ setHistoData = function(ret) {
             "x": 0,
             "y": -5,
             "style": {
-		"fontSize": "10px"
+    "fontSize": "10px"
             }
-	}
+  }
     }];
     var sigmas = [-3,-2,-1,1,2,3];
     for (s in sigmas) {
-	console.log(s);
-	plotLines.push({
-	    "value": mean + sd*sigmas[s],
+  console.log(s);
+  plotLines.push({
+      "value": mean + sd*sigmas[s],
             "width": 1,
             "color": "#999",
             "dashStyle": "Dash",
             "zIndex": 10,
             "label": {
-		"text": sigmas[s].toString() + "s",
-		"rotation": 0,
-		"align": "center",
-		"x": 0,
-		"y": -5,
-		"style": {
-		    "fontSize": "10px"
-		}
-	    }
-	});
+    "text": sigmas[s].toString() + "s",
+    "rotation": 0,
+    "align": "center",
+    "x": 0,
+    "y": -5,
+    "style": {
+        "fontSize": "10px"
+    }
+      }
+  });
     }
     var plotBands = [{
-	"from": -1*sd + mean,
+  "from": -1*sd + mean,
         "to": 1*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-	"from": -2*sd + mean,
+  "from": -2*sd + mean,
         "to": 2*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-	"from": -3*sd + mean,
+  "from": -3*sd + mean,
         "to": 3*sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
@@ -104,75 +104,75 @@ setHistoData = function(ret) {
     var buckets = [];
     var count = 0;
     while (curBucket < maxPoints) {
-	count = 0;
-	for (var i = 0; i < scores.length; i += 1) {
-	    if (scores[i] >= curBucket - bucketMargin && scores[i] < curBucket + bucketMargin) {
-		count += 1;
-	    }
-	}
-	buckets.push([curBucket, count]);
-	curBucket += bucketSize;
+  count = 0;
+  for (var i = 0; i < scores.length; i += 1) {
+      if (scores[i] >= curBucket - bucketMargin && scores[i] < curBucket + bucketMargin) {
+    count += 1;
+      }
+  }
+  buckets.push([curBucket, count]);
+  curBucket += bucketSize;
     }
     count = 0;
     for (var j = 0; j < scores.length; j += 1) {
-	if (scores[j] == maxPoints) {
-	    count += 1;
-	}
+  if (scores[j] == maxPoints) {
+      count += 1;
+  }
     }
     buckets[buckets.length-1][1] += count;
     console.log(buckets);
     Session.set("histoData", {
-	chart: {
+  chart: {
             type: 'column',
             alignTicks: false,
             marginTop: 25,
             showAxes: true
-	},
-	exporting: {
+  },
+  exporting: {
             enabled: false
-	},
-	title: {
+  },
+  title: {
             text: 'Grade Histogram'
-	},
-	tooltip: {
+  },
+  tooltip: {
             borderWidth: 1,
             pointFormatter: function () {
-		lower = this.x - bucketMargin;
-		upper = this.x + bucketMargin;
-		return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
+    lower = this.x - bucketMargin;
+    upper = this.x + bucketMargin;
+    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
                     '<b>Count:</b> ' + this.y;
             }
-	},
-	plotOptions: {
+  },
+  plotOptions: {
             series: {
-		minPointLength: 1,
-		shadow: false,
-		marker: {
+    minPointLength: 1,
+    shadow: false,
+    marker: {
                     enabled: false
-		}
+    }
             },
             area: {
-		events: {
+    events: {
                     legendItemClick: function (e) {
-			if (this.name == 'Sigma Bands') {
+      if (this.name == 'Sigma Bands') {
                             toggleBands(this.chart);
-			}
+      }
                     }
-		}
+    }
             }
-	},
-	xAxis: {
+  },
+  xAxis: {
             title: {
-		text: 'Point Buckets'
+    text: 'Point Buckets'
             },
             lineColor: '#999',
             tickColor: '#ccc',
             plotLines: plotLines,
             plotBands: plotBands
-	},
-	yAxis: {
+  },
+  yAxis: {
             title: {
-		text: 'Count'
+    text: 'Count'
             },
             gridLineColor: '#e9e9e9',
             tickWidth: 1,
@@ -180,8 +180,8 @@ setHistoData = function(ret) {
             tickColor: '#ccc',
             lineColor: '#ccc',
             endOnTick: false,
-	},
-	series: [{
+  },
+  series: [{
             name: 'Submission Samples',
             data: buckets,
             pointRange: bucketSize,
@@ -190,17 +190,17 @@ setHistoData = function(ret) {
             pointPadding: 0,
             groupPadding: 0,
             color: '#e3e3e3',
-	    tooltip: {
-		pointFormatter: function () {
-		    lower = this.x - bucketMargin;
-		    upper = this.x + bucketMargin;
-		    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
-		}
-	    }
-	}, {
+      tooltip: {
+    pointFormatter: function () {
+        lower = this.x - bucketMargin;
+        upper = this.x + bucketMargin;
+        return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
+    }
+      }
+  }, {
             type: 'area',
             name: 'Sigma Bands',
-	}]
+  }]
     });
 }
 
@@ -223,35 +223,35 @@ computeStats = function(values) {
 
 setBoxData = function(ret) {
     Session.set("boxData", {
-	chart: {
-	    type: 'boxplot',
-	    backgroundColor: 'white'//"#BBBBBB"
-	},
-	title: {
-	    text: 'Reader Grade Distributions'
-	},
-	legend: {
-	    enabled: false
-	},
-	xAxis: {
-	    categories: ret.map(function(x) {return x.grader_name;}),
-	    title: {
-		text: 'Grader'
-	    }
-	},
-	yAxis: {
-	    title: {
-		text: 'Points Awarded'
-	    }
-	},
-	series: [{
-	    name: 'Grade Distribution',
-	    data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
-	    tooltip: {
-		headerFormat: '<b>{point.key} Grades</b><br/>'
-	    }
-	}, {
-	    name: 'Mean',
+  chart: {
+      type: 'boxplot',
+      backgroundColor: 'white'//"#BBBBBB"
+  },
+  title: {
+      text: 'Reader Grade Distributions'
+  },
+  legend: {
+      enabled: false
+  },
+  xAxis: {
+      categories: ret.map(function(x) {return x.grader_name;}),
+      title: {
+    text: 'Grader'
+      }
+  },
+  yAxis: {
+      title: {
+    text: 'Points Awarded'
+      }
+  },
+  series: [{
+      name: 'Grade Distribution',
+      data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
+      tooltip: {
+    headerFormat: '<b>{point.key} Grades</b><br/>'
+      }
+  }, {
+      name: 'Mean',
             color: Highcharts.getOptions().colors[0],
             type: 'scatter',
             data: ret.map(function(x) {return [ret.indexOf(x),x.scores.reduce(function(a,b){return a+b}, 0)/x.scores.length]}),
@@ -263,7 +263,7 @@ setBoxData = function(ret) {
             tooltip: {
                 pointFormat: 'Value: {point.y}'
             }
-	}]
+  }]
     });
 }
 
@@ -271,99 +271,118 @@ Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
-	console.log(value);
-	if (err) {
-	    console.log(err);
-	} else {
-	    console.log(value);
-	    self.submissionList.set(value);
-	}
+  console.log(value);
+  if (err) {
+      console.log(err);
+  } else {
+      console.log(value);
+      self.submissionList.set(value);
+  }
     });
 }
 
 Template.assignment.rendered = function() {
     $("#gradedata-toggle").click(function() {
-	if ($("#gradeHistogram").contents().length != 0) {
-	    $("#gradeHistogram").html("");
-	} else {
-	    $("#gradeHistogram").highcharts(Session.get("histoData"));
-	}
+  if ($("#gradeHistogram").contents().length != 0) {
+      $("#gradeHistogram").html("");
+  } else {
+      $("#gradeHistogram").highcharts(Session.get("histoData"));
+  }
     });
     $("#analytics-toggle").click(function() {
-	if ($("#readerAverages").contents().length != 0) {
-	    $("#readerAverages").html("");
-	} else {
-	    $("#readerAverages").highcharts(Session.get("boxData"));
-	}
+  if ($("#readerAverages").contents().length != 0) {
+      $("#readerAverages").html("");
+  } else {
+      $("#readerAverages").highcharts(Session.get("boxData"));
+  }
     });
 }
 
 Template.assignment.helpers({
     assignment: function() {
-	return Session.get("assignment");
+        return Session.get("assignment");
     },
     course: function() {
-	return Session.get("course");
+        return Session.get("course");
     },
     submissions: function() {
-	var data = Template.instance().submissionList.get();
-	return data;
+        var data = Template.instance().submissionList.get();
+        return data;
     },
     graderStats: function() {
-	var data = Template.instance().submissionList.get();
-	var total = 0;
-	var count = 0;
-	var stats = {};
-	var gId = 0;
-	for (var i=0; i < data.length; i += 1) {
-	    gId = data[i].grader_id;
-	    total += data[i].score;
-	    count += 1;
-	    if (stats[gId]) {
-		stats[gId].count += 1;
-		stats[gId].total += data[i].score;
-		stats[gId].scores.push(data[i].score);
-	    } else {
-		stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
-	    }
-	}
-	var ret = [];
-	ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
-	for (grader in stats) {
-	    stats[grader].mean = stats[grader].total/stats[grader].count;
-	    stats[grader].grader_id = grader;
-	    ret.push(stats[grader]);
-	}
-	Session.set("classMean", total/count);
-	Session.set("ret", ret);
-	setBoxData(ret);
-	setHistoData(ret);
-	return ret;
+        var data = Template.instance().submissionList.get();
+        var total = 0;
+        var count = 0;
+        var stats = {};
+        var gId = 0;
+        for (var i=0; i < data.length; i += 1) {
+      gId = data[i].grader_id;
+      total += data[i].score;
+      count += 1;
+      if (stats[gId]) {
+    stats[gId].count += 1;
+    stats[gId].total += data[i].score;
+    stats[gId].scores.push(data[i].score);
+      } else {
+    stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
+      }
+  }
+  var ret = [];
+  ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
+  for (grader in stats) {
+      stats[grader].mean = stats[grader].total/stats[grader].count;
+      stats[grader].grader_id = grader;
+      ret.push(stats[grader]);
+  }
+  Session.set("classMean", total/count);
+  Session.set("ret", ret);
+  setBoxData(ret);
+  setHistoData(ret);
+  return ret;
     },
     classMean: function() {
-	return Session.get("classMean");
+  return Session.get("classMean");
     },
     mean: function() {
-	return Session.get("mean");
+  return Session.get("mean");
     },
     standardDeviation: function() {
-	return Session.get("standardDeviation");
+  return Session.get("standardDeviation");
     },
     median: function() {
-	return Session.get("standardDeviation");
+  return Session.get("standardDeviation");
     }
 });
 
 Template.assignment.events({
     'click .course-link': function(e) {
-	Session.set("dashView", "course");
+        Session.set("dashView", "course");
     },
     'click .grade-submission': function(e) {
-	if (this.preview_url) {
-	    Session.set("submissionURL", this.preview_url);
-	} else {
-	    Session.set("submissionURL", this.html_url);
-	}
-	window.open(Session.get("submissionURL"), "_blank").focus();
+        if (this.preview_url) {
+            Session.set("submissionURL", this.preview_url);
+        } else {
+            Session.set("submissionURL", this.html_url);
+        }
+        window.open(Session.get("submissionURL"), "_blank").focus();
+    },
+    'click #doAssignment': function(e) {
+        var assnID = Session.get('assignment').id
+        var courseID = Session.get('course').id
+        var pctConstraint = $('.pctConstraint').val();
+        var numConstraint = $('.numConstraint').val();
+        var params = {
+            course: courseID,
+            assign: assnID,
+            pct: pctConstraint,
+            num: numConstraint
+        }
+        Meteor.call('doReaderAssign', params, function(err, value) {
+            if (err) {
+
+            } else {
+                $('.assignconfrim').append('<h5>Success!</h5>');
+            }
+        })
     }
 });

@@ -91,11 +91,11 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-	var course = Courses.find({"id": cId}).fetch();
-	if (course.length == 0) {
-	    return canvasStaff(cId);
-	}
-	return course[0].staff;
+        var course = Courses.find({"id": cId}).fetch();
+        if (course.length == 0) {
+            return canvasStaff(cId);
+        }
+        return course[0].staff;
     },
     getSubmissions: function(cId, aId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
@@ -163,8 +163,27 @@ Meteor.methods({
         Courses.update({ 'id': course.id },
                { $set: { 'staff': staff } });
        return true;
+    },
+    doReaderAssign: function(params) {
+        /* params = {
+            course: courseID,
+            assign: assnID,
+            pct: pctConstraint,
+            num: numConstraint
+        } */
+        console.log(params);
+        var staff = Courses.findOne({ 'id' : parseInt(params.course) });
+        staff = staff.staff;
+        if (!staff) {
+            throw new Error('Course Staff Must be saved in GradeSate');
+        }
+        console.log(staff);
+
+        return true;
     }
 });
+
+
 
 function isCurrentCanvasUser(user) {
     return user.id == Meteor.user().canvasId;
