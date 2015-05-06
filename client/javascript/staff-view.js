@@ -4,7 +4,6 @@ Template.course_staff.created = function() {
     var self = this;
     self.staffList = new ReactiveVar(['Loading...']);
     Meteor.call('getStaff', Session.get("course").id, function (err, value) {
-	console.log(value);
         if (err) {
             console.log(err);
         } else {
@@ -37,22 +36,25 @@ Template.course_staff.helpers({
 
 // Handle Form Submission
 Template.course_staff.events({
-    'click .submit-button': function(e) {
+    'click #submit-button': function(e) {
         console.log('SUBMIT...');
-        console.log(this);
+        var cId = this.id;
         var hoursData = {};
-        $('.hours-data').each(function(item) {
+        console.log('fuck you jquery');
+        console.log($('.hours-data'));
+        $('.hours-data').each(function(i, item) {
             item = $(item);
             var id = item.attr('for')
             hoursData[id] = $(item).val();
         });
 
-        Meteor.call('updateStaffHours', Session.get("course").id, hoursData, function(err, value) {
+        Meteor.call('updateStaffHours', cId, hoursData, function(err, value) {
             console.log('response!');
             if (err) {
                 console.log(err);
             } else {
                 console.log(value);
+                $('.update-section').append('Success!');
             }
         });
         // Don't refresh the page.

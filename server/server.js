@@ -152,18 +152,12 @@ Meteor.methods({
         return course;
     },
     updateStaffHours: function(cId, hours) {
-        console.log('UPDATE');
-        console.log(course);
-        console.log(hours);
-        var course = Coursess.findOne({'id': parseInt(cId )});
-        var staff = course.staff
+        var course = Courses.findOne({'id': parseInt(cId )});
+        var staff = course.staff;
         staff.forEach(function(s) {
-            if (s.hours != hours[s.id]) {
-                console.log('Updating hours!');
-                console.log(s.name);
-                console.log(hours[s.id]);
+            if (hours[s.id]) {
+                s.hours =  hours[s.id];
             }
-            s.hours =  hours[s.id];
         });
         // UpdateDB
         Courses.update({ 'id': course.id },
