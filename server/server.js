@@ -109,16 +109,30 @@ Meteor.methods({
 
         return Meteor.users.find({_id: userId}).canvasId;
     },
+    removeCourse: function(course) {
+        var remove = Courses.remove({'id': parseInt(course.id)});
+        if (remove == 0) {
+            console.log('oh shitttttt');
+        }
+        return remove;
+    },
     addCourse: function(course) {
+        console.log(course);
         course.staff = canvasStaff(course.id);
+        course.staff.forEach(function(s) {
+            s.hours = 0;
+            s.percent = null; // Not used currently.
+        });
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
             Courses.insert(course);
         }
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
-        var course_staff = Courses.find({"id":course.id});
-        course_staff = course_staff.fetch().staff;
+        var course_db = Courses.find({"id" : course.id}).fetch();
+        console.log('COURSE STAFF');
+        console.log(course_db);
+        course_staff = course_db.staff;
         var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
 
         my_info.user_id = Meteor.userId();

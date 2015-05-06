@@ -25,14 +25,24 @@ Template.mycourses.events({
         });
     },
     'click .add-course': function(e) {
-    this.user_id = Meteor.userId();
-    Meteor.call('addCourse', this, function(err,value) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("SUCCESS: added course " + value.name);
-        }
-    });
+        this.user_id = Meteor.userId();
+        Meteor.call('addCourse', this, function(err, value) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("SUCCESS: added course " + value.name);
+            }
+        });
+    },
+    'click .remove-course': function(e) {
+        Meteor.call('removeCourse', this, function(err, value) {
+            if (err) {
+                console.log(err);
+            }
+            if (value != 0) {
+                e.removeClass('remove-course').addClass('add-course')
+            }
+        })
     }
 });
 

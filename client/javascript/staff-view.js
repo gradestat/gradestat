@@ -11,7 +11,7 @@ Template.course_staff.created = function() {
             self.staffList.set(value);
         }
     });
-    
+
     self.isInDB = new ReactiveVar(['Loading...']);
     Meteor.call('courseInDB', Session.get("course").id, function (err, value) {
         console.log(value);
