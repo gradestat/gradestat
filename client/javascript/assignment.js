@@ -200,8 +200,7 @@ setHistoData = function(ret) {
                 type: 'area',
                 name: 'Sigma Bands',
             }]
-        }
-    );
+        });
 }
 
 computeStats = function(values) {
@@ -271,30 +270,30 @@ Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
-  console.log(value);
-  if (err) {
-      console.log(err);
-  } else {
-      console.log(value);
-      self.submissionList.set(value);
-  }
+        console.log(value);
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(value);
+            self.submissionList.set(value);
+        }
     });
 }
 
 Template.assignment.rendered = function() {
     $("#gradedata-toggle").click(function() {
-  if ($("#gradeHistogram").contents().length != 0) {
-      $("#gradeHistogram").html("");
-  } else {
-      $("#gradeHistogram").highcharts(Session.get("histoData"));
-  }
+        if ($("#gradeHistogram").contents().length != 0) {
+            $("#gradeHistogram").html("");
+        } else {
+            $("#gradeHistogram").highcharts(Session.get("histoData"));
+        }
     });
     $("#analytics-toggle").click(function() {
-  if ($("#readerAverages").contents().length != 0) {
-      $("#readerAverages").html("");
-  } else {
-      $("#readerAverages").highcharts(Session.get("boxData"));
-  }
+        if ($("#readerAverages").contents().length != 0) {
+            $("#readerAverages").html("");
+        } else {
+            $("#readerAverages").highcharts(Session.get("boxData"));
+        }
     });
 }
 
@@ -316,41 +315,41 @@ Template.assignment.helpers({
         var stats = {};
         var gId = 0;
         for (var i=0; i < data.length; i += 1) {
-      gId = data[i].grader_id;
-      total += data[i].score;
-      count += 1;
-      if (stats[gId]) {
-    stats[gId].count += 1;
-    stats[gId].total += data[i].score;
-    stats[gId].scores.push(data[i].score);
-      } else {
-    stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
-      }
-  }
-  var ret = [];
-  ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
-  for (grader in stats) {
-      stats[grader].mean = stats[grader].total/stats[grader].count;
-      stats[grader].grader_id = grader;
-      ret.push(stats[grader]);
-  }
-  Session.set("classMean", total/count);
-  Session.set("ret", ret);
-  setBoxData(ret);
-  setHistoData(ret);
-  return ret;
+            gId = data[i].grader_id;
+            total += data[i].score;
+            count += 1;
+            if (stats[gId]) {
+                stats[gId].count += 1;
+                stats[gId].total += data[i].score;
+                stats[gId].scores.push(data[i].score);
+            } else {
+                stats[gId] = {count: 1, total: data[i].score, scores: [data[i].score], grader_name: data[i].grader_name};
+            }
+        }
+        var ret = [];
+        ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
+        for (grader in stats) {
+            stats[grader].mean = stats[grader].total/stats[grader].count;
+            stats[grader].grader_id = grader;
+            ret.push(stats[grader]);
+        }
+        Session.set("classMean", total/count);
+        Session.set("ret", ret);
+        setBoxData(ret);
+        setHistoData(ret);
+        return ret;
     },
     classMean: function() {
-  return Session.get("classMean");
+        return Session.get("classMean");
     },
     mean: function() {
-  return Session.get("mean");
+        return Session.get("mean");
     },
     standardDeviation: function() {
-  return Session.get("standardDeviation");
+        return Session.get("standardDeviation");
     },
     median: function() {
-  return Session.get("standardDeviation");
+        return Session.get("standardDeviation");
     }
 });
 
@@ -377,11 +376,12 @@ Template.assignment.events({
             pct: pctConstraint,
             num: numConstraint
         }
+        $('.assignconf').html('<img src="/client/loading_spinner.gif" />');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
 
             } else {
-                $('.assignconfrim').append('<h5>Success!</h5>');
+                $('.assignconf').html('<h5>Success!</h5>');
             }
         })
     }
