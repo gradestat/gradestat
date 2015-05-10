@@ -123,7 +123,6 @@ Meteor.methods({
 	var course_staff = Courses.find({"id":course.id});
 	course_staff = course_staff.fetch()[0].staff;
 	var my_info = course_staff.filter(function(o) {return o.id == Meteor.user().canvasId;})[0];
-
 	my_info.user_id = Meteor.userId();
 	var other_info = course_staff.filter(function(o) {return o.id != Meteor.user().canvasId;});
 	other_info.push(my_info);
