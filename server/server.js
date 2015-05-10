@@ -157,7 +157,6 @@ Meteor.methods({
             my_info.user_id = Meteor.userId();
             other_info.push(my_info);
         }
-
         Courses.update({ 'id': course.id },
                        { $set: { 'staff': other_info } });
         return course;
