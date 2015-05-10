@@ -6,7 +6,7 @@ function requestParams(p) {
     var qs = _.extend({}, baseQuery, p);
     var options = {
         headers: {
-            Authorization: 'Bearer ' + '19~ud3PyBoCaBRHVUCsvhPJEt285u8H2bX5Lw0gGnLU4zbKvOjgAxe2Qofjb9VDvCBy'
+            Authorization: 'Bearer ' + Meteor.user().canvasToken
         },
         params: qs,
         npmRequestOptions: {
