@@ -74,8 +74,10 @@
 /* Dashboard  Template */
 
 #menu {
-    top: 62px;
+    top: 53px;
 }
+
+@-moz-document url-prefix() { #menu { top: 62px; } } 
 
 /* Not Found Template */
 
