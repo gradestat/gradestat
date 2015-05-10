@@ -13,11 +13,10 @@ function normalizeHours(readers) {
 // This are supposed to grade.
 // Each reader is expected to have a `.workload` attribute which is their
 // percentage of the work
-// Validate determines the overlap in assignments to all readers.
-// If validate >0 and < 1, then it is a percentage of the total number of
-// assignments, otherwise, it is treated as an integer.
-function assignReaders(readers, assignments, validate) {
-    var numAssignAll = calculateNumValidations(assignments.length, validate);
+// Validate determines the overlap in assignments to all readers, as a %
+// maxValidate limits the percentage to a set value
+function assignReaders(readers, assignments, validate, maxValidate) {
+    var numAssignAll = calculateNumValidations(assignments.length, validate, maxValidate);
     var readerTaks = readers.map(function(r) {
         return { name: r.name, id: r.id, workload: r.workload, assigments: [] };
     });
@@ -57,15 +56,16 @@ function assignReaders(readers, assignments, validate) {
 }
 
 
-function calculateNumValidations(numAsssignments, toValidate) {
+function calculateNumValidations(numAsssignments, validPct, maxValid) {
     var numAssignAll = 0;
-    if (toValidate < 0) {
-        numAssignAll = 0;
-    } else if (toValidate < 1) {
-        numAssignAll = numAsssignments * toValidate;
-    } else {
-        numAssignAll = Math.max(toValidate, numAsssignments);
+    if (validPct > 1) {
+        validPct /= 100;
     }
+
+    numAssignAll = numAsssignments * validPct;
+
+    numAssignAll = Math.max(validPct, maxValid, numAsssignments);
+
     return Math.round(numAssignAll);
 }
 

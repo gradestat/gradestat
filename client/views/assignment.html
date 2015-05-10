@@ -1,8 +1,6 @@
 <template name="assignment">
   <div class="header">
-    <h1>
-      {{assignment.name}}
-    </h1>
+    <h1>{{assignment.name}}</h1>
     <a href="#" class="course-link">
       Back to {{course.name}}
     </a>
@@ -13,125 +11,181 @@
     </h3>
     <div class="pure-g" id="course-info" style="display:none;">
       <div class="pure-u-1-2">
-	<table class="dashboard-table">
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Created:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{assignment.created_at}}
-	      </p>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Due:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{assignment.due_at}}
-	      </p>
-	    </td>
-	  </tr>
-	</table>
+        <table class="dashboard-table">
+          <tr>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Created:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.created_at}}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Due:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.due_at}}
+              </p>
+            </td>
+          </tr>
+        </table>
       </div>
       <div class="pure-u-1-2">
-	<table class="dashboard-table">
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Points Possible:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{assignment.points_possible}}
-	      </p>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Ungraded:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{assignment.needs_grading_count}}
-	      </p>
-	    </td>
-	  </tr>
-	</table>
+        <table class="dashboard-table">
+          <tr>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Points Possible:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.points_possible}}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="course-page-title" style="height:20px;">
+                Ungraded:
+              </p>
+            </td>
+            <td>
+              <p>
+                {{assignment.needs_grading_count}}
+              </p>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
+
+    <!-- ASSIGN READERS TAKS -->
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <h3 class="assignment-title content-subhead">
+          <a href="#" class="toggle-link" id="info-toggle" onclick="$('#reader-assignments').toggle();">+</a> Assign Readers
+        </h3>
+        <div class="pure-g" id="reader-assignments" style="display:none;">
+          <div class="pure-u-1-1">
+            <table class="dashboard-table">
+              <tr>
+                <td>
+                  <p class="course-page-title" style="height:20px;">
+                    Precent Assignments to Validate [0 to 100]
+                  </p>
+                </td>
+                <td>
+                  <input type="number" class="pctConstraint" value="3">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="course-page-title" style="height:20px;">
+                    Max Assignments to Overlap [0 > number of submission]
+                  </p>
+                </td>
+                <td>
+                  <input type="number" class="numConstraint" value="3">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>
+                    <button class="pure-button pure-button-primary" id="doAssignment">
+                      Assign Readers
+                    </button>
+                    <!-- Success or Failure message -->
+                    <div class="assignconf"></div> 
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="pure-g">
       <div style="width:100%">
-	<h3 class="assignment-title content-subhead">
-	  <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
-	</h3>
-	<div id="submission-table" style="display:none;">
-	  <table class="dashboard-table">
+        <h3 class="assignment-title content-subhead">
+          <a href="#" class="toggle-link" id="submissions-toggle" onclick="$('#submission-table').toggle();">+</a> Submissions
+        </h3>
+        <div id="submission-table" style="display:none;">
+          <table class="dashboard-table">
             <thead>
               <tr class="table-header">
-		<td>Student</td>
-		<td>Submitted</td>
-		<td>Grader</td>
-		<td>Graded?</td>
+                <td>Student</td>
+                <td>Submitted At</td>
+                <td>Assigned To</td>
+                <td>Graded By</td>
+                <td>Graded?</td>
               </tr>
             </thead>
             <br>
             <tbody>
-	      {{#each submissions}}
-	      <tr>
-		<td>
-		  <a href="#" class="course-link">
+              {{#each submissions}}
+              <tr>
+                <td>
+                  <a href="#" class="course-link">
                     <p class="course-link-inner">
-		      {{this.user.name}}
+                      {{this.user.name}}
                     </p>
-		  </a>
-		</td>
-		<td>
-		  {{#if this.submitted_at}}
-		  {{this.submitted_at}}
-		  {{else}}
-		  No Submission Time
-		  {{/if}}
-		</td>
-		<td>
-		  {{#if this.grader_id}}
-		  {{this.grader_name}}
-		  {{else}}
-		  Not Yet Graded
-		  {{/if}}
-		</td>
-		<td>
-		  {{#if this.graded_at}}
-		  <i class="fa fa-check-square-o"></i>
-		  {{/if}}
-		  <a href="#" class="grade-submission pure-button">Grade</a>
-		</td>
-	      </tr>
-	      {{/each}}
-	    </tbody>
-	  </table>
-	</div>
+                  </a>
+                </td>
+                <td>
+                  {{#if this.submitted_at}}
+                  {{this.submitted_at}}
+                  {{else}}
+                  No Submission
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if this.assigned_to_grade_id}}
+                  {{this.assigned_to_grade_name}}
+                  {{else}}
+                  Not Yet Assigned
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if this.grader_id}}
+                  {{this.grader_name}}
+                  {{else}}
+                  Not Yet Graded
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if this.graded_at}}
+                  <i class="fa fa-check-square-o"></i>
+                  {{/if}}
+                  <a href="#" class="grade-submission pure-button">Grade</a>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="pure-g">
       <h3 class="assignment-title content-subhead">
-	<a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#stat-table').toggle();">+</a> Grader Analytics
+        <a href="#" class="toggle-link" id="analytics-toggle" onclick="$('#stat-table').toggle();$('#graderCharts').toggle();">+</a> Grader Analytics
       </h3>
       <table class="dashboard-table" id="stat-table" style="display:none;">
         <thead>
           <tr class="table-header">
             <td>Grader</td>
             <td>Average Score</td>
-	    <td>Number Graded</td>
+      <td>Number Graded</td>
           </tr>
         </thead>
         <br>
@@ -139,21 +193,21 @@
           {{#each graderStats}}
           <tr>
             <td>
-	      <a href="#" class="course-link">
+        <a href="#" class="course-link">
                 <p class="course-link-inner">
                   {{this.grader_name}}
                 </p>
-	      </a>
+        </a>
             </td>
             <td>
-	      {{this.mean}}
+        {{this.mean}}
             </td>
-	    <td>
-	      {{this.scores.length}}
-	    </td>
+      <td>
+        {{this.scores.length}}
+      </td>
           </tr>
           {{/each}}
-	</tbody>
+  </tbody>
       </table>
     </div>
     <div id="readerAverages" style="width:100%;height:100%;"></div>
@@ -162,48 +216,48 @@
     </h3>
     <div class="pure-g" style="letter-spacing:1px;display:none;" id="grade-stats">
       <div class="pure-u-1-2">
-	<table class="dashboard-table">
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Median:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{median}}
-	      </p>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Mean:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{mean}}
-	      </p>
-	    </td>
-	  </tr>
-	</table>
+  <table class="dashboard-table">
+    <tr>
+      <td>
+        <p class="course-page-title" style="height:20px;">
+    Median:
+        </p>
+      </td>
+      <td>
+        <p>
+    {{median}}
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p class="course-page-title" style="height:20px;">
+    Mean:
+        </p>
+      </td>
+      <td>
+        <p>
+    {{mean}}
+        </p>
+      </td>
+    </tr>
+  </table>
       </div>
       <div class="pure-u-1-2">
-	<table class="dashboard-table">
-	  <tr>
-	    <td>
-	      <p class="course-page-title" style="height:20px;">
-		Standard Deviation:
-	      </p>
-	    </td>
-	    <td>
-	      <p>
-		{{standardDeviation}}
-	      </p>
-	    </td>
-	  </tr>
-	</table>
+  <table class="dashboard-table">
+    <tr>
+      <td>
+        <p class="course-page-title" style="height:20px;">
+    Standard Deviation:
+        </p>
+      </td>
+      <td>
+        <p>
+    {{standardDeviation}}
+        </p>
+      </td>
+    </tr>
+  </table>
       </div>
     </div>
     <div id="gradeHistogram" style="width:100%;height:100%"></div>
