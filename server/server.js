@@ -64,15 +64,10 @@ Meteor.methods({
         return data !== [];
     },
     getCourses: function() {
-        console.log("courses");
-        console.log(Meteor.user().canvasToken);
         if (Meteor.user().canvasToken) {
-            console.log("inside");
             var result = Meteor.http.get(coursePath(),
             requestParams({'include[]':'term'})).content;
             var myCourseIds = Meteor.user().courses;
-            console.log('COURSE IDs', myCourseIds);
-            console.log("courseIDs: " + result);
             if (myCourseIds) {
                 var myCourses = Courses.find({'id' : { $in : myCourseIds }});
                 myCourses = myCourses.fetch();
@@ -82,7 +77,6 @@ Meteor.methods({
                         result[index] = myCourses[i];
                     }
                 }
-                return result;
             }
             return result;
         }
@@ -97,11 +91,11 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-        var course = Courses.find({"id": cId}).fetch();
-        if (course.length == 0) {
+        var course = Courses.findOne({"id": cId});
+        if (!course) {
             return canvasStaff(cId);
         }
-        return course[0].staff;
+        return course.staff;
     },
     getSubmissions: function(cId, aId) {
         var data;
@@ -145,7 +139,7 @@ Meteor.methods({
         course.staff = canvasStaff(course.id);
         course.staff.forEach(function(s) {
             s.hours = 0;
-            s.percent = null; // Not used currently.
+            s.percent = null; // Not to be set directly (yet).
         });
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
@@ -157,8 +151,6 @@ Meteor.methods({
         course_staff = course_staff.staff;
         var my_info = course_staff.filter(isCurrentCanvasUser);
         var other_info = course_staff.filter(isNotCurrentCanvasUser);
-        console.log('MY INFO');
-        console.log(my_info);
         if (my_info.length > 0) {
             my_info = my_info[0];
 
