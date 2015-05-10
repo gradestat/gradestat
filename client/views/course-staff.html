@@ -3,42 +3,45 @@
 
     <div class="pure-g">
       <div class="pure-u-1-1">
-	<table class="table table-striped">
-	  <thead>
+        <table class="table table-striped">
+          <thead>
             <tr class="table-header">
               <td></td>
               <td>Name</td>
               <td>Role</td>
               <td>Hours</td>
             </tr>
-	  </thead>
-	  <tbody>
-          {{#each staffList}}
+          </thead>
+          <tbody class="staff-table">
+            {{#each staffList}}
             <tr>
               <td><img src="{{ this.avatar_url }}"/></td>
               <td>
-		<p class="course-page-title" style="height:20px;">
+                <p class="course-page-title" style="height:20px;">
                   {{this.name}}
-		</p>
+                </p>
               </td>
               <td><p>{{this.enrollment_type}}</p></td>
               <td>
-		{{#if isInDB}}
-		<input type="number" class="hours-data" for="{{id}}" value="{{hours}}">
-		{{else}}
-		0
-		{{/if}}
+                {{#if isInDB}}
+                <form class="pure-form">
+                  <input type="number" class="hours-data pure-input-rounded"
+                    for="{{id}}" value="{{hours}}">
+                </form>
+                {{else}}
+                0
+                {{/if}}
               </td>
             </tr>
             {{/each}}
-	  </tbody>
+          </tbody>
         </table>
       </div>
     </div>
     {{#if isInDB}}
-      <div class="update-section">
-        <button type="submit" id="submit-button" class="pure-button pure-button-primary">
-          Update Staff Hours</button>
-        </div>
+    <div class="update-section">
+      <button type="submit" id="submit-button" class="button pure-button pure-button-primary">
+        Update Staff Hours</button>
+      </div>
     {{/if}}
 </template>

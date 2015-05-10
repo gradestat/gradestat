@@ -10,38 +10,34 @@
 
     <div class="pure-g">
       <div class="pure-u-1-1">
-	<table class="table table-striped" id="course-table">
+        <table class="table table-striped" id="course-table">
           <thead>
             <tr>
-              <td><h4>Course</h4></td>
-              <td><h4>Term</h4></td>
-              <td><h4>Manage</h4></td>
+              <th><h4>Course</h4></th>
+              <th><h4>Term</h4></th>
+              <th><h4>Manage</h4></th>
             </tr>
           </thead>
           <tbody>
             {{#each courses}}
             <tr>
               <td>
-		<a href="#" class="course-link">
-                  <p class="course-link-inner">
-                    {{this.name}}
-                  </p>
-		</a>
+                <a href="#" class="course-link">
+                  <p class="course-link-inner">{{this.name}}</p>
+                </a>
               </td>
+              <td>{{this.term.name}}</td>
               <td>
-		{{this.term.name}}
-              </td>
-              <td>
-		{{#if this.user_id}}
-		<a href="#" class="remove-course pure-button">Remove</a>
-		{{else}}
-		<a href="#" class="add-course pure-button">Add</a>
-		{{/if}}
+                {{#if this.user_id}}
+                <a href="#" class="remove-course pure-button">Remove</a>
+                {{else}}
+                <a href="#" class="add-course pure-button">Add</a>
+                {{/if}}
               </td>
             </tr>
             {{/each}}
-	  </tbody>
-	</table>
+          </tbody>
+        </table>
       </div>
     </div>
     {{/if}}

@@ -59,9 +59,7 @@
               </p>
             </td>
             <td>
-              <p>
-                {{assignment.needs_grading_count}}
-              </p>
+              <p>{{assignment.needs_grading_count}}</p>
             </td>
           </tr>
         </table>
@@ -77,26 +75,16 @@
         <div class="pure-g" id="reader-assignments" style="display:none;">
           <div class="pure-u-1-1">
             <table class="dashboard-table">
-              <tr>
-                <td>
-                  <p class="course-page-title" style="height:20px;">
-                    Precent Assignments to Validate [0 to 100]
-                  </p>
-                </td>
-                <td>
-                  <input type="number" class="pctConstraint" value="3">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p class="course-page-title" style="height:20px;">
-                    Max Assignments to Overlap [0 to number of submissions]
-                  </p>
-                </td>
-                <td>
-                  <input type="number" class="numConstraint" value="3">
-                </td>
-              </tr>
+              <form class="pure-form pure-form-aligned">
+                <div class="pure-input-group">
+                  <label for="pctConstraint">Precent Assignments to Validate [0 to 100]</label>
+                  <input type="number" class="pure-input-rounded pctConstraint" value="3">
+                </div>
+                <div class="pure-input-group">
+                  <label for="numConstraint">Max Assignments to Overlap</label>
+                  <input type="number" class="pure-input-rounded numConstraint" value="3">
+                </div>
+              </form>
               <tr>
                 <td>
                   <div>
@@ -104,7 +92,7 @@
                       Assign Readers
                     </button>
                     <!-- Success or Failure message -->
-                    <div class="assignconf"></div> 
+                    <div class="assignconf"></div>
                   </div>
                 </td>
               </tr>

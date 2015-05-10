@@ -268,12 +268,9 @@ Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
     Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
-        console.log('GET SUBMISSIONS ');
-        console.log(value);
         if (err) {
             console.log(err);
         } else {
-            console.log(value);
             self.submissionList.set(value);
         }
     });
@@ -309,8 +306,6 @@ Template.assignment.helpers({
     },
     graderStats: function() {
         var data = Template.instance().submissionList.get();
-        console.log('STATS');
-        console.log(data);
         var total = 0;
         var count = 0;
         var stats = {};
@@ -377,16 +372,24 @@ Template.assignment.events({
         var params = {
             course: courseID,
             assign: assnID,
-            pct: pctConstraint,
-            num: numConstraint
+            pct: parseFloat(pctConstraint),
+            num: parseFloat(numConstraint)
         }
         $('.assignconf').html('<img src="/loading_spinner.gif" width="30px" height="30px"/>');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
-
+                $('.assignconf').html(err);
             } else {
                 $('.assignconf').html('<h4>Success!</h4>');
+                Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        self.submissionList.set(value);
+                    }
+                });
             }
-        })
+        });
+        
     }
 });

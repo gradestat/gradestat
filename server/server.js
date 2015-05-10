@@ -104,7 +104,6 @@ Meteor.methods({
         if (assignment) {
             console.log('FOUND IN DB');
             data = assignment.cached_submissions;
-            console.log(data);
         } else {
             var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
             data = result.content;
@@ -135,6 +134,18 @@ Meteor.methods({
         }
         return remove;
     },
+    mySubmissions: function(aId) {
+        var assn = Assignments.findOne({ 'id' : aId });
+        if (!assn && !assn.cached_submissions) {
+            return [];
+        }
+        var subm = assn.cached_submissions;
+        subm = subm.filter(function(s) {
+            return s.assigned_to_grade_id === Meteor.user().canvasId ||
+                s.assigned_to_grade_name === 'Everyone'
+        });
+        return subm;
+    },
     addCourse: function(course) {
         var courseDB = Courses.findOne({'id': course.id});
         if (!courseDB) {
@@ -162,7 +173,7 @@ Meteor.methods({
         var staff = course.staff;
         staff.forEach(function(s) {
             if (hours[s.id]) {
-                s.hours =  hours[s.id];
+                s.hours =  parseInt(hours[s.id]);
             }
         });
         // UpdateDB
@@ -181,8 +192,15 @@ Meteor.methods({
         var cId = params.course
         var staff = Courses.findOne({ 'id' : parseInt(cId) });
         staff = staff.staff;
+        var hours = 0;
         if (!staff) {
             throw new Error('Course Staff Must be saved in GradeSate');
+        }
+        staff.forEach(function(s) {
+            hours += parseInt(s.hours);
+        })
+        if (hours < 1) {
+            throw new Error('Staff Must Be Assigned 1 or more hours.');
         }
         var assignment = Meteor.http.get(coursePath(cId) + "/assignments/" + aId, requestParams()).content;
         var submissions = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
@@ -203,9 +221,8 @@ Meteor.methods({
                 subm.assigned_to_grade_name = tasks.submissionMap[id].name;
             } else {
                 console.log('Uh oh! Assignment not found!!');
-                console.log(subm);
             }
-        })
+        });
         assignment.reader_taks = tasks.tasks;
         assignment.validations = tasks.validations;
         var existingAssignment = Assignments.findOne({'id': aId});
@@ -254,12 +271,13 @@ function normalizeHours(readers) {
 // Validate determines the overlap in assignments to all readers, as a %
 // maxValidate limits the percentage to a set value
 function assignReaders(readers, submissions, validate, maxValidate) {
-    var numAssignAll = calculateNumValidations(submissions.length, validate, maxValidate);
+    var numAssignAll = calculateNumValidations(submissions.length,
+                parseFloat(validate), parseInt(maxValidate));
     // Make a copy of the readers adding an assignments array.
     var readerTaks = readers.map(function(r) {
         return _.extend({}, r, {assignments: [] });
     });
-    var submissions = clone(submissions); // Immutability.
+    var submissions = clone(submissions);
     // TODO: Update once assignment object exists.
     // Respresents assignments that need to be divided up by reader
     var numToAssign = submissions.length - numAssignAll;
@@ -271,7 +289,8 @@ function assignReaders(readers, submissions, validate, maxValidate) {
     var assignIdx = 0;
     while (numAssignAll) {
         submIdx = Math.floor(Math.random() * submissions.length);
-        var subm = submissions[submIdx];submissions[submIdx];
+        var subm = submissions[submIdx];
+
         readerTaks.forEach(function(reader) {
             if (reader.hours && reader.percent) {
                 reader.assignments.push(subm);
@@ -285,27 +304,32 @@ function assignReaders(readers, submissions, validate, maxValidate) {
         submissions.splice(submIdx, 1); // remove item.
         numAssignAll--;
     }
-    readerTaks.forEach(function(reader) {
-        var readerNum = Math.round(reader.percent * numToAssign);
-        while (readerNum) {
-            submIdx = Math.floor(Math.random() * submissions.length);
-            var subm = submissions[submIdx];
-            // sometimes undefined is added to a reader array
-            if (!subm) { break; }
 
-            reader.assignments.push(subm);
-            submissionIDMap[subm.id] = {
-                id: reader.id, name: reader.name };
-            submissions.splice(submIdx, 1); // remove item.
-            readerNum--;
+    readerTaks.forEach(function(reader) {
+        if (reader.hours && reader.percent) {
+            var readerNum = Math.round(parseFloat(reader.percent) * numToAssign);
+            while (readerNum) {
+                submIdx = Math.floor(Math.random() * submissions.length);
+                var subm = submissions[submIdx];
+                // sometimes undefined is added to a reader array
+                if (!subm) { break; }
+
+                reader.assignments.push(subm);
+                submissionIDMap[subm.id] = {
+                    id: reader.id, name: reader.name };
+                submissions.splice(submIdx, 1); // remove item.
+                readerNum--;
+            }
         }
     });
     // Cleanup remaining leftover assigments (rounding) if any.
-    while (submissions.length) {
+    while (submissions.length > 1) {
         readerTaks.some(function(reader) {
-            reader.assingmnets.push(submissions.pop());
-            // .some stops on true values, but we should stop only at 0.
-            return !submissions.length;
+            if (reader.hours && reader.percent) {
+                reader.assingments.push(submissions.pop());
+                // .some stops on true values, but we should stop only at 0.
+                return !submissions.length;
+            }
         });
     }
 
