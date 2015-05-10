@@ -77,8 +77,8 @@ Meteor.methods({
                         result[index] = myCourses[i];
                     }
                 }
-                return result;
             }
+            return result;
         }
         return null;
     },
@@ -91,11 +91,11 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-        var course = Courses.find({"id": cId}).fetch();
-        if (course.length == 0) {
+        var course = Courses.findOne({"id": cId});
+        if (!course) {
             return canvasStaff(cId);
         }
-        return course[0].staff;
+        return course.staff;
     },
     getSubmissions: function(cId, aId) {
         var data;
@@ -109,7 +109,7 @@ Meteor.methods({
             var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"}));
             data = result.content;
         }
-        
+
         var staff = canvasStaff(cId);
         for (var i = 0; i < data.length; i += 1) {
             grader = staff.filter(function(e) {return e.id == data[i].grader_id; });
@@ -125,7 +125,7 @@ Meteor.methods({
         canvasUser = JSON.parse(canvasUser.content);
         Meteor.users.update({_id: userId},
             { $set: {"canvasId": canvasUser["id"]} });
-
+            console.log("Canvas id: " + canvasUser["id"])
         return Meteor.users.find({_id: userId}).canvasId;
     },
     removeCourse: function(course) {
@@ -139,7 +139,7 @@ Meteor.methods({
         course.staff = canvasStaff(course.id);
         course.staff.forEach(function(s) {
             s.hours = 0;
-            s.percent = null; // Not used currently.
+            s.percent = null; // Not to be set directly (yet).
         });
         var courseDB = Courses.find({'id': course.id});
         if (courseDB.fetch().length == 0) {
@@ -151,8 +151,6 @@ Meteor.methods({
         course_staff = course_staff.staff;
         var my_info = course_staff.filter(isCurrentCanvasUser);
         var other_info = course_staff.filter(isNotCurrentCanvasUser);
-        console.log('MY INFO');
-        console.log(my_info);
         if (my_info.length > 0) {
             my_info = my_info[0];
 
@@ -298,7 +296,7 @@ function assignReaders(readers, submissions, validate, maxValidate) {
             var subm = submissions[submIdx];
             // sometimes undefined is added to a reader array
             if (!subm) { break; }
-            
+
             reader.assignments.push(subm);
             submissionIDMap[subm.id] = {
                 id: reader.id, name: reader.name };

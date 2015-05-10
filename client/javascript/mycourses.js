@@ -4,9 +4,11 @@ Template.mycourses.created = function() {
     var self = this;
     self.courseInfo = new ReactiveVar(['Loading...']);
     Meteor.call('getCourses', function(err, value) {
+        console.log('Got data from server');
         if (err) {
             console.log(err);
         } else {
+            console.log(value);
             self.courseInfo.set(value);
         }
     });
@@ -53,19 +55,30 @@ Template.mycourses.events({
 
 Template.mycourses.helpers({
     noToken: function() {
-        return !Meteor.user().canvasToken;
+        if (Meteor.user()) {
+            return !Meteor.user().canvasToken;
+        }
+        return true;
     },
     course: function() {
         return Session.get("course");
     },
     courses: function() {
+        console.log("1");
+        console.log(Template.instance().courseInfo);
         var courses = Template.instance().courseInfo.get();
-        for (var i = 0; i < courses.length; i += 1) {
-            if (courses[i].bcourses) {
-                courses[i] = courses[i].bcourses;
+        console.log("2: " + courses);
+        if (courses) {
+            for (var i = 0; i < courses.length; i += 1) {
+                console.log("3");
+                if (courses[i].bcourses) {
+                    console.log("5");
+                    courses[i] = courses[i].bcourses;
+                }
             }
+            console.log("4");
+            return courses;
         }
-        return courses;
     },
     assignment: function() {
         return Session.get("assignment");
