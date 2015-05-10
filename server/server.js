@@ -17,6 +17,19 @@ function requestParams(p) {
     return options;
 }
 
+function toGrade(uId, aId) {
+    var assn = Assignments.findOne({ 'id' : aId });
+    if (!assn && !assn.cached_submissions) {
+        return [];
+    }
+    var subm = assn.cached_submissions;
+    subm = subm.filter(function(s) {
+        return s.assigned_to_grade_id === uId ||
+            s.assigned_to_grade_name === 'Everyone'
+    });
+    return subm;
+}
+
 /* Check if an object in arr has value for field. */
 function findObjectByField(arr, field, value) {
     for (var i = 0; i < arr.length; i += 1) {
@@ -135,16 +148,13 @@ Meteor.methods({
         return remove;
     },
     mySubmissions: function(aId) {
-        var assn = Assignments.findOne({ 'id' : aId });
-        if (!assn && !assn.cached_submissions) {
-            return [];
-        }
-        var subm = assn.cached_submissions;
-        subm = subm.filter(function(s) {
-            return s.assigned_to_grade_id === Meteor.user().canvasId ||
-                s.assigned_to_grade_name === 'Everyone'
-        });
-        return subm;
+	return toGrade(Meteor.user().canvasId, aId);
+    },
+    assignedSubmissions: function(aId) {
+	var subList = [];
+	var readers = Assignments.findOne({'id': aId});
+	
+	return subList;
     },
     addCourse: function(course) {
         var courseDB = Courses.findOne({'id': course.id});

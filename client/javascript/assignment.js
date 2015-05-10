@@ -295,6 +295,14 @@ Template.assignment.created = function() {
             self.mysubmissionList.set(value);
         }
     });
+    self.readerSubmissionList = new ReactiveVar([]);
+    Meteor.call("assignedSubmissions", Session.get("assignment").id, function(err, value) {
+        if (err) {
+            console.log(err);
+        } else {
+            self.readerSubmissionList.set(value);
+        }
+    });
 }
 
 Template.assignment.rendered = function() {
@@ -371,6 +379,7 @@ Template.assignment.helpers({
         Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
+	setTimeData(ret);
         setHistoData(ret);
         return ret;
     },
