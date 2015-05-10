@@ -46,14 +46,16 @@
 	  Assignments
 	</h3>
 	<div id="assignment-table">
-	  <table>
-	    {{#each assignmentList}}
-	    <tr>
-	      <a href="#" class="assignment-link">{{this.name}}</a>
-	    </tr>
-	    {{/each}}
+	  <table class="table table-striped">
+	    <tbody>
+	      {{#each assignmentList}}
+	      <tr>
+		<a href="#" class="assignment-link">{{this.name}}</a>
+	      </tr>
+	      {{/each}}
+	    </tbody>
 	  </table>
-    </div>
+	</div>
       </div>
       <div class="pure-u-1-2">
         {{> course_staff}}

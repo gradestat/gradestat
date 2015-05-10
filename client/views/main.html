@@ -1,43 +1,4 @@
 <template name="main">
-<body>
-  <script>
-    function showLoginBox() {
-      var haze = document.getElementById("login-wrapper");
-      haze.style.visibility = "visible";
-    }
-    $("#login-box").on("click", function(event){
-      event.stopPropagation();
-    });
-    $("#login-wrapper").on("click", function(event){
-      $("#login-wrapper").hide();
-    });
-  </script>
-
-  <div id="login-wrapper" class="content-wrapper">
-    <div id="login-box" class="content">
-      <h2>Login with Google</h2>
-      {{> loginButtons}}
-      <!-- <form class="pure-form pure-form-aligned" action="{{pathFor 'dashboard'}}">
-        <fieldset>
-          <div class="pure-control-group">
-            <input name="email" id="email" type="text" placeholder="Berkeley Email">
-          </div>
-
-          <div class="pure-control-group">
-            <input name="password" id="password" type="password" placeholder="Password">
-          </div>
-
-          <div class="pure-controls">
-            <label for="cb" class="pure-checkbox">
-              <input name="cb" id="cb" type="checkbox"> I have read the <a href="{{pathFor 'about'}}">terms and conditions</a>.
-            </label>
-
-            <button type="submit" class="pure-button pure-button-primary">Submit</button>
-          </div>
-        </fieldset>
-      </form> -->
-    </div>
-  </div>
   
   <!-- NAV BAR -->
     <div class="header">
@@ -45,11 +6,8 @@
         <a class="pure-menu-heading" href="{{pathFor 'splash'}}"><i class="fa fa-check-square-o"></i> Gradestat</a>
 
           {{> loginButtons}}
-          <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">Sign Up</a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link" onclick="showLoginBox();">Login</a></li> -->
       </div>
     </div>
 
     {{> yield}}
-</body>
 </template>

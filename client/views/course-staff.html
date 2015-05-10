@@ -2,32 +2,38 @@
     <h3 class="content-subhead">Course Staff</h3>
 
     <div class="pure-g">
-      <table class="dashboard-table">
-        <tr class="table-header">
-          <td></td>
-          <td>Name</td>
-          <td>Role</td>
-          <td>Hours</td>
-        </tr>
-        {{#each staffList}}
-          <tr>
-            <td><img src="{{ this.avatar_url }}"/></td>
-            <td>
-              <p class="course-page-title" style="height:20px;">
-                {{this.name}}
-              </p>
-            </td>
-            <td><p>{{this.enrollment_type}}</p></td>
-            <td>
-              {{#if isInDB}}
-                <input type="number" class="hours-data" for="{{id}}" value="{{hours}}">
-              {{else}}
-                0
-              {{/if}}
-            </td>
-          </tr>
-        {{/each}}
+      <div class="pure-u-1-1">
+	<table class="table table-striped">
+	  <thead>
+            <tr class="table-header">
+              <td></td>
+              <td>Name</td>
+              <td>Role</td>
+              <td>Hours</td>
+            </tr>
+	  </thead>
+	  <tbody>
+          {{#each staffList}}
+            <tr>
+              <td><img src="{{ this.avatar_url }}"/></td>
+              <td>
+		<p class="course-page-title" style="height:20px;">
+                  {{this.name}}
+		</p>
+              </td>
+              <td><p>{{this.enrollment_type}}</p></td>
+              <td>
+		{{#if isInDB}}
+		<input type="number" class="hours-data" for="{{id}}" value="{{hours}}">
+		{{else}}
+		0
+		{{/if}}
+              </td>
+            </tr>
+            {{/each}}
+	  </tbody>
         </table>
+      </div>
     </div>
     {{#if isInDB}}
       <div class="update-section">
