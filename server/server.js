@@ -91,11 +91,11 @@ Meteor.methods({
         return result;
     },
     getStaff: function(cId) {
-        var course = Courses.findOne({"id": cId});
-        if (!course) {
+        var course = Courses.find({"id": cId}).fetch();
+        if (course.length == 0) {
             return canvasStaff(cId);
         }
-        return course.staff;
+        return course[0].staff;
     },
     getSubmissions: function(cId, aId) {
         var data;
@@ -125,7 +125,7 @@ Meteor.methods({
         canvasUser = JSON.parse(canvasUser.content);
         Meteor.users.update({_id: userId},
             { $set: {"canvasId": canvasUser["id"]} });
-            console.log("Canvas id: " + canvasUser["id"])
+
         return Meteor.users.find({_id: userId}).canvasId;
     },
     removeCourse: function(course) {
@@ -136,29 +136,25 @@ Meteor.methods({
         return remove;
     },
     addCourse: function(course) {
+        var courseDB = Courses.findOne({'id': course.id});
+        if (!courseDB) {
+            Courses.insert(course);
+        }
         course.staff = canvasStaff(course.id);
         course.staff.forEach(function(s) {
             s.hours = 0;
-            s.percent = null; // Not to be set directly (yet).
+            s.percent = null; // Not used currently.
         });
-        var courseDB = Courses.find({'id': course.id});
-        if (courseDB.fetch().length == 0) {
-            Courses.insert(course);
-        }
         Meteor.users.update({ '_id': Meteor.userId() },
                             { $addToSet: { 'courses': course.id } });
-        var course_staff = Courses.findOne({"id" : course.id});
-        course_staff = course_staff.staff;
-        var my_info = course_staff.filter(isCurrentCanvasUser);
-        var other_info = course_staff.filter(isNotCurrentCanvasUser);
-        if (my_info.length > 0) {
-            my_info = my_info[0];
-
-            my_info.user_id = Meteor.userId();
-            other_info.push(my_info);
-        }
+        course.staff.forEach(function(s) {
+            if (isCurrentCanvasUser(s)) {
+                console.log('Found current user');
+                s.user_id = Meteor.userId();
+            }
+        });
         Courses.update({ 'id': course.id },
-                       { $set: { 'staff': other_info } });
+                       { $set: { 'staff': course.staff } });
         return course;
     },
     updateStaffHours: function(cId, hours) {
