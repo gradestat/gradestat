@@ -2,7 +2,7 @@
 
 medianX = function(medianArr) {
     count = medianArr.length;
-    median = (count % 2 == 0) ? (medianArr[(medianArr.length/2) - 1] + medianArr[(medianArr.length / 2)]) / 2 : medianArr[Math.floor(medianArr.length / 2)];
+    median = (count % 2 == 0) ? (medianArr[(medianArr.length / 2) - 1] + medianArr[(medianArr.length / 2)]) / 2 : medianArr[Math.floor(medianArr.length / 2)];
     return median;
 }
 
@@ -21,7 +21,7 @@ toggleBands = function(chart) {
 }
 
 average = function(data) {
-    var sum = data.reduce(function(sum, value){
+    var sum = data.reduce(function(sum, value) {
         return sum + value;
     }, 0);
     var avg = sum / data.length;
@@ -29,7 +29,9 @@ average = function(data) {
 }
 
 setHistoData = function(ret) {
-    var all = $.grep(ret, function(o) {return o.grader_id == "All";});
+    var all = $.grep(ret, function(o) {
+        return o.grader_id == "All";
+    });
     all = all[0];
     var mean = all.mean;
     var scores = all.scores;
@@ -59,10 +61,10 @@ setHistoData = function(ret) {
             }
         }
     }];
-    var sigmas = [-3,-2,-1,1,2,3];
+    var sigmas = [-3, -2, -1, 1, 2, 3];
     for (s in sigmas) {
         plotLines.push({
-            "value": mean + sd*sigmas[s],
+            "value": mean + sd * sigmas[s],
             "width": 1,
             "color": "#999",
             "dashStyle": "Dash",
@@ -80,24 +82,24 @@ setHistoData = function(ret) {
         });
     }
     var plotBands = [{
-        "from": -1*sd + mean,
-        "to": 1*sd + mean,
+        "from": -1 * sd + mean,
+        "to": 1 * sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-        "from": -2*sd + mean,
-        "to": 2*sd + mean,
+        "from": -2 * sd + mean,
+        "to": 2 * sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }, {
-        "from": -3*sd + mean,
-        "to": 3*sd + mean,
+        "from": -3 * sd + mean,
+        "to": 3 * sd + mean,
         "color": "rgba(184,210,236,.1)",
         "zIndex": 0
     }];
     var maxPoints = Session.get("assignment").points_possible;
-    var bucketSize = Math.ceil(maxPoints/10);
-    var bucketMargin = bucketSize/2;
+    var bucketSize = Math.ceil(maxPoints / 10);
+    var bucketMargin = bucketSize / 2;
     var curBucket = bucketMargin;
     var buckets = [];
     var count = 0;
@@ -117,7 +119,7 @@ setHistoData = function(ret) {
             count += 1;
         }
     }
-    buckets[buckets.length-1][1] += count;
+    buckets[buckets.length - 1][1] += count;
     Session.set("histoData", {
         chart: {
             type: 'column',
@@ -133,125 +135,135 @@ setHistoData = function(ret) {
         },
         tooltip: {
             borderWidth: 1,
-            pointFormatter: function () {
+            pointFormatter: function() {
                 lower = this.x - bucketMargin;
                 upper = this.x + bucketMargin;
                 return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' +
                     '<b>Count:</b> ' + this.y;
+            }
+        },
+        plotOptions: {
+            series: {
+                minPointLength: 1,
+                shadow: false,
+                marker: {
+                    enabled: false
                 }
             },
-            plotOptions: {
-                series: {
-                    minPointLength: 1,
-                    shadow: false,
-                    marker: {
-                        enabled: false
-                    }
-                },
-                area: {
-                    events: {
-                        legendItemClick: function (e) {
-                            if (this.name == 'Sigma Bands') {
-                                toggleBands(this.chart);
-                            }
+            area: {
+                events: {
+                    legendItemClick: function(e) {
+                        if (this.name == 'Sigma Bands') {
+                            toggleBands(this.chart);
                         }
                     }
                 }
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'Point Buckets'
             },
-            xAxis: {
-                title: {
-                    text: 'Point Buckets'
-                },
-                lineColor: '#999',
-                tickColor: '#ccc',
-                plotLines: plotLines,
-                plotBands: plotBands
+            lineColor: '#999',
+            tickColor: '#ccc',
+            plotLines: plotLines,
+            plotBands: plotBands
+        },
+        yAxis: {
+            title: {
+                text: 'Count'
             },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                },
-                gridLineColor: '#e9e9e9',
-                tickWidth: 1,
-                tickLength: 3,
-                tickColor: '#ccc',
-                lineColor: '#ccc',
-                endOnTick: false,
-            },
-            series: [{
-                name: 'Submission Samples',
-                data: buckets,
-                pointRange: bucketSize,
-                borderWidth: .5,
-                borderColor: '#666',
-                pointPadding: 0,
-                groupPadding: 0,
-                color: '#e3e3e3',
-                tooltip: {
-                    pointFormatter: function () {
-                        lower = this.x - bucketMargin;
-                        upper = this.x + bucketMargin;
-                        return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
-                    }
+            gridLineColor: '#e9e9e9',
+            tickWidth: 1,
+            tickLength: 3,
+            tickColor: '#ccc',
+            lineColor: '#ccc',
+            endOnTick: false,
+        },
+        series: [{
+            name: 'Submission Samples',
+            data: buckets,
+            pointRange: bucketSize,
+            borderWidth: .5,
+            borderColor: '#666',
+            pointPadding: 0,
+            groupPadding: 0,
+            color: '#e3e3e3',
+            tooltip: {
+                pointFormatter: function() {
+                    lower = this.x - bucketMargin;
+                    upper = this.x + bucketMargin;
+                    return '<b>Range:</b><br/> ' + lower + ' - ' + upper + '<br/>' + '<b>Count:</b> ' + this.y;
                 }
-            }, {
-                type: 'area',
-                name: 'Sigma Bands',
-            }]
-        });
+            }
+        }, {
+            type: 'area',
+            name: 'Sigma Bands',
+        }]
+    });
 }
 
 computeStats = function(values) {
-    var ret = [0,0,0,0,0];
-    values.sort(function(a,b) {return a-b;});
+    var ret = [0, 0, 0, 0, 0];
+    values.sort(function(a, b) {
+        return a - b;
+    });
     q1Arr = (values.length % 2 == 0) ? values.slice(0, (values.length / 2) + 1) : values.slice(0, Math.floor(values.length / 2) + 1);
-    q2Arr =  values;
-    q3Arr = (values.length % 2 == 0) ? values.slice( (values.length/2) - 1, values.length) : values.slice(Math.ceil(values.length / 2) - 1, values.length);
+    q2Arr = values;
+    q3Arr = (values.length % 2 == 0) ? values.slice((values.length / 2) - 1, values.length) : values.slice(Math.ceil(values.length / 2) - 1, values.length);
     medianX(q1Arr);
-    ret[1]=median;
+    ret[1] = median;
     medianX(q2Arr);
-    ret[2]=median;
+    ret[2] = median;
     medianX(q3Arr);
-    ret[3]=median;
+    ret[3] = median;
     ret[0] = values[0];
-    ret[4] = values[values.length-1];
+    ret[4] = values[values.length - 1];
     return ret;
 }
 
 setBoxData = function(ret) {
     Session.set("boxData", {
-  chart: {
-      type: 'boxplot',
-      backgroundColor: 'white'//"#BBBBBB"
-  },
-  title: {
-      text: 'Reader Grade Distributions'
-  },
-  legend: {
-      enabled: false
-  },
-  xAxis: {
-      categories: ret.map(function(x) {return x.grader_name;}),
-      title: {
-    text: 'Grader'
-      }
-  },
-  yAxis: {
-      title: {
-    text: 'Points Awarded'
-      }
-  },
-  series: [{
-      name: 'Grade Distribution',
-      data: Session.get("ret").map(function(x) {return computeStats(x.scores);}),
-      tooltip: {
-    headerFormat: '<b>{point.key} Grades</b><br/>'
-      }
-  }, {
-      name: 'Mean',
+        chart: {
+            type: 'boxplot',
+            backgroundColor: 'white' //"#BBBBBB"
+        },
+        title: {
+            text: 'Reader Grade Distributions'
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ret.map(function(x) {
+                return x.grader_name;
+            }),
+            title: {
+                text: 'Grader'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Points Awarded'
+            }
+        },
+        series: [{
+            name: 'Grade Distribution',
+            data: Session.get("ret").map(function(x) {
+                return computeStats(x.scores);
+            }),
+            tooltip: {
+                headerFormat: '<b>{point.key} Grades</b><br/>'
+            }
+        }, {
+            name: 'Mean',
             color: Highcharts.getOptions().colors[0],
             type: 'scatter',
-            data: ret.map(function(x) {return [ret.indexOf(x),x.scores.reduce(function(a,b){return a+b}, 0)/x.scores.length]}),
+            data: ret.map(function(x) {
+                return [ret.indexOf(x), x.scores.reduce(function(a, b) {
+                    return a + b
+                }, 0) / x.scores.length]
+            }),
             marker: {
                 fillColor: '#254A6E',
                 lineWidth: 1,
@@ -260,18 +272,27 @@ setBoxData = function(ret) {
             tooltip: {
                 pointFormat: 'Value: {point.y}'
             }
-  }]
+        }]
     });
 }
 
 Template.assignment.created = function() {
     var self = this;
     self.submissionList = new ReactiveVar([]);
-    Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
+    Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
         if (err) {
             console.log(err);
         } else {
             self.submissionList.set(value);
+        }
+    });
+    
+    self.mysubmissionList = new ReactiveVar([]);
+    Meteor.call("mySubmissions", Session.get("assignment").id, function(err, value) {
+        if (err) {
+            console.log(err);
+        } else {
+            self.mysubmissionList.set(value);
         }
     });
 }
@@ -304,13 +325,17 @@ Template.assignment.helpers({
         var data = Template.instance().submissionList.get();
         return data;
     },
+    mysubmissions: function() {
+        var data = Template.instance().mysubmissionList.get();
+        return data;
+    },
     graderStats: function() {
         var data = Template.instance().submissionList.get();
         var total = 0;
         var count = 0;
         var stats = {};
         var gId = 0;
-        for (var i=0; i < data.length; i += 1) {
+        for (var i = 0; i < data.length; i += 1) {
             gId = data[i].grader_id;
             total += data[i].score;
             count += 1;
@@ -319,20 +344,31 @@ Template.assignment.helpers({
                 stats[gId].total += data[i].score;
                 stats[gId].scores.push(data[i].score);
             } else {
-                stats[gId] = { count: 1,
-                        total: data[i].score,
-                        scores: [data[i].score],
-                        grader_name: data[i].grader_name };
+                stats[gId] = {
+                    count: 1,
+                    total: data[i].score,
+                    scores: [data[i].score],
+                    grader_name: data[i].grader_name
+                };
             }
         }
         var ret = [];
-        ret.push({grader_id: "All", mean: total/count, total: total, count: count, scores: data.map(function(x) {return x.score;}), grader_name: "All"});
+        ret.push({
+            grader_id: "All",
+            mean: total / count,
+            total: total,
+            count: count,
+            scores: data.map(function(x) {
+                return x.score;
+            }),
+            grader_name: "All"
+        });
         for (grader in stats) {
-            stats[grader].mean = stats[grader].total/stats[grader].count;
+            stats[grader].mean = stats[grader].total / stats[grader].count;
             stats[grader].grader_id = grader;
             ret.push(stats[grader]);
         }
-        Session.set("classMean", total/count);
+        Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
         setHistoData(ret);
@@ -381,7 +417,7 @@ Template.assignment.events({
                 $('.assignconf').html(err);
             } else {
                 $('.assignconf').html('<h4>Success!</h4>');
-                Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function (err, value) {
+                Meteor.call("getSubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
                     if (err) {
                         console.log(err);
                     } else {
@@ -390,6 +426,6 @@ Template.assignment.events({
                 });
             }
         });
-        
+
     }
 });
