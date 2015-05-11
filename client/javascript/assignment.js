@@ -31,10 +31,11 @@ average = function(data) {
 setTimeData = function() {
     var data = Template.instance().readerSubmissionList.get();
     for (gId in data) {
-	data[gId] = data[gId].map(function(e) {return new Date(e.graded_at);});
+	data[gId] = data[gId].map(function(e) {return e.graded_at ? new Date(e.graded_at) : null;});
     }
     var assignment = Session.get("assignment");
-    var lastDate = new Date(assignment.created_at);
+    var created = new Date(assignment.created_at);
+    var lastDate = created;
     for (gId in data) {
 	for (date in data[gId]) {
 	    if (date > lastDate) {
@@ -42,7 +43,6 @@ setTimeData = function() {
 	    }
 	}
     }
-    var created = new Date(assignment.created_at);
     interval = (lastDate-created)/10
     cats = []
     for (var i=0; i < 10; i += 1) {
@@ -53,7 +53,7 @@ setTimeData = function() {
     for (gId in data) {
 	values = [];
 	for (date in cats) {
-	    subs = data[gId].filter(function(e) {return e <= date;}).length;
+	    subs = data[gId].filter(function(e) {return e != null && e <= date;}).length;
 	    values.push(subs/data[gId].length);
 	}
 	sers.push({
