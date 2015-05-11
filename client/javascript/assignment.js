@@ -35,7 +35,13 @@ setTimeData = function() {
     }
     var assignment = Session.get("assignment");
     var lastDate = new Date(assignment.created_at);
-    var today = new Date();
+    for (gId in data) {
+	for (date in data[gId]) {
+	    if (date > lastDate) {
+		lastDate = date;
+	    }
+	}
+    }
     var created = new Date(assignment.created_at);
     interval = (lastDate-created)/10
     cats = []
@@ -82,10 +88,7 @@ setTimeData = function() {
             verticalAlign: 'middle',
             borderWidth: 0
         },
-        series: [{
-            name: 'Tokyo',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-        }]
+        series: sers
     });
 }
 
