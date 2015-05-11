@@ -43,14 +43,25 @@ setTimeData = function() {
 	cats.push(new Date((i*interval) + (created/1)));
     }
     duetime = assignment.due_at;
+    sers = [];
+    for (gId in data) {
+	values = [];
+	for (date in cats) {
+	    subs = data[gId].filter(function(e) {return e <= date;}).length;
+	    values.push(subs/data[gId].length);
+	}
+	sers.push({
+	    name: gId,
+	    data: values
+	});
+    }
     Session.set("timeData", {
         title: {
             text: 'Reader Progress',
             x: -20 //center
         },
         xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-			 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            categories: cats
         },
         yAxis: {
             title: {
