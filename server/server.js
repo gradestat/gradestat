@@ -171,7 +171,7 @@ Meteor.methods({
 	var subList = {};
 	var assignments = Assignments.findOne({'id': aId});
 	if (assignments) {
-	    data = assignemnts.cached_submissions;
+	    data = assignments.cached_submissions;
 	} else {
 	    data = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"})).content;
 	}

@@ -448,7 +448,8 @@ Template.assignment.helpers({
         Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
-        setHistoData(ret);
+        setTimeData();
+	setHistoData(ret);
         return ret;
     },
     classMean: function() {
