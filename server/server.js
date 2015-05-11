@@ -42,11 +42,45 @@ function requestParams(params) {
     return options;
 }
 
+// Parse Canvas Headers Specifed in this format:
+// https://bcourses.berkeley.edu/doc/api/file.pagination.html
+// Return an object of {type: url }
+function parseLinkHeaders(link) {
+    // This may be brittle...
+    // Url is item 1, type is 2.
+    var rUrlData = /<(.*)>; rel="(.*)"/;
+    var result = {};
+    var links = link.split(',');
+    links.forEach(function(l) {
+        var item = l.match(rUrlData);
+        if (item) {
+            result[item[2]] = item[1];
+        }
+    });
+    return result;
+}
+
 // A recursive HTTP call to get all data from bCourses.
-function allPages(url, params, data) {
-    var partial;
-    partial = HTTP.get(url, params);
-    return data
+function allPages(url, params, inputData) {
+    var data;
+    var partial = HTTP.get(url, params);
+    var results = partial.content;
+
+    // TODO: Assumes an array...is this safe??
+    if (inputData) {
+        data = inputData.concat(results);
+    } else {
+        data = results;
+    }
+
+    var headers = partial.headers;
+    headers = parseLinkHeaders(headers.link);
+    // Recurse and append data.
+    // TODO: verify params duplication is ok...
+    if (headers.next) {
+        data =  data.concat(allPages(headers.next, params, data));
+    }
+    return data;
 }
 
 function toGrade(uId, aId) {
@@ -128,10 +162,10 @@ Meteor.methods({
     },
     getCourses: function() {
         if (Meteor.user().canvasToken) {
-            var result = Meteor.http.get(coursePath(),
+            var result = allPages(coursePath(),
                 requestParams({
                     'include[]': 'term'
-                })).content;
+                }));
             var myCourseIds = Meteor.user().courses;
             if (myCourseIds) {
                 var myCourses = Courses.find({
@@ -167,10 +201,9 @@ Meteor.methods({
         if (assignment) {
             data = assignment.cached_submissions;
         } else {
-            var result = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({
+            data = allPages(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({
                 "include[]": "user"
             }));
-            data = result.content;
         }
 
         var staff = canvasStaff(cId);
