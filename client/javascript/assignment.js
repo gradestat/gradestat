@@ -48,40 +48,44 @@ setTimeData = function(ret) {
     var data = Template.instance().readerSubmissionList.get();
 
     for (gId in data) {
-	data[gId] = data[gId].map(function(e) {return e.graded_at ? new Date(e.graded_at) : null;});
+        data[gId] = data[gId].map(function(e) {
+            return e.graded_at ? new Date(e.graded_at) : null;
+        });
     }
     var assignment = Session.get("assignment");
     var created = new Date(assignment.created_at);
     var lastDate = created;
     for (gId in data) {
-	for (var k=0; k < data[gId].length; k += 1) {
-	    date = data[gId][k];
-	    if (date > lastDate) {
-		lastDate = date;
-	    }
-	}
+        for (var k = 0; k < data[gId].length; k += 1) {
+            date = data[gId][k];
+            if (date > lastDate) {
+                lastDate = date;
+            }
+        }
     }
-    interval = (lastDate-created)/10
+    interval = (lastDate - created) / 10
     cats = []
-    for (var i=0; i < 11; i += 1) {
-	cats.push(new Date((i*interval) + (created/1)));
+    for (var i = 0; i < 11; i += 1) {
+        cats.push(new Date((i * interval) + (created / 1)));
     }
     duetime = assignment.due_at;
     sers = [];
     for (gId in data) {
-	values = [];
-	for (var j=0; j < cats.length; j += 1) {
-	    date = cats[j];
-	    subs = data[gId].filter(function(e) {return e <= date;}).length;
-	    values.push((subs/data[gId].length)*100);
-	}
-	ind = findObjectByField(ret, 'grader_id', gId);
-	if (ind != -1) {
-	    sers.push({
-		name: ret[ind].grader_name,
-		data: values
-	    });
-	}
+        values = [];
+        for (var j = 0; j < cats.length; j += 1) {
+            date = cats[j];
+            subs = data[gId].filter(function(e) {
+                return e <= date;
+            }).length;
+            values.push((subs / data[gId].length) * 100);
+        }
+        ind = findObjectByField(ret, 'grader_id', gId);
+        if (ind != -1) {
+            sers.push({
+                name: ret[ind].grader_name,
+                data: values
+            });
+        }
     }
     Session.set("timeData", {
         title: {
@@ -372,7 +376,7 @@ Template.assignment.created = function() {
             self.submissionList.set(value);
         }
     });
-    
+
     self.mysubmissionList = new ReactiveVar([]);
     Meteor.call("mySubmissions", Session.get("assignment").id, function(err, value) {
         if (err) {
@@ -381,6 +385,7 @@ Template.assignment.created = function() {
             self.mysubmissionList.set(value);
         }
     });
+
     self.readerSubmissionList = new ReactiveVar([]);
     Meteor.call("assignedSubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
         if (err) {
@@ -414,6 +419,9 @@ Template.assignment.rendered = function() {
 }
 
 var displayNames = {};
+var displayReaderNames = {};
+var isDemo = true;
+
 
 Template.assignment.helpers({
     assignment: function() {
@@ -433,10 +441,22 @@ Template.assignment.helpers({
     log: function(items) {
         console.log(items);
     },
+    demoReader: function(name) {
+        if (!isDemo) {
+            return name;
+        }
+
+        if (name in displayReaderNames) {
+            return displayReaderNames[name];
+        }
+        var len = Object.keys(displayReaderNames).length;
+        var new_name = 'Reader ' + len;
+        displayReaderNames[name] = new_name;
+        return new_name;
+    },
     demoName: function(name) {
-        var isDemo = true;
         if (!isDemo) { return name; }
-        
+
         if (name in displayNames) {
             return displayNames[name];
         }
@@ -488,7 +508,7 @@ Template.assignment.helpers({
         Session.set("ret", ret);
         setBoxData(ret);
         setTimeData(ret);
-	setHistoData(ret);
+        setHistoData(ret);
         return ret;
     },
     classMean: function() {
@@ -531,6 +551,7 @@ Template.assignment.events({
         $('.assignconf').html('<img src="/loading_spinner.gif" width="30px" height="30px"/>');
         Meteor.call('doReaderAssign', params, function(err, value) {
             if (err) {
+                console.log(err);
                 $('.assignconf').html(err);
             } else {
                 $('.assignconf').html('<h4>Success!</h4>');

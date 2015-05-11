@@ -57,15 +57,18 @@
 
 .course-link, .assignment-link, .course-page-title {
     color: #34495e;
-    display: block;
-    text-decoration: none;
+/*    display: block;
+*/    text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 40px;
-    width: 100%;
-    line-height: 20px;
+/*    height: 40px;
+*/    width: 100%;
+    /*line-height: 20px;*/
 }
 
+p {
+  margin: .1em !important;
+}
 .course-link-inner {
     vertical-align: middle;
 }
@@ -81,9 +84,9 @@
     max-width: none;
 }
 
-#assignment-table {
+.assignment-table {
     overflow: auto;
-    max-height: 400px;
+    max-height: 600px;
     margin-right: 50px;
 }
 
@@ -126,6 +129,12 @@ p, .content-subhead {
   vertical-align: middle !important;
 }
 
+.course-link-inner p {
+  margin: none;
+  vertical-align: middle;
+  line-height: 1.41em;
+  height: auto;
+}
 .hours-data {
   max-width: 6em;
 }
