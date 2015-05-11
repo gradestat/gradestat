@@ -49,22 +49,17 @@ setTimeData = function(ret) {
     var lastDate = created;
     for (gId in data) {
 	for (var k=0; k < data[gId].length; k += 1) {
-	    console.log("DAAAAAAAAAAATE");
 	    date = data[gId][k];
-	    console.log(date);
 	    if (date > lastDate) {
 		lastDate = date;
 	    }
 	}
     }
-    console.log("LastDate: " + lastDate.toISOString());
     interval = (lastDate-created)/10
     cats = []
     for (var i=0; i < 11; i += 1) {
 	cats.push(new Date((i*interval) + (created/1)));
     }
-    console.log("CATS");
-    console.log(cats);
     duetime = assignment.due_at;
     sers = [];
     for (gId in data) {
