@@ -78,7 +78,7 @@ function allPages(url, params, inputData) {
     // Recurse and append data.
     // TODO: verify params duplication is ok...
     if (headers.next) {
-        data =  data.concat(allPages(headers.next, params, data));
+        return allPages(headers.next, params, data);
     }
     return data;
 }
