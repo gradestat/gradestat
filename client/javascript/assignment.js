@@ -1,5 +1,15 @@
 // Assignment Template
 
+/* Check if an object in arr has value for field. */
+function findObjectByField(arr, field, value) {
+    for (var i = 0; i < arr.length; i += 1) {
+        if (arr[i][field] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 medianX = function(medianArr) {
     count = medianArr.length;
     median = (count % 2 == 0) ? (medianArr[(medianArr.length / 2) - 1] + medianArr[(medianArr.length / 2)]) / 2 : medianArr[Math.floor(medianArr.length / 2)];
@@ -28,8 +38,9 @@ average = function(data) {
     return avg;
 }
 
-setTimeData = function() {
+setTimeData = function(ret) {
     var data = Template.instance().readerSubmissionList.get();
+
     for (gId in data) {
 	data[gId] = data[gId].map(function(e) {return e.graded_at ? new Date(e.graded_at) : null;});
     }
@@ -43,6 +54,7 @@ setTimeData = function() {
 	    }
 	}
     }
+    console.log("LastDate: " + lastDate.toISOString());
     interval = (lastDate-created)/10
     cats = []
     for (var i=0; i < 10; i += 1) {
@@ -52,14 +64,20 @@ setTimeData = function() {
     sers = [];
     for (gId in data) {
 	values = [];
-	for (date in cats) {
-	    subs = data[gId].filter(function(e) {return e != null && e <= date;}).length;
+	for (var j=0; j < cats.length; j += 1) {
+	    date = cats[j];
+	    console.log(data[gId][0] < date);
+	    subs = data[gId].filter(function(e) {return e <= date;}).length;
+	    console.log("SUBS: " + subs);
 	    values.push(subs/data[gId].length);
 	}
-	sers.push({
-	    name: gId,
-	    data: values
-	});
+	ind = findObjectByField(ret, 'grader_id', gId);
+	if (ind != -1) {
+	    sers.push({
+		name: ret[ind].grader_name,
+		data: values
+	    });
+	}
     }
     Session.set("timeData", {
         title: {
@@ -448,7 +466,7 @@ Template.assignment.helpers({
         Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
-        setTimeData();
+        setTimeData(ret);
 	setHistoData(ret);
         return ret;
     },

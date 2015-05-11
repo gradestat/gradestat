@@ -177,7 +177,8 @@ Meteor.methods({
 	}
 	data = data.map(function(e) {return e.grader_id;});
 	data = data.unique();
-	for (gId in data) {
+	for (var i=0; i < data.length; i += 1) {
+	    gId = data[i];
 	    subList[gId] = toGrade(gId, aId);
 	}
 	return subList;
