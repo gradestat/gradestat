@@ -5,6 +5,8 @@
 // http://jsfiddle.net/FnhRV/19/
 
 /* Check if an object in arr has value for field. */
+
+
 function findObjectByField(arr, field, value) {
     for (var i = 0; i < arr.length; i += 1) {
         if (arr[i][field] == value) {
@@ -411,6 +413,8 @@ Template.assignment.rendered = function() {
     });
 }
 
+var displayNames = {};
+
 Template.assignment.helpers({
     assignment: function() {
         return Session.get("assignment");
@@ -425,6 +429,21 @@ Template.assignment.helpers({
     mysubmissions: function() {
         var data = Template.instance().mysubmissionList.get();
         return data;
+    },
+    log: function(items) {
+        console.log(items);
+    },
+    demoName: function(name) {
+        var isDemo = true;
+        if (!isDemo) { return name; }
+        
+        if (name in displayNames) {
+            return displayNames[name];
+        }
+        var len = Object.keys(displayNames).length;
+        var new_name = 'Student ' + len;
+        displayNames[name] = new_name;
+        return new_name;
     },
     graderStats: function() {
         var data = Template.instance().submissionList.get();

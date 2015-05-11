@@ -112,6 +112,7 @@
                   <td><h4>Student</h4></td>
                   <td><h4>Submitted At</h4></td>
                   <td><h4>Graded By</h4></td>
+                  <td><h4>Score</h4></td>
                   <td><h4>Graded?</h4></td>
                 </tr>
               </thead>
@@ -122,7 +123,7 @@
                   <td>
                     <a href="#" class="course-link">
                       <p class="course-link-inner">
-                        {{this.user.name}}
+                        {{demoName this.user.name}}
                       </p>
                     </a>
                   </td>
@@ -136,6 +137,13 @@
                   <td>
                     {{#if this.grader_id}}
                     {{this.grader_name}}
+                    {{else}}
+                    Not Yet Graded
+                    {{/if}}
+                  </td>
+                  <td>
+                    {{#if this.grader_id}}
+                    {{this.score}}
                     {{else}}
                     Not Yet Graded
                     {{/if}}
@@ -171,17 +179,19 @@
                   <td><h4>Submitted At</h4></td>
                   <td><h4>Assigned To</h4></td>
                   <td><h4>Graded By</h4></td>
+                  <td><h4>Score</h4></td>
                   <td><h4>Graded?</h4></td>
                 </tr>
               </thead>
               <br>
               <tbody>
                 {{#each submissions}}
+                {{log this}}
                 <tr>
                   <td>
                     <a href="#" class="course-link">
                       <p class="course-link-inner">
-                        {{this.user.name}}
+                        {{demoName this.user.name}}
                       </p>
                     </a>
                   </td>
@@ -201,7 +211,15 @@
                   </td>
                   <td>
                     {{#if this.grader_id}}
+                    {{log this.grader_name}}
                     {{this.grader_name}}
+                    {{else}}
+                    Not Yet Graded
+                    {{/if}}
+                  </td>
+                  <td>
+                    {{#if this.grader_id}}
+                    {{this.score}}
                     {{else}}
                     Not Yet Graded
                     {{/if}}
@@ -209,8 +227,10 @@
                   <td>
                     {{#if this.graded_at}}
                     <i class="fa fa-check-square-o"></i>
-                    {{/if}}
+                    <a href="#" class="grade-submission pure-button">View</a>
+                    {{else}}
                     <a href="#" class="grade-submission pure-button">Grade</a>
+                    {{/if}}
                   </td>
                 </tr>
                 {{/each}}
