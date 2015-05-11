@@ -18,6 +18,7 @@ Array.prototype.unique = function() {
 /* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
+// Refactor into smaller functions
 function requestParams(p) {
     var baseQuery = {
         'per_page': '100'
@@ -67,6 +68,13 @@ function coursePath(id) {
 }
 
 function canvasStaff(cId) {
+    console.log('CANVAS STAFF');
+    var course = Courses.findOne({ "id": parseInt(cId) });
+    console.log(cId);
+    if (course && course.staff) {
+        return course.staff;
+    }
+    
     var taParam = requestParams({
         enrollment_type: 'ta',
         'include[]': ['email', 'avatar_url']
@@ -75,16 +83,20 @@ function canvasStaff(cId) {
         enrollment_type: 'teacher',
         'include[]': ['email', 'avatar_url']
     });
+    console.log('TA Call');
+    console.log(taParam);
     var tas = Meteor.http.get(coursePath(cId) + "/users", taParam);
     tas = tas.content;
     for (var i = 0; i < tas.length; i += 1) {
         tas[i].enrollment_type = "TA";
     }
+    console.log('Instructor Call');
     var inst = Meteor.http.get(coursePath(cId) + "/users", instParam);
     inst = inst.content;
     for (var i = 0; i < inst.length; i += 1) {
         inst[i].enrollment_type = "Instructor";
     }
+    console.log('Http calls good');
     var all = [].concat(tas, inst)
     var sorted = all.sort(function(a, b) {
         a = a.sortable_name.toLowerCase();
@@ -109,6 +121,7 @@ Meteor.methods({
         return data !== [];
     },
     getCourses: function() {
+        console.log('GET COURSES');
         if (Meteor.user().canvasToken) {
             var result = Meteor.http.get(coursePath(),
                 requestParams({
@@ -131,24 +144,20 @@ Meteor.methods({
             }
             return result;
         }
-        return null;
+        return [];
     },
     getAssignmentList: function(cId) {
         var result = Meteor.http.get(coursePath(cId) + "/assignments", requestParams()).content;
         return result;
     },
     getAssignment: function(cId, assignmentId) {
+        console.log('GET ASSIGNMENT');
         var result = Meteor.http.get(coursePath(cId) + "/assignments/" + assignmentId, requestParams()).content;
         return result;
     },
-    getStaff: function(cId) {
-        var course = Courses.find({ "id": cId }).fetch();
-        if (course.length == 0) {
-            return canvasStaff(cId);
-        }
-        return course[0].staff;
-    },
+    getStaff: canvasStaff,
     getSubmissions: function(cId, aId) {
+        console.log('GET SUBMISSIONS');
         var data;
         // Check if the assignment has readers assigned:
         var assignment = Assignments.findOne({ id: parseInt(aId) });
@@ -184,9 +193,7 @@ Meteor.methods({
             }
         });
 
-        return Meteor.users.find({
-            _id: userId
-        }).canvasId;
+        return canvasUser["id"];
     },
     removeCourse: function(course) {
         var remove = Courses.remove({
@@ -197,7 +204,9 @@ Meteor.methods({
         }
         return remove;
     },
-    mySubmissions: function(aId) {
+    mySubmissions: function(cId, aId) {
+        console.log('MY SUBMISSIONS');
+        console.log(cId, aId);
         var data = toGrade(Meteor.user().canvasId, aId)
         var staff = canvasStaff(cId);
         data.forEach(function(subm) {
@@ -251,7 +260,6 @@ Meteor.methods({
         });
         course.staff.forEach(function(s) {
             if (isCurrentCanvasUser(s)) {
-                console.log('Found current user');
                 s.user_id = Meteor.userId();
             }
         });
@@ -350,7 +358,6 @@ Meteor.methods({
 });
 
 
-
 function isCurrentCanvasUser(user) {
     return user.id == Meteor.user().canvasId;
 }
@@ -361,11 +368,9 @@ function isNotCurrentCanvasUser(user) {
 
 
 
-
-
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // This handles a very simple algorithm for reader assignment.
 // Takes in Readers and a list of assignments.

@@ -119,13 +119,11 @@
               <br>
               <tbody>
                 {{#each mysubmissions}}
-                {{log "My submission"}}
-                {{log this}}
                 <tr>
                   <td>
                     <a href="#" class="course-link">
                       <p class="course-link-inner">
-                        {{demoName this.user.name}}
+                        {{this.user.name}}
                       </p>
                     </a>
                   </td>
@@ -138,7 +136,7 @@
                   </td>
                   <td>
                     {{#if this.grader_id}}
-                    {{demoReader this.grader_name}}
+                    {{this.grader_name}}
                     {{else}}
                     Not Yet Graded
                     {{/if}}
@@ -194,7 +192,7 @@
                   <td>
                     <a href="#" class="course-link">
                       <p class="course-link-inner">
-                        {{demoName this.user.name}}
+                        {{this.user.name}}
                       </p>
                     </a>
                   </td>
@@ -207,15 +205,14 @@
                   </td>
                   <td>
                     {{#if this.assigned_to_grade_id}}
-                    {{demoReader this.assigned_to_grade_name}}
+                    {{this.assigned_to_grade_name}}
                     {{else}}
                     Not Yet Assigned
                     {{/if}}
                   </td>
                   <td>
                     {{#if this.grader_id}}
-                    {{log this.grader_name}}
-                    {{demoReader this.grader_name}}
+                    {{this.grader_name}}
                     {{else}}
                     Not Yet Graded
                     {{/if}}
@@ -265,7 +262,7 @@
               <td>
                 <a href="#" class="course-link">
                   <p class="course-link-inner">
-                    {{demoReader this.grader_name}}
+                    {{this.grader_name}}
                   </p>
                 </a>
               </td>

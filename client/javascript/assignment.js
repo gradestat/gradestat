@@ -378,7 +378,7 @@ Template.assignment.created = function() {
     });
 
     self.mysubmissionList = new ReactiveVar([]);
-    Meteor.call("mySubmissions", Session.get("assignment").id, function(err, value) {
+    Meteor.call("mySubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
         if (err) {
             console.log(err);
         } else {
@@ -420,7 +420,7 @@ Template.assignment.rendered = function() {
 
 var displayNames = {};
 var displayReaderNames = {};
-var isDemo = true;
+var isDemo = false;
 
 
 Template.assignment.helpers({
