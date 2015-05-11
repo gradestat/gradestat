@@ -18,23 +18,35 @@ Array.prototype.unique = function() {
 /* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
-// Refactor into smaller functions
-function requestParams(p) {
-    var baseQuery = {
-        'per_page': '100'
-    };
-    var qs = _.extend({}, baseQuery, p);
+function baseOptions(token) {
     var options = {
         headers: {
-            Authorization: 'Bearer ' + Meteor.user().canvasToken
+            Authorization: 'Bearer ' + token
         },
-        params: qs,
         npmRequestOptions: {
             json: true,
             useQueryString: true
         }
-    }
+    };
+
+    return options
+}
+
+// Refactor into smaller functions
+function requestParams(params) {
+    var query = _.extend({
+        'per_page': '100'
+    }, params);
+    var options = baseOptions(Meteor.user().canvasToken);
+    options.params = query;
     return options;
+}
+
+// A recursive HTTP call to get all data from bCourses.
+function allPages(url, params, data) {
+    var partial;
+    partial = HTTP.get(url, params);
+    return data
 }
 
 function toGrade(uId, aId) {
