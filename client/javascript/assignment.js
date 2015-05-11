@@ -60,7 +60,7 @@ setTimeData = function(ret) {
     console.log("LastDate: " + lastDate.toISOString());
     interval = (lastDate-created)/10
     cats = []
-    for (var i=0; i < 10; i += 1) {
+    for (var i=0; i < 11; i += 1) {
 	cats.push(new Date((i*interval) + (created/1)));
     }
     console.log("CATS");
@@ -72,7 +72,7 @@ setTimeData = function(ret) {
 	for (var j=0; j < cats.length; j += 1) {
 	    date = cats[j];
 	    subs = data[gId].filter(function(e) {return e <= date;}).length;
-	    values.push(subs/data[gId].length);
+	    values.push((subs/data[gId].length)*100);
 	}
 	ind = findObjectByField(ret, 'grader_id', gId);
 	if (ind != -1) {
