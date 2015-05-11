@@ -377,18 +377,16 @@ Template.assignment.rendered = function() {
             $("#gradeHistogram").highcharts(Session.get("histoData"));
         }
     });
-    $("#timeline-toggle").click(function() {
-        if ($("#readerTimelines").contents().length != 0) {
-            $("#readerTimelines").html("");
-        } else {
-            $("#readerTimelines").highcharts(Session.get("timeData"));
-        }
-    });
     $("#analytics-toggle").click(function() {
         if ($("#readerAverages").contents().length != 0) {
             $("#readerAverages").html("");
         } else {
             $("#readerAverages").highcharts(Session.get("boxData"));
+        }
+        if ($("#readerTimelines").contents().length != 0) {
+            $("#readerTimelines").html("");
+        } else {
+            $("#readerTimelines").highcharts(Session.get("timeData"));
         }
     });
 }
