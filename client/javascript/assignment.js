@@ -34,6 +34,14 @@ setTimeData = function() {
 	data[gId] = data[gId].map(function(e) {return new Date(e.graded_at);});
     }
     var assignment = Session.get("assignment");
+    var lastDate = new Date(assignment.created_at);
+    var today = new Date();
+    var created = new Date(assignment.created_at);
+    interval = (lastDate-created)/10
+    cats = []
+    for (var i=0; i < 10; i += 1) {
+	cats.push(new Date((i*interval) + (created/1)));
+    }
     duetime = assignment.due_at;
     Session.set("timeData", {
         title: {
