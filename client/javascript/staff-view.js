@@ -13,7 +13,6 @@ Template.course_staff.created = function() {
 
     self.isInDB = new ReactiveVar(['Loading...']);
     Meteor.call('courseInDB', Session.get("course").id, function (err, value) {
-        console.log(value);
         if (err) {
             console.log(err);
         } else {
@@ -37,11 +36,8 @@ Template.course_staff.helpers({
 // Handle Form Submission
 Template.course_staff.events({
     'click #submit-button': function(e) {
-        console.log('SUBMIT...');
         var cId = this.id;
         var hoursData = {};
-        console.log('fuck you jquery');
-        console.log($('.hours-data'));
         $('.hours-data').each(function(i, item) {
             item = $(item);
             var id = item.attr('for')
@@ -49,11 +45,9 @@ Template.course_staff.events({
         });
 
         Meteor.call('updateStaffHours', cId, hoursData, function(err, value) {
-            console.log('response!');
             if (err) {
                 console.log(err);
             } else {
-                console.log(value);
                 $('.update-section').append('Success!');
             }
         });
