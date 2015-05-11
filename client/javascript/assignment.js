@@ -28,6 +28,48 @@ average = function(data) {
     return avg;
 }
 
+setTimeData = function() {
+    var data = Template.instance().readerSubmissionList.get();
+    for (gId in data) {
+	data[gId] = data[gId].map(function(e) {return new Date(e.graded_at);});
+    }
+    var assignment = Session.get("assignment");
+    duetime = assignment.due_at;
+    Session.set("timeData", {
+        title: {
+            text: 'Reader Progress',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+			 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            title: {
+                text: 'Percent Complete (%)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '%'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: 'Tokyo',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+        }]
+    });
+}
+
 setHistoData = function(ret) {
     var all = $.grep(ret, function(o) {
         return o.grader_id == "All";
@@ -296,7 +338,7 @@ Template.assignment.created = function() {
         }
     });
     self.readerSubmissionList = new ReactiveVar([]);
-    Meteor.call("assignedSubmissions", Session.get("assignment").id, function(err, value) {
+    Meteor.call("assignedSubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
         if (err) {
             console.log(err);
         } else {
@@ -311,6 +353,13 @@ Template.assignment.rendered = function() {
             $("#gradeHistogram").html("");
         } else {
             $("#gradeHistogram").highcharts(Session.get("histoData"));
+        }
+    });
+    $("#timeline-toggle").click(function() {
+        if ($("#readerTimelines").contents().length != 0) {
+            $("#readerTimelines").html("");
+        } else {
+            $("#readerTimelines").highcharts(Session.get("timeData"));
         }
     });
     $("#analytics-toggle").click(function() {
@@ -379,7 +428,6 @@ Template.assignment.helpers({
         Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
-	setTimeData(ret);
         setHistoData(ret);
         return ret;
     },

@@ -1,3 +1,20 @@
+Array.prototype.contains = function(v) {
+    for(var i = 0; i < this.length; i++) {
+        if(this[i] === v) return true;
+    }
+    return false;
+};
+
+Array.prototype.unique = function() {
+    var arr = [];
+    for(var i = 0; i < this.length; i++) {
+        if(!arr.contains(this[i])) {
+            arr.push(this[i]);
+        }
+    }
+    return arr; 
+}
+
 /* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
@@ -19,7 +36,7 @@ function requestParams(p) {
 
 function toGrade(uId, aId) {
     var assn = Assignments.findOne({ 'id' : aId });
-    if (!assn && !assn.cached_submissions) {
+    if (!assn || !assn.cached_submissions) {
         return [];
     }
     var subm = assn.cached_submissions;
@@ -150,10 +167,19 @@ Meteor.methods({
     mySubmissions: function(aId) {
 	return toGrade(Meteor.user().canvasId, aId);
     },
-    assignedSubmissions: function(aId) {
-	var subList = [];
-	var readers = Assignments.findOne({'id': aId});
-	
+    assignedSubmissions: function(cId, aId) {
+	var subList = {};
+	var assignments = Assignments.findOne({'id': aId});
+	if (assignments) {
+	    data = assignemnts.cached_submissions;
+	} else {
+	    data = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"})).content;
+	}
+	data = data.map(function(e) {return e.grader_id;});
+	data = data.unique();
+	for (gId in data) {
+	    subList[gId] = toGrade(gId, aId);
+	}
 	return subList;
     },
     addCourse: function(course) {
