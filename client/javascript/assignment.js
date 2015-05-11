@@ -1,4 +1,20 @@
 // Assignment Template
+// Highcharts inspiration from:
+// http://jsfiddle.net/gh/get/jquery/1.7.2/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/line-basic/
+// http://jsfiddle.net/gh/get/jquery/1.9.1/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/box-plot/
+// http://jsfiddle.net/FnhRV/19/
+
+/* Check if an object in arr has value for field. */
+
+
+function findObjectByField(arr, field, value) {
+    for (var i = 0; i < arr.length; i += 1) {
+        if (arr[i][field] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 medianX = function(medianArr) {
     count = medianArr.length;
@@ -26,6 +42,76 @@ average = function(data) {
     }, 0);
     var avg = sum / data.length;
     return avg;
+}
+
+setTimeData = function(ret) {
+    var data = Template.instance().readerSubmissionList.get();
+
+    for (gId in data) {
+	data[gId] = data[gId].map(function(e) {return e.graded_at ? new Date(e.graded_at) : null;});
+    }
+    var assignment = Session.get("assignment");
+    var created = new Date(assignment.created_at);
+    var lastDate = created;
+    for (gId in data) {
+	for (var k=0; k < data[gId].length; k += 1) {
+	    date = data[gId][k];
+	    if (date > lastDate) {
+		lastDate = date;
+	    }
+	}
+    }
+    interval = (lastDate-created)/10
+    cats = []
+    for (var i=0; i < 11; i += 1) {
+	cats.push(new Date((i*interval) + (created/1)));
+    }
+    duetime = assignment.due_at;
+    sers = [];
+    for (gId in data) {
+	values = [];
+	for (var j=0; j < cats.length; j += 1) {
+	    date = cats[j];
+	    subs = data[gId].filter(function(e) {return e <= date;}).length;
+	    values.push((subs/data[gId].length)*100);
+	}
+	ind = findObjectByField(ret, 'grader_id', gId);
+	if (ind != -1) {
+	    sers.push({
+		name: ret[ind].grader_name,
+		data: values
+	    });
+	}
+    }
+    Session.set("timeData", {
+        title: {
+            text: 'Reader Progress',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: cats
+        },
+        yAxis: {
+            title: {
+                text: 'Percent Complete (%)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '%'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: sers
+    });
 }
 
 setHistoData = function(ret) {
@@ -295,6 +381,14 @@ Template.assignment.created = function() {
             self.mysubmissionList.set(value);
         }
     });
+    self.readerSubmissionList = new ReactiveVar([]);
+    Meteor.call("assignedSubmissions", Session.get("course").id, Session.get("assignment").id, function(err, value) {
+        if (err) {
+            console.log(err);
+        } else {
+            self.readerSubmissionList.set(value);
+        }
+    });
 }
 
 Template.assignment.rendered = function() {
@@ -311,8 +405,15 @@ Template.assignment.rendered = function() {
         } else {
             $("#readerAverages").highcharts(Session.get("boxData"));
         }
+        if ($("#readerTimelines").contents().length != 0) {
+            $("#readerTimelines").html("");
+        } else {
+            $("#readerTimelines").highcharts(Session.get("timeData"));
+        }
     });
 }
+
+var displayNames = {};
 
 Template.assignment.helpers({
     assignment: function() {
@@ -328,6 +429,21 @@ Template.assignment.helpers({
     mysubmissions: function() {
         var data = Template.instance().mysubmissionList.get();
         return data;
+    },
+    log: function(items) {
+        console.log(items);
+    },
+    demoName: function(name) {
+        var isDemo = true;
+        if (!isDemo) { return name; }
+        
+        if (name in displayNames) {
+            return displayNames[name];
+        }
+        var len = Object.keys(displayNames).length;
+        var new_name = 'Student ' + len;
+        displayNames[name] = new_name;
+        return new_name;
     },
     graderStats: function() {
         var data = Template.instance().submissionList.get();
@@ -371,7 +487,8 @@ Template.assignment.helpers({
         Session.set("classMean", total / count);
         Session.set("ret", ret);
         setBoxData(ret);
-        setHistoData(ret);
+        setTimeData(ret);
+	setHistoData(ret);
         return ret;
     },
     classMean: function() {

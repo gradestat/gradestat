@@ -1,3 +1,20 @@
+Array.prototype.contains = function(v) {
+    for(var i = 0; i < this.length; i++) {
+        if(this[i] === v) return true;
+    }
+    return false;
+};
+
+Array.prototype.unique = function() {
+    var arr = [];
+    for(var i = 0; i < this.length; i++) {
+        if(!arr.contains(this[i])) {
+            arr.push(this[i]);
+        }
+    }
+    return arr; 
+}
+
 /* Base URL for canvas/bCourses API requests. */
 var canvasBaseURL = "https://bcourses.berkeley.edu/api/v1";
 
@@ -15,6 +32,19 @@ function requestParams(p) {
         }
     }
     return options;
+}
+
+function toGrade(uId, aId) {
+    var assn = Assignments.findOne({ 'id' : aId });
+    if (!assn || !assn.cached_submissions) {
+        return [];
+    }
+    var subm = assn.cached_submissions;
+    subm = subm.filter(function(s) {
+        return s.assigned_to_grade_id === uId ||
+            s.assigned_to_grade_name === 'Everyone'
+    });
+    return subm;
 }
 
 /* Check if an object in arr has value for field. */
@@ -135,16 +165,23 @@ Meteor.methods({
         return remove;
     },
     mySubmissions: function(aId) {
-        var assn = Assignments.findOne({ 'id' : aId });
-        if (!assn && !assn.cached_submissions) {
-            return [];
-        }
-        var subm = assn.cached_submissions;
-        subm = subm.filter(function(s) {
-            return s.assigned_to_grade_id === Meteor.user().canvasId ||
-                s.assigned_to_grade_name === 'Everyone'
-        });
-        return subm;
+	return toGrade(Meteor.user().canvasId, aId);
+    },
+    assignedSubmissions: function(cId, aId) {
+	var subList = {};
+	var assignments = Assignments.findOne({'id': aId});
+	if (assignments) {
+	    data = assignments.cached_submissions;
+	} else {
+	    data = Meteor.http.get(coursePath(cId) + "/assignments/" + aId + "/submissions", requestParams({"include[]": "user"})).content;
+	}
+	data = data.map(function(e) {return e.grader_id;});
+	data = data.unique();
+	for (var i=0; i < data.length; i += 1) {
+	    gId = data[i];
+	    subList[gId] = toGrade(gId, aId);
+	}
+	return subList;
     },
     addCourse: function(course) {
         var courseDB = Courses.findOne({'id': course.id});
