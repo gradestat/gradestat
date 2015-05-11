@@ -48,7 +48,10 @@ setTimeData = function(ret) {
     var created = new Date(assignment.created_at);
     var lastDate = created;
     for (gId in data) {
-	for (date in data[gId]) {
+	for (var k=0; k < data[gId].length; k += 1) {
+	    console.log("DAAAAAAAAAAATE");
+	    date = data[gId][k];
+	    console.log(date);
 	    if (date > lastDate) {
 		lastDate = date;
 	    }
@@ -60,15 +63,15 @@ setTimeData = function(ret) {
     for (var i=0; i < 10; i += 1) {
 	cats.push(new Date((i*interval) + (created/1)));
     }
+    console.log("CATS");
+    console.log(cats);
     duetime = assignment.due_at;
     sers = [];
     for (gId in data) {
 	values = [];
 	for (var j=0; j < cats.length; j += 1) {
 	    date = cats[j];
-	    console.log(data[gId][0] < date);
 	    subs = data[gId].filter(function(e) {return e <= date;}).length;
-	    console.log("SUBS: " + subs);
 	    values.push(subs/data[gId].length);
 	}
 	ind = findObjectByField(ret, 'grader_id', gId);
