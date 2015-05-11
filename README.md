@@ -8,9 +8,9 @@ GradeStat was developed for [CS294-101][cs294], "Emerging Web Technology" with P
 
 For the class we wrote about our progress throughout the semester:
 
-* [Proposal](http://webtech-cs294.tumblr.com/post/111183958936/proposal-gradestat-by-lambda-lambda-lambda)
-* [Milestone 1](http://webtech-cs294.tumblr.com/post/113788229828/gradestat-project-milestone-1-team-lambda-lambda)
-* [Milestone 2](http://webtech-cs294.tumblr.com/post/116986546335/project-milestone-2-gradestat)
+* [Proposal](http://webtech-cs294.tumblr.com/post/111183958936/proposal-GradeStat-by-lambda-lambda-lambda)
+* [Milestone 1](http://webtech-cs294.tumblr.com/post/113788229828/GradeStat-project-milestone-1-team-lambda-lambda)
+* [Milestone 2](http://webtech-cs294.tumblr.com/post/116986546335/project-milestone-2-GradeStat)
 * [Milestone 3]() -- NOTE: Not yet published.
 
 ## Basic Features
@@ -49,6 +49,6 @@ Here's some specific points of work that the app could use:
 - [ ] More Course interface APIs. Glookup would be an interesting example!
 - [ ] Code Cleanup. This app could use a lot of refactoring and cleanup to be more maintainable and stable.
 
-[gs]: https://gradestat.meteor.com/
+[gs]: https://GradeStat.meteor.com/
 [cs294]: http://inst.eecs.berkeley.edu/~cs294-101/sp15/
 [meteor]: http://meteor.com
