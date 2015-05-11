@@ -1,4 +1,8 @@
 // Assignment Template
+// Highcharts inspiration from:
+// http://jsfiddle.net/gh/get/jquery/1.7.2/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/line-basic/
+// http://jsfiddle.net/gh/get/jquery/1.9.1/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/box-plot/
+// http://jsfiddle.net/FnhRV/19/
 
 /* Check if an object in arr has value for field. */
 function findObjectByField(arr, field, value) {
