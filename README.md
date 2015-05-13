@@ -11,7 +11,7 @@ For the class we wrote about our progress throughout the semester:
 * [Proposal](http://webtech-cs294.tumblr.com/post/111183958936/proposal-GradeStat-by-lambda-lambda-lambda)
 * [Milestone 1](http://webtech-cs294.tumblr.com/post/113788229828/GradeStat-project-milestone-1-team-lambda-lambda)
 * [Milestone 2](http://webtech-cs294.tumblr.com/post/116986546335/project-milestone-2-GradeStat)
-* [Milestone 3]() -- NOTE: Not yet published.
+* [Milestone 3](http://webtech-cs294.tumblr.com/post/118692005919/gradestat-final-report)
 
 ## Basic Features
 GradeStat is an extension to an existing grade book type application. Currently, the chosen grade book interface bCourses at Berkeley. However, the app should work with any grade book future as long as there is an API that could be implemented.
