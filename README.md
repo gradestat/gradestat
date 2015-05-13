@@ -32,7 +32,7 @@ Here's a summary of the headline features:
 
 GradeStat is built with [Meteor][meteor], which itself is built on nodeJS.
 
-The client side code is fairly well organized by view where one `.html` and one `.js` correspond to each view component. However, pretty much all the server-side logic is contained in `server.js`. This is one place for future improvement. 
+The client side code is fairly well organized by view where one `.html` and one `.js` correspond to each view component. However, pretty much all the server-side logic is contained in `server.js`. This is one place for future improvement.
 
 ## Future Work
 Please see the issue tracker for some bugs, as well as the proposal for where we think the application should go.
